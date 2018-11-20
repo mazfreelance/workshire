@@ -64,19 +64,20 @@ class jobPostController extends Controller
                     ->leftjoin('employers', 'job_postings.jobpost_employer', '=', 'employers.id')     
                     ->leftjoin('savedjob_job_postings', 'job_postings.id', '=', 'savedjob_job_postings.job_id') 
                     ->leftjoin('job_applications', 'job_postings.id', '=', 'job_applications.appl_jobpostid')  
-                    ->paginate(10);
-   
-    if(!Auth::guard('web')->user()->complete){
-      return redirect()->intended(route('seeker.account.complete')); 
-    }else{
-      return $request->ajax() ? view('seeker.jposts.index', compact('posts')) : view('seeker.jposts.ajax', compact('posts')); 
-    }  
+                    ->paginate(10); 
+
+    //return value                  
+    if($request->ajax()) return view('seeker.jposts.index', compact('posts'));
+    else{ 
+      if(Auth::guard('web')->check()){
+        return !Auth::guard('web')->user()->complete ? redirect()->intended(route('seeker.account.complete')) : view('seeker.jposts.ajax', compact('posts')); 
+      }else return view('seeker.jposts.ajax', compact('posts'));  
+    }
   }
  
   public function view($name, $id)
   {
    	$jobposts = jobPost::where('id', $id)->with('employerDetailBySeq')->first(); 
-
     $post =  jobPost::select('*', 'job_postings.id', 'job_applications.id as appl_id', 
                       'savedjob_job_postings.id as saved_id', 'employers.id as emp_id') 
                       ->leftjoin('employers', 'job_postings.jobpost_employer', '=', 'employers.id')     
