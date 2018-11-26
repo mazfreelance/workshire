@@ -14,7 +14,7 @@ class EducationCatProvider extends ServiceProvider
     public function boot()
     {
         view()->composer('*', function($view){
-            $view->with('eduCats', 
+            $view->with('fos', 
                             \DB::table('education_category') 
                             ->select('*')->where('parent_cat', '=', '')->orderby('category_Name', 'ASC')->get()
                         );
