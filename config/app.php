@@ -168,6 +168,7 @@ return [
         App\Providers\Setting\SalaryProvider::class,
         App\Providers\Setting\EducationLvlProvider::class,
         App\Providers\Setting\InstituteProvider::class,  
+        App\Providers\Setting\EducationCatProvider::class,  
 
         //admins user setting 
         App\Providers\Setting\CandidateProvider::class,

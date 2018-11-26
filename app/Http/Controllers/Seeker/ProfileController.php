@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Model\job_seeker;
 use App\Model\JobSeeker_Education;
 use App\Model\JobSeeker_Experience;  
+use App\Model\Resume;  
 
 class ProfileController extends Controller
 {
@@ -151,33 +152,43 @@ class ProfileController extends Controller
    	}  
 
 
-    public function complete(){
+  public function complete(){
 
-      $id = Auth::guard('web')->user()->id; 
-      $seek = job_seeker::selectraw("ISNULL(NULLIF(seeker_address,'')) + ISNULL(NULLIF(seeker_city,'')) +
-                                     ISNULL(NULLIF(seeker_state,'')) + ISNULL(NULLIF(seeker_zip,'')) +
-                                     ISNULL(NULLIF(seeker_ctc_tel1,'')) + ISNULL(NULLIF(seeker_DOB,'')) + 
-                                     ISNULL(NULLIF(seeker_nric,'')) + ISNULL(NULLIF(seeker_gender,'')) +
-                                     ISNULL(NULLIF(seeker_skillSets,'')) + ISNULL(NULLIF(seeker_will_travel,'')) + 
-                                     ISNULL(NULLIF(seeker_expect_salary,'')) + ISNULL(NULLIF(seeker_language,'')) + 
-                                     ISNULL(NULLIF(seeker_type,''))
-                                     AS incomplete")
-                         ->where('user_id', '=', $id)
-                         ->first(); 
+    $id = Auth::guard('web')->user()->id; 
+    $seek = job_seeker::selectraw("id, ISNULL(NULLIF(seeker_address,'')) + ISNULL(NULLIF(seeker_city,'')) +
+                                   ISNULL(NULLIF(seeker_state,'')) + ISNULL(NULLIF(seeker_zip,'')) +
+                                   ISNULL(NULLIF(seeker_ctc_tel1,'')) + ISNULL(NULLIF(seeker_DOB,'')) + 
+                                   ISNULL(NULLIF(seeker_nric,'')) + ISNULL(NULLIF(seeker_gender,'')) +
+                                   ISNULL(NULLIF(seeker_skillSets,'')) + ISNULL(NULLIF(seeker_will_travel,'')) + 
+                                   ISNULL(NULLIF(seeker_expect_salary,'')) + ISNULL(NULLIF(seeker_language,'')) + 
+                                   ISNULL(NULLIF(seeker_type,''))
+                                   AS incomplete")
+                       ->where('user_id', '=', $id)
+                       ->first(); 
 
-      $photo = job_seeker::selectraw("ISNULL(NULLIF(seeker_profile_photo_loc,'')) AS incomplete")
-                         ->where('user_id', '=', $id)
-                         ->first(); 
+    $photo = job_seeker::selectraw("ISNULL(NULLIF(seeker_profile_photo_loc,'')) AS incomplete")
+                       ->where('user_id', '=', $id)
+                       ->first(); 
 
-      $resume = job_seeker::selectraw("ISNULL(NULLIF(seeker_resume_location,'')) AS incomplete")
-                         ->where('user_id', '=', $id)
-                         ->first(); 
+    $resume = Resume::selectraw("*, ISNULL(NULLIF(resume_loc,'')) AS incomplete")
+                    ->where('seeker_id', '=', $seek->id)
+                    ->first(); 
 
-      $edu = JobSeeker_Experience::where('seeker_id', '=', $seek->id)
-                                 ->first();
-      $exp = JobSeeker_Education::where('seeker_id', '=', $seek->id)
-                                ->first(); 
+    $edu = JobSeeker_Education::selectraw("*, ISNULL(NULLIF(highest_education,'')) +
+                                ISNULL(NULLIF(qualification,'')) + ISNULL(NULLIF(grade_achievement,'')) + ISNULL(NULLIF(field_of_study,'')) +
+                                ISNULL(NULLIF(major_study,'')) + ISNULL(NULLIF(institute,''))
+                                AS incomplete ")
+                              ->where('seeker_id', '=', $seek->id)
+                              ->where('level', '=', 1)
+                              ->first(); 
+    $exp = JobSeeker_Experience::selectraw("*, ISNULL(NULLIF(exp_fromDt,'')) +
+                                ISNULL(NULLIF(exp_toDt,'')) + ISNULL(NULLIF(exp_position,'')) + ISNULL(NULLIF(exp_jobd,'')) +
+                                ISNULL(NULLIF(exp_company,'')) + ISNULL(NULLIF(exp_salary,''))
+                                AS incomplete ")
+                               ->where('seeker_id', '=', $seek->id)
+                               ->where('level', '=', 1)
+                               ->first();
 
-      return view('seeker.profile.complete', compact('seek', 'photo', 'resume', 'edu', 'exp')); 
-    }
+    return view('seeker.profile.complete', compact('seek', 'photo', 'resume', 'edu', 'exp')); 
+  }
 }

@@ -19,34 +19,36 @@
 			<ul>
 				<li>{{ $completeProfile = round(100 - ($seek->incomplete * 100) / 13) }}%</li>
 				<li>{{ $completePhoto = round(100 - ($photo->incomplete * 100) / 1) }}%</li>
-				<li>{{ $completeResume = round(100 - ($resume->incomplete * 100) / 1) }}%</li>
+				<li>
+					<?php $completeResume = '' ?>
+					@if($resume !== null) 
+						{{ $completeResume = round(100 - ($resume->incomplete * 100) / 1) }}%	
+					@else 0%  
+					@endif 
+				</li>
 			</ul>
-		</td>
-		<td>
-
-		</td>
+		</td> 
 	</tr>
 	<tr>
 		<td>2.</td>
 		<td>Education</td>
 		<td> 
-			@if($edu !== null) ada
+			<?php $completeEdu = '' ?>
+			@if($edu !== null) 
+				{{ $completeEdu = round(100 - ($edu->incomplete * 100) / 6) }}%	
 			@else 0%  
 			@endif 
-		</td>
-		<td>
-
-		</td>
+		</td> 
 	</tr>
 	<tr>
 		<td>3.</td>
 		<td>Experience</td>
-		<td>
-			{{$exp}}
-			@if($exp !== null) ada
+		<td> 
+			<?php $completeExp = '' ?>
+			@if($exp !== null)
+				{{ $completeExp = round(100 - ($exp->incomplete * 100) / 6) }}%	
 			@else 0%  
 			@endif 
-		</td>
-		<td>
-
-		</td>
+		</td> 
+	</tr>
+</table> 

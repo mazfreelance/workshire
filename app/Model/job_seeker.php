@@ -39,4 +39,8 @@ class job_seeker extends Model
     {
         return $this->hasMany('App\Model\PaidCandidate');
     }
+
+    public function resume(){
+        return $this->hasOne('App\Model\Resume', 'seeker_id');
+    } 
 }
