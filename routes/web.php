@@ -11,6 +11,7 @@
 | 
 */ 
 //LOGIN,RESET,REGISTER [JOB SEEKER]
+Auth::routes(); 
 Route::group(['namespace' => 'Auth'], function() { 
     Route::post('login', 'LoginController@login')->name('login.submit'); 
 
@@ -56,11 +57,8 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'namespace' => 'AuthAdmin']
     //Route::post('/password/reset', 'ResetPasswordController@reset'); 
 }); 
 
-
-
-
-/* JOB SEEKER */   
-Auth::routes();  
+ 
+/* JOB SEEKER */    
 // JOB POST LIST 
 Route::group(['namespace' => 'Seeker'], function() {
     Route::get('/', 'jobPostController@index')->name('main'); 

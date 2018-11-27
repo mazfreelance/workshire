@@ -98,7 +98,7 @@ class LoginController extends Controller
         //dd(redirect()->intended( $this->redirectPath() )); 
         if(!$user->complete) { 
             return redirect()->intended(route('seeker.account.complete'));
-        }
+        } 
         return redirect()->intended( $this->redirectPath() ); //$this->redirectTo
     }
 }
