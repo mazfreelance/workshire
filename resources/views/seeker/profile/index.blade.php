@@ -5,8 +5,7 @@
 <main class="py-0">  
 	<div class="row my-1 mx-2">
 		<div class="col-sm-12">
-			<h3>Profile</h3>
-			<p style="margin-bottom:-0.2em;" class="text-danger">Your profile not update, please update your profile.</p> 
+			<h3>Profile</h3> 
 			<hr style="height:1px;border-width:0;background-color:#6066c4">
 		</div> 
 		<div class="col-sm ml-sm-2"> 
@@ -18,16 +17,27 @@
 		                <div class="tab-pane active" id="profile">
 		                    <h5 class="mb-2">{{$seek->seeker_name}}&#39;s Profile</h5>
 		                    <h6 class="mb-1">
+		                    	<i class="fa fa-user fa-1x" aria-hidden="true"></i>&nbsp;
+		                    	{{auth()->user()->username}}
+		                	</h6>
+		                    <h6 class="mb-1">
 		                    	<i class="fa fa-envelope fa-1x" aria-hidden="true"></i>&nbsp;
-		                    	{{$seek->seeker_ctc_email1}}
+		                    	{{auth()->user()->email}}
 		                	</h6>
 		                    <h6 class="mb-1">
 		                    	<i class="fa fa-mobile fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;
 		                    	{{$seek->seeker_ctc_tel1}}
 		                	</h6> 
+		                    <h6 class="mb-1">
+		                    	<i class="fa fa-clock" aria-hidden="true"></i>&nbsp;&nbsp;
+		                    	<input type="hidden" name="profile_updated" value="{{$seek->updated_at}}"> 
+		                    	Updated on: <span id="updateprofilejs"></span>
+		                	</h6> 
+		                	<!--
                             <span class="badge badge-primary"><i class="fa fa-user"></i> 900 Followers</span>
                             <span class="badge badge-success"><i class="fa fa-cog"></i> 43 Forks</span>
-                            <span class="badge badge-danger"><i class="fa fa-eye"></i> 245 Views</span>  
+                            <span class="badge badge-danger"><i class="fa fa-eye"></i> 245 Views</span> 
+                           --> 
 		                	<hr>
 		                    <div class="row">
 		                        <div class="col-md-6">
@@ -69,10 +79,16 @@
 		                        <div class="col-md-6"> 
 		                            <h6>Language<i class="fa fa-language float-right"></i></h6>
 		                            @if($seek->seeker_language != '')
-			                            <?php $langsets = explode(',', $seek->seeker_language)?>
-								              	
+			                            <?php $langsets = explode(',', $seek->seeker_language);?> 
 								        @foreach($langsets as $langset)
-							        	<a href="" class="badge badge-info badge-pill">{!!$langset!!}</a>
+								        	@if($langset == 'Other')
+								        		<?php $otherlangsets = explode(',', $seek->seeker_language_other)?> 
+								        		@foreach($otherlangsets as $otherlangset)
+								        		<a href="" class="badge badge-info badge-pill">{!!$otherlangset!!}</a>
+								        		@endforeach 
+								        	@else
+							        		<a href="" class="badge badge-info badge-pill">{!!$langset!!}</a>
+							        		@endif
 								        @endforeach        
 								    @else
 								    	<p>No language found.</p>	
@@ -89,6 +105,7 @@
 								    	<p>No skill found.</p>	
 								    @endif	    
 		                        </div> 
+		                        <!--
 		                        <div class="col-md-12">
 		                        	<hr>
 		                            <h5 class="mt-2"><span class="fa fa-clock-o ion-clock float-right"></span> Recent Activity</h5>
@@ -122,6 +139,7 @@
 		                                </tbody>
 		                            </table>
 		                        </div>
+		                    	-->
 		                    </div>
 		                    <!--/row-->
 		                </div> 

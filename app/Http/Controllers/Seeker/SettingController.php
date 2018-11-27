@@ -105,4 +105,33 @@ class SettingController extends Controller
         $noti = Notification_Seeker::where('user_id', '=', Auth::guard('web')->user()->id)->first();
         return view('setting.notification', compact('noti'));
     }
+
+    public function notification_post(Request $request){ 
+        $rules = [
+          'schedule' => 'required_if:jobalertsubs,Y'
+        ];
+        $message = [ 
+            
+        ]; 
+
+        $validator = Validator::make($request->all(), $rules, $message);
+        if ($validator->fails())
+        return response()->json([
+          'fail' =>true, 
+          'errors' => $validator->errors()
+        ]); 
+ 
+        $noti = Notification_Seeker::find($request->input('id'));
+        $noti->job_alert = $request->input('job_alert');
+        $noti->profile_remind = $request->input('profilealertsubs');
+        $noti->promo_alert = $request->input('promoalertsubs');
+        $noti->updated_at = date('Y-m-d h:i:s');
+        $noti->save();
+        
+        //return back()->with('success', 'Successfully updated your account.');
+        return response()->json([
+          'fail' =>false, 
+          'redirect_url' => route('seeker.setting.notification')
+        ]); 
+    }
 }

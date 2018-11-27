@@ -36,8 +36,8 @@ return [
     ], 
 
     'twitter' => [
-        'client_id'     => env('TWITTER_ID', ''),
-        'client_secret' => env('TWITTER_SECRET', ''),
+        'client_id'     => env('TWITTER_ID', 'HXQODae2saDzx2aKPuUigi7Kb'),
+        'client_secret' => env('TWITTER_SECRET', '1640VVbBGDlEABqeO8B1y4lAwrXyXKXi6OKJ2vxdPfatrofzuW'),
         'redirect'      => env('TWITTER_URL', 'http://localhost/whfw/login/twitter/callback'),
     ],
 

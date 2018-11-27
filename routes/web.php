@@ -83,6 +83,7 @@ Route::group(['as' => 'seeker.', 'prefix' => 'seeker', 'namespace' => 'Seeker', 
     Route::get('profile/message', 'ProfileController@showMessage')->name('showMessage'); 
     Route::get('profile/edit', 'ProfileController@showEditForm')->name('showEditForm'); 
     Route::post('profile/update', 'ProfileController@update')->name('profile.update');  
+    Route::get('profile/resume/{id}', 'ProfileController@resume')->name('resume');  
     //Routes which needs to check if profile is complete or not 
     Route::get('complete/profile', 'ProfileController@complete')->name('account.complete');  
 
@@ -90,10 +91,9 @@ Route::group(['as' => 'seeker.', 'prefix' => 'seeker', 'namespace' => 'Seeker', 
     Route::get('setting', 'SettingController@showAccount')->name('setting');  
     Route::post('setting/upd/acc', 'SettingController@updateAcc')->name('updateAcc'); 
     Route::get('setting/password', 'SettingController@showPassword')->name('setting.password'); 
-    Route::post('setting/upd/pass', 'SettingController@updatePass')->name('updatePass'); 
-
+    Route::post('setting/upd/pass', 'SettingController@updatePass')->name('updatePass');  
     Route::get('setting/notification', 'SettingController@notification')->name('setting.notification'); 
-
+    Route::post('setting/notification/edit', 'SettingController@notification_post')->name('setting.notification.edit');  
 });  
 
 
@@ -101,7 +101,7 @@ Route::group(['as' => 'seeker.', 'prefix' => 'seeker', 'namespace' => 'Seeker', 
 //middleware employer
 Route::group(['as' => 'employer.', 'prefix' => 'employer', 'namespace' => 'Employer', 'middleware' => 'auth:employer'], function(){ 
     //jobpost
-    Route::get('home', 'DashboardController@index')->name('dashboard'); 
+    Route::get('/', 'DashboardController@index')->name('dashboard'); 
     Route::get('post', 'DashboardController@post_job')->name('postjob');  
     Route::match(['get', 'post'], 'create', 'DashboardController@create_job')->name('createPost');
     Route::match(['get', 'put'], 'update/{id}', 'DashboardController@update_job')->name('update'); 
@@ -148,7 +148,7 @@ Route::group(['as' => 'employer.', 'prefix' => 'employer', 'middleware' => 'auth
 });
 //not middleware employer 
 Route::group(['as' => 'employer.', 'prefix' => 'employer'], function() { 
-    Route::get('/', function(){ return view('employer.main'); })->name('main');
+    Route::get('home', function(){ return view('employer.main'); })->name('main');
 
     //cart
     Route::get('pricing', 'HomeController@pricePLAN')->name('pricing');

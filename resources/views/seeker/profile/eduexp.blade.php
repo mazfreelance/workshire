@@ -6,7 +6,6 @@
 	<div class="row my-1 mx-2">
 		<div class="col-sm-12">
 			<h3>Profile</h3>
-			<p style="margin-bottom:-0.2em;" class="text-danger">Your profile not update, please update your profile.</p> 
 			<hr style="height:1px;border-width:0;background-color:#6066c4">
 		</div> 
 		<div class="col-sm ml-sm-2"> 
@@ -18,8 +17,11 @@
 		                    <div class="row"> 
 		                        <div class="col-12">
 		                            <h5 class="mt-2"><span class="fa fa-book float-right"></span> Education</h5>
+		                            <button class="btn btn-sm btn-primary my-1" data-toggle="tooltip" data-placement="top" title="Add/Edit Education">
+		                            	<i class="fa fa-plus-circle"></i> or <i class="fa fa-edit"></i>
+		                            </button>
+	                            	@for ($i = 0; $i < count($edu_detail); $i++) 
 		                            <div class="container row text-left px-4 mb-2"> 
-		                            	@for ($i = 0; $i < count($edu_detail); $i++) 
 										<div class="col-5 table-bordered bg-dark text-white">Institution</div>
 										<div class="col-7 table-bordered bg-light">
 											{!! str_replace('( ', '(', ucwords(str_replace('(', '( ', strtolower($edu_detail[$i]->institute)))) !!}
@@ -41,12 +43,15 @@
 										<div class="col-7 table-bordered bg-light">
 											{!!$edu_detail[$i]->grade_achievement!!} 
 										</div> 
-										@endfor
 		                            </div>
+									@endfor
 		                        </div>
 	                            <hr> 
 		                        <div class="col-12">
 		                            <h5 class="mt-2"><span class="fa fa-building float-right"></span> Work Experience</h5> 
+		                            <button class="btn btn-sm btn-primary my-1" data-toggle="tooltip" data-placement="top" title="Add/Edit Experience">
+		                            	<i class="fa fa-plus-circle"></i> or <i class="fa fa-edit"></i>
+		                            </button>
 		                            @for ($i = 0; $i < count($exp_detail); $i++) 
 		                            <div class="container row text-left px-4 mb-2">
 										<div class="col-5 table-bordered bg-dark text-white">Company</div>

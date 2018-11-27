@@ -6,7 +6,6 @@
 	<div class="row my-1 mx-2">
 		<div class="col-sm-12">
 			<h3>Profile</h3>
-			<p style="margin-bottom:-0.2em;" class="text-danger">Your profile not update, please update your profile.</p> 
 			<hr style="height:1px;border-width:0;background-color:#6066c4">
 		</div> 
 		<div class="col-sm ml-sm-2"> 

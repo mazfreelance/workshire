@@ -15,6 +15,11 @@
         <a href="{{route('seeker.showEditForm')}}" class="nav-link {{Request::path() == 'seeker/profile/edit' ? 'active':''}}">Edit</a>
     </li>
     <li class="nav-item">
+        <a href="{{route('seeker.resume', ['id' => $seek->id])}}" 
+           class="nav-link {{Request::path() == 'seeker/profile/resume/'.$seek->id ? 'active':''}}">Resume
+        </a>
+    </li>
+    <li class="nav-item">
 		<a href="" data-toggle="tab" class="nav-link btnPrint"><i class="fa fa-print"></i> Profile</a>
     </li>
 </ul>

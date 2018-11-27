@@ -82,7 +82,7 @@
 									@else Male
 									@endif
 								</span>
-								<span class="d-block"><i class="fa fa-at"></i> {{$seeker->seeker_ctc_email1}}</span>
+								<span class="d-block"><i class="fa fa-at"></i> {{auth()->user()->email}}</span>
 								<span class="d-block"><i class="fa fa-mobile fa-lg"></i>&nbsp;
 									{{$seeker->seeker_ctc_tel1}}
 								</span> 

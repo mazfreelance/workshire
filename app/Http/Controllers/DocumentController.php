@@ -42,9 +42,12 @@ class DocumentController extends Controller
         if($request->isMethod('get')){
             $seeker = job_seeker::find(decrypt($id));
             $experience = JobSeeker_Experience::where('seeker_id', '=', decrypt($id))
+                                                ->orderby('level', 'ASC')
                                                 ->orderby('exp_toDt', 'DESC')
                                                 ->get();
-            $education = JobSeeker_Education::where('seeker_id', '=', decrypt($id))->get();
+            $education = JobSeeker_Education::where('seeker_id', '=', decrypt($id)) 
+                                            ->orderby('level', 'ASC') 
+            								->get();
 
             return view('print.seeker', compact('seeker', 'education', 'experience'));  
         }

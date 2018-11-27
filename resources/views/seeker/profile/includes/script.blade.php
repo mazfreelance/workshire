@@ -1,6 +1,15 @@
 @section('js') 
 <script type="text/javascript" src="{{ asset('public/js/jquery.printPage.js') }}"></script>
 <script>
+	$('[data-toggle="tooltip"]').tooltip();
+	var resume_updated = $('input[name="resume_updated"]').val();
+	var moment_resume = moment(resume_updated).calendar();
+	$('#updateresumejs').text(moment_resume);
+
+	var profile_updated = $('input[name="profile_updated"]').val();
+	var moment_profile = moment(profile_updated).calendar();
+	$('#updateprofilejs').text(moment_profile);
+
 	$(document).ready(function(){
 		var raw = $('#dob').val();
 		var years = moment().diff(raw, 'years',false);  
