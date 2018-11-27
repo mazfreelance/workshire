@@ -10,22 +10,57 @@
 | contains the "web" middleware group. Now create something great!
 | 
 */ 
-
-/* JOB SEEKER */  
-//LOGIN,RESET,REGISTER
-Auth::routes(); 
-Route::group(['namespace' => 'Auth'], function() {
-    Route::post('user/logout', 'LoginController@userLogout')->name('user.logout');
+//LOGIN,RESET,REGISTER [JOB SEEKER]
+Route::group(['namespace' => 'Auth'], function() { 
     Route::post('login', 'LoginController@login')->name('login.submit'); 
+
+    //social media login
     Route::get('/login/{social}','LoginController@socialLogin')
             ->where('social','twitter|facebook|linkedin|google')
             ->name('loginsocial');
     Route::get('/login/{social}/callback','LoginController@handleProviderCallback')
             ->where('social','twitter|facebook|linkedin|google'); 
- 
+    
+    //verify user
     Route::get('/user/verify/{token}', 'RegisterController@verifyUser');
+
+    //logout 
+    Route::post('user/logout', 'LoginController@userLogout')->name('user.logout');
 });
- 
+//LOGIN,RESET,REGISTER [EMPLOYER]
+Route::group(['as' => 'employer.', 'prefix' => 'employer', 'namespace' => 'AuthEmployer'], function() { 
+    Route::get('login', 'LoginController@showLoginForm')->name('login');
+    Route::post('login', 'LoginController@EmployerLogin')->name('login.submit');
+    Route::post('logout', 'LoginController@employerLogout')->name('logout');
+
+    Route::get('register', 'RegisterController@showRegistrationForm')->name('register');
+    Route::post('register', 'RegisterController@register')->name('register.submit');
+
+    //verify user
+    Route::get('verify/{token}', 'RegisterController@verifyUser')->name('verify');
+
+    Route::get('password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.request');
+    Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+
+    Route::get('password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
+    Route::post('password/reset', 'ResetPasswordController@reset');
+});
+//LOGIN,RESET [ADMIN]
+Route::group(['as' => 'admin.', 'prefix' => 'admin', 'namespace' => 'AuthAdmin'], function(){  
+    Route::get('login', 'LoginController@showLoginForm')->name('login'); 
+    Route::post('login', 'LoginController@login')->name('login.submit');
+    Route::post('logout', 'LoginController@logout')->name('logout');
+    Route::get('/password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.request');
+    Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+    //Route::get('/password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
+    //Route::post('/password/reset', 'ResetPasswordController@reset'); 
+}); 
+
+
+
+
+/* JOB SEEKER */   
+Auth::routes();  
 // JOB POST LIST 
 Route::group(['namespace' => 'Seeker'], function() {
     Route::get('/', 'jobPostController@index')->name('main'); 
@@ -66,50 +101,56 @@ Route::group(['as' => 'seeker.', 'prefix' => 'seeker', 'namespace' => 'Seeker', 
 
 /* EMPLOYER */  
 //middleware employer
-Route::group(['as' => 'employer.', 'prefix' => 'employer', 'middleware' => 'auth:employer'], function(){ 
+Route::group(['as' => 'employer.', 'prefix' => 'employer', 'namespace' => 'Employer', 'middleware' => 'auth:employer'], function(){ 
     //jobpost
-    Route::get('/', 'Employer\DashboardController@index')->name('dashboard'); 
-    Route::get('post', 'Employer\DashboardController@post_job')->name('postjob');  
-    Route::match(['get', 'post'], 'create', 'Employer\DashboardController@create_job')->name('createPost');
-    Route::match(['get', 'put'], 'update/{id}', 'Employer\DashboardController@update_job')->name('update'); 
-    Route::delete('delete/{id}', 'Employer\DashboardController@destroy');
-    Route::get('show/{id}', 'Employer\DashboardController@show_post');
+    Route::get('home', 'DashboardController@index')->name('dashboard'); 
+    Route::get('post', 'DashboardController@post_job')->name('postjob');  
+    Route::match(['get', 'post'], 'create', 'DashboardController@create_job')->name('createPost');
+    Route::match(['get', 'put'], 'update/{id}', 'DashboardController@update_job')->name('update'); 
+    Route::delete('delete/{id}', 'DashboardController@destroy');
+    Route::get('show/{id}', 'DashboardController@show_post');
+
+    //Routes which needs to check if profile is complete or not 
+    Route::get('complete/profile', 'ProfileController@complete')->name('account.complete');  
 
     //candidate
-    Route::get('candidate-fresh', 'Employer\CandidateController@candidate_search_fresh')->name('candidate.fresh'); 
-    Route::get('candidate-exp', 'Employer\CandidateController@candidate_search_experience')->name('candidate.experience'); 
-    Route::get('candidate-intern', 'Employer\CandidateController@candidate_search_intern')->name('candidate.intern'); 
-    Route::get('candidate-operator', 'Employer\CandidateController@candidate_search_operator')->name('candidate.operator'); 
-    Route::get('buy_candidate', 'Employer\CandidateController@buy_candidate'); 
-    Route::get('paid-candidate', 'Employer\CandidateController@paid')->name('paid'); 
+    Route::get('candidate-fresh', 'CandidateController@candidate_search_fresh')->name('candidate.fresh'); 
+    Route::get('candidate-exp', 'CandidateController@candidate_search_experience')->name('candidate.experience'); 
+    Route::get('candidate-intern', 'CandidateController@candidate_search_intern')->name('candidate.intern'); 
+    Route::get('candidate-operator', 'CandidateController@candidate_search_operator')->name('candidate.operator'); 
+    Route::get('buy_candidate', 'CandidateController@buy_candidate'); 
+    Route::get('paid-candidate', 'CandidateController@paid')->name('paid'); 
 
     //applicant
-    Route::match(['get', 'put'],'applicant/{name}/{id}', 'Employer\ApplicantController@applicant')->name('applicant'); 
-    Route::get('applicant/profile/seeker/{id}', 'Employer\ApplicantController@seeker_profile'); 
-    Route::get('status_applicant/{id}', 'Employer\ApplicantController@applicant_status'); 
+    Route::match(['get', 'put'],'applicant/{name}/{id}', 'ApplicantController@applicant')->name('applicant'); 
+    Route::get('applicant/profile/seeker/{id}', 'ApplicantController@seeker_profile'); 
+    Route::get('status_applicant/{id}', 'ApplicantController@applicant_status'); 
 
     //profile
-    Route::get('profile', 'Employer\ProfileController@index')->name('profile'); 
+    Route::get('profile', 'ProfileController@index')->name('profile'); 
 
     //setting
-    Route::get('setting', 'Employer\SettingController@index')->name('setting'); 
-    Route::get('setting/password', 'Employer\SettingController@password')->name('setting.password'); 
-    Route::get('setting/notification', 'Employer\SettingController@notification')->name('setting.notification'); 
-    Route::get('setting/plan', 'Employer\SettingController@plan')->name('setting.plan'); 
+    Route::get('setting', 'SettingController@index')->name('setting'); 
+    Route::get('setting/password', 'SettingController@password')->name('setting.password'); 
+    Route::get('setting/notification', 'SettingController@notification')->name('setting.notification'); 
+    Route::get('setting/plan', 'SettingController@plan')->name('setting.plan'); 
 
     //cart 
-    Route::get('checkout', 'Employer\CheckoutController@index')->name('checkout'); 
-    Route::post('formvalidate', 'Employer\CheckoutController@checkout_post')->name('checkout.post');
-    Route::get('invoice', 'DocumentController@list_invoice')->name('invoice');
-    Route::get('invoice/{date}', 'DocumentController@invoice'); 
-    Route::get('thankyou', function() { return view('employer.cart.thankyou'); });
+    Route::get('checkout', 'CheckoutController@index')->name('checkout'); 
+    Route::post('formvalidate', 'CheckoutController@checkout_post')->name('checkout.post');
 
     //message 
-    Route::get('message', 'Employer\MessageController@message')->name('message'); 
+    Route::get('message', 'MessageController@message')->name('message'); 
+});
+Route::group(['as' => 'employer.', 'prefix' => 'employer', 'middleware' => 'auth:employer'], function(){  
+    //invoice  
+    Route::get('invoice', 'DocumentController@list_invoice')->name('invoice');
+    Route::get('invoice/{date}', 'DocumentController@invoice'); 
+    Route::get('thankyou', function() { return view('employer.cart.thankyou'); }); 
 });
 //not middleware employer 
 Route::group(['as' => 'employer.', 'prefix' => 'employer'], function() { 
-    Route::get('home', function(){ return view('employer.main'); })->name('main');
+    Route::get('/', function(){ return view('employer.main'); })->name('main');
 
     //cart
     Route::get('pricing', 'HomeController@pricePLAN')->name('pricing');
@@ -117,19 +158,7 @@ Route::group(['as' => 'employer.', 'prefix' => 'employer'], function() {
     Route::get('cart/update', 'Employer\CartController@update')->name('update');
     Route::get('cart/remove/{id}', 'Employer\CartController@destroy');
     Route::get('cart', 'Employer\CartController@index')->name('cart');
-});
-//LOGIN,RESET,REGISTER
-Route::group(['as' => 'employer.', 'prefix' => 'employer', 'namespace' => 'AuthEmployer'], function() { 
-    Route::get('login', 'LoginController@showLoginForm')->name('login');
-    Route::post('login', 'LoginController@EmployerLogin')->name('login.submit');
-    Route::post('logout', 'LoginController@employerLogout')->name('logout');
-
-    Route::get('password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.request');
-    Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-
-    //Route::get('password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
-    //Route::post('password/reset', 'ResetPasswordController@reset');
-});
+}); 
 
 /* ADMINISTRATOR */  
 Route::group(['as' => 'admin.', 'prefix' => 'admin'], function(){  
@@ -142,16 +171,6 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin'], function(){
     Route::get('setting/package/employer', 'Admin\SettingController@package_employer')->name('package_employer'); 
     Route::get('setting/package/topup/add', 'Admin\SettingController@package_add')->name('package_add'); 
     Route::get('setting/package/topup/reload', 'Admin\SettingController@package_reload')->name('package_reload');  
-});  
-//LOGIN,RESET
-Route::group(['as' => 'admin.', 'prefix' => 'admin', 'namespace' => 'AuthAdmin'], function(){  
-    Route::get('login', 'LoginController@showLoginForm')->name('login'); 
-    Route::post('login', 'LoginController@login')->name('login.submit');
-    Route::post('logout', 'LoginController@logout')->name('logout');
-    Route::get('/password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.request');
-    Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-    //Route::get('/password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
-    //Route::post('/password/reset', 'ResetPasswordController@reset'); 
 }); 
 
 /* CONTACT */  
@@ -167,6 +186,39 @@ Route::get('public/document/uploadsCV/{id}', 'DocumentController@getDocument');
 Route::get('profile/print/{id}', 'DocumentController@print');
 Route::get('poskod', 'HomeController@poskod')->name('poskod');
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+TUTORIAL ROUTE
+**/
+
 /*
 Route::group(['as' => 'employer.', 'prefix' => 'employer', 'namespace' => 'Employer', 'middleware' => ['auth', 'employer']], function(){
     Route::get('dashboard', 'DashboardController@index')->name('dashboard'); 
@@ -188,7 +240,7 @@ Route::get('/employer/post-job', function () { return view('employer.postjob'); 
 Route::get('/employer/search-candidate', function () {  return view('employer.candidate');});
 */ 
 
-/**TUTORIAL ROUTE**/
+
 Route::get('/live_search', 'LivesearchController@index');
 Route::get('/live_search/action', 'LivesearchController@action')->name('live_search.action');
 

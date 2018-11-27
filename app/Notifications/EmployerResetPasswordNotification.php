@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notifications\Notifications;
+namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -10,13 +10,13 @@ use Illuminate\Notifications\Messages\MailMessage;
 class EmployerResetPasswordNotification extends Notification
 {
     use Queueable;
-
+    public $token;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($token)
     {
         $this->token = $token;
     }
@@ -42,7 +42,7 @@ class EmployerResetPasswordNotification extends Notification
     {
         return (new MailMessage)
                     ->line('You are receiving the email because we received a password reset request for your account.')
-                    ->action('Reset Password', route('admin.password.reset', $this->token))
+                    ->action('Reset Password', route('employer.password.reset', $this->token))
                     ->line('Thank you for using our application!');
     }
 

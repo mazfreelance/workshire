@@ -20,4 +20,8 @@ class ProfileController extends Controller
     	$employer = employer::where('users_id', '=', Auth::guard('employer')->user()->id)->first();
     	return view('employer.profile', compact('employer'));
     }
+
+    public function complete(){
+    	return view('employer.profile.complete');
+    }
 }

@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\AuthEmployer;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Foundation\Auth\ResetsPasswords;  
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Auth;
  
+use App\User_Employer;
+
 class ResetPasswordController extends Controller
 {
     /*
@@ -36,11 +39,8 @@ class ResetPasswordController extends Controller
      * @return void
      */
     public function __construct()
-    {  
-        if (Auth::guard('employer')->check() && Auth::guard('web')->user()->role->id == 2) 
-        {
-            $this->redirectTo = route('employer.dashboard');
-        }
+    {   
+        $this->redirectTo = route('employer.dashboard'); 
         $this->middleware('guest:employer');
     }
 
@@ -50,7 +50,7 @@ class ResetPasswordController extends Controller
     }
 
     public function broker(){
-        return Password::broker('users_employer');
+        return Password::broker('employers');
     }
 
     public function showResetForm(Request $request, $token = null){

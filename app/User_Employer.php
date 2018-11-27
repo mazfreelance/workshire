@@ -7,10 +7,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\EmployerResetPasswordNotification;
 
 class User_Employer extends Authenticatable
-{ 
-	protected $table = 'users_employer';
-    
+{  
  	use Notifiable;
+    protected $table = 'users_employer';
     protected $guard = 'employer';
     /**
      * The attributes that are mass assignable.
@@ -18,7 +17,7 @@ class User_Employer extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'username', 'email', 'password',
+        'email', 'password',
     ];
 
     /**
@@ -42,4 +41,9 @@ class User_Employer extends Authenticatable
     public function employer(){
         return $this->hasMany('App\Model\employer', 'users_id');
     } 
+
+    public function verifyUser()
+    {
+        return $this->hasOne('App\Model\VerifyUserEmployer', 'user_id');
+    }
 }

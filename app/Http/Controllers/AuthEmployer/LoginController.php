@@ -5,6 +5,10 @@ namespace App\Http\Controllers\AuthEmployer;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Mail;
+
+use App\Mail\VerifyMailEmployer;
+use App\User_Employer;
 
 class LoginController extends Controller
 {
@@ -37,7 +41,7 @@ class LoginController extends Controller
     {
         return view('authEmployer.login');
     }
- 
+    /*
     public function EmployerLogin(Request $request)
     {
         $this->validate($request, [
@@ -55,7 +59,36 @@ class LoginController extends Controller
         }
         // If Unsuccessful, then redirect back to the login with the form data
         return redirect()->back()->withInput($request->only('email', 'remember'));
-    } 
+    } */
+    public function EmployerLogin(Request $request)
+    {
+        $this->validate($request, [
+            'email' => 'required|email',
+            'password' => 'required|min:6'
+        ]);
+        $credential = [
+            'email' => $request->email,
+            'password' => $request->password
+        ];
+        // Attempt to log the user in
+        if (Auth::guard('employer')->attempt($credential, $request->member)){
+            // If login succesful, then redirect to their intended location
+            $user = Auth::guard('employer')->user();
+            //return dd($user->verified);
+            if (!$user->verified) {
+                Auth::guard('employer')->logout();
+                Mail::to($user->email)->send(new VerifyMailEmployer($user));
+                return back()->with('warning', 'You need to confirm your account. We have sent you an activation code, please check your email.');
+            }  
+            //dd(redirect()->intended( $this->redirectPath() )); 
+            if(!$user->complete){ 
+                return redirect()->intended(route('employer.account.complete'));
+            } 
+            return redirect()->intended(route('employer.dashboard'));
+        }    
+        // If Unsuccessful, then redirect back to the login with the form data
+        return redirect()->back()->withInput($request->only('email', 'remember')); 
+    }
 
     public function employerLogout()
     {
@@ -63,4 +96,5 @@ class LoginController extends Controller
         //return $this->loggedOut($request) ?: redirect('/');
         return redirect('/employer/home');
     }
+ 
 }

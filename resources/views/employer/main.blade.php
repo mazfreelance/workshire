@@ -15,7 +15,7 @@
         <div class="carousel-caption ">
           	<h2 class="display-4 text-white mb-2 mt-4">Free unlimited job posting</h2>
 			<p class="text-white mb-3 px-5 lead">View our resumes on Workshire</p>
-			<a href="" class="btn btn-primary btn-capsul px-4 py-2">Explore More</a>
+			<a href="{{route('employer.register')}}" class="btn btn-primary btn-capsul px-4 py-2">Sign Up now !</a>
         </div>
       </div> 
     </div>
