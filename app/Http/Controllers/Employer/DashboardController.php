@@ -44,14 +44,28 @@ class DashboardController extends Controller
                     }) 
                    ->where('appl_emp_id', '=', $user->employer[0]->id)  
 				           ->get();
+
+    $applsKIV = jobPost::selectRaw('job_postings.jobpost_position, COUNT(job_applications.appl_seeker) as total')
+                        ->join('job_applications', 'job_applications.appl_jobpostid', '=', 'job_postings.id')
+                        ->where('job_postings.jobpost_employer', '=', $user->employer[0]->id)
+                        ->where('job_applications.appl_process_status', '=', 'KIV')
+                        ->groupby('job_postings.id')
+                        ->get();
+
+    $applsProcess = jobPost::selectRaw('job_postings.jobpost_position, COUNT(job_applications.appl_seeker) as total')
+                        ->join('job_applications', 'job_applications.appl_jobpostid', '=', 'job_postings.id')
+                        ->where('job_postings.jobpost_employer', '=', $user->employer[0]->id)
+                        ->where('job_applications.appl_process_status', '=', 'Processing')
+                        ->groupby('job_postings.id')
+                        ->get();
 	
 	if($request->ajax())
     {
-      return view('employer.jposts.index', compact('jposts','appls'));
+      return view('employer.jposts.index', compact('jposts','appls', 'applsKIV', 'applsProcess'));
     }
     else
     {
-      return view('employer.jposts.ajax', compact('jposts','appls'));
+      return view('employer.jposts.ajax', compact('jposts','appls', 'applsKIV', 'applsProcess'));
     }
   }
 
