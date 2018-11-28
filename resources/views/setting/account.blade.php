@@ -20,11 +20,12 @@
 			      	<div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
 						<div class="tab-pane fade {{Request::path() == 'employer/setting' ? 'show active':''}}" id="nav-account" role="tabpanel" aria-labelledby="nav-account-tab">
 							<h5 class="my-2"><span class="fa fa-user float-right"></span> Account Settings</h5> 
-							<form>  
+							{!! Form::open(['route' => 'employer.updateAcc', 'id' => 'acc_form']) !!} 
 							  	<div class="form-group row">
 								    <label for="emailUser" class="col-sm-2 col-form-label">Email</label>
 								    <div class="col-sm-10"> 
-								      	<input type="email" class="form-control" id="emailUser" placeholder="Email" value="{{Auth::guard('employer')->user()->email}}"> 
+								      	<input type="text" class="form-control" name="email" id="email" placeholder="Email" value="{{Auth::guard('employer')->user()->email}}">  
+								      	<span id="error-email" class="invalid-feedback"></span>
 								    </div>
 							  	</div> 
 							  <div class="form-group row">
@@ -32,7 +33,7 @@
 							      <button type="submit" class="btn btn-third">Update</button>
 							    </div>
 							  </div>
-							</form>
+							{!! Form::close() !!}
 						</div> 
 					</div>
 					@else
@@ -40,8 +41,7 @@
 						<div class="tab-pane fade {{Request::path() == 'seeker/setting' ? 'show active':''}}" id="nav-account" role="tabpanel" aria-labelledby="nav-account-tab">
 							<h5 class="my-2"><span class="fa fa-user float-right"></span> Account Settings</h5>  
 
-							<form id="acc_form" method="post">  
-								@csrf
+							{!! Form::open(['route' => 'seeker.updateAcc', 'id' => 'acc_form']) !!}  
 							  	<div class="form-group row">
 								    <label for="email" class="col-sm-2 col-form-label">Email</label>
 								    <div class="col-sm-10"> 
@@ -60,7 +60,7 @@
 								      <button type="submit" class="btn btn-third">Save account</button>
 								    </div>
 							  	</div>
-							</form>
+							{!! Form::close() !!}
 						</div> 
 					</div> 
 					@endif
@@ -73,12 +73,16 @@
 <script> 
 $(document).ready(function(){
 	$('#acc_form').submit(function(evt){  
-		evt.preventDefault();
-		var data = new FormData($(this)[0]); 
-		var url = "{{route('seeker.updateAcc')}}";
+		evt.preventDefault(); 
+
+	    var form = $(this);
+	    var data = new FormData($(this)[0]);
+	    var url = form.attr("action");
+	    var method = form.attr("method");
+
 		$.ajax({
 			url: url,
-			type: $(this).attr('method'),
+			type: method,
 			data: data,
 		    cache:false,
 		    contentType: false,
@@ -89,7 +93,7 @@ $(document).ready(function(){
 		    		for (control in data.errors) {   
                         $('#' + control).addClass('is-invalid');
                         $('#error-' + control).html(data.errors[control]);
-                        //alert(data.errors[control]);
+                        //alert(control+' '+data.errors[control]);
                     } 
                 }else {   
                     $.confirm({
@@ -107,7 +111,7 @@ $(document).ready(function(){
                     }); 
                 }
 		    }, error: function (xhr, textStatus, errorThrown){
-                //alert("Error: " + errorThrown);
+                console.log("Error: " + xhr.responseText);
                 $.alert({
                     icon: 'fa fa-times-circle',
                     theme: 'modern',

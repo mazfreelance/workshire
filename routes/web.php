@@ -129,8 +129,11 @@ Route::group(['as' => 'employer.', 'prefix' => 'employer', 'namespace' => 'Emplo
 
     //setting
     Route::get('setting', 'SettingController@index')->name('setting'); 
+    Route::post('setting/upd/acc', 'SettingController@updateAcc')->name('updateAcc'); 
     Route::get('setting/password', 'SettingController@password')->name('setting.password'); 
+    Route::post('setting/upd/pass', 'SettingController@updatePass')->name('updatePass');  
     Route::get('setting/notification', 'SettingController@notification')->name('setting.notification'); 
+    Route::post('setting/notification/edit', 'SettingController@notification_post')->name('setting.notification.edit');  
     Route::get('setting/plan', 'SettingController@plan')->name('setting.plan'); 
 
     //cart 
@@ -183,6 +186,8 @@ Route::group(['prefix' => 'contact'], function(){
 Route::get('public/document/uploadsCV/{id}', 'DocumentController@getDocument');
 Route::get('profile/print/{id}', 'DocumentController@print');
 Route::get('poskod', 'HomeController@poskod')->name('poskod');
+Route::get('jobfair', 'HomeController@jobfairForm')->name('jobfairForm');
+Route::post('jobfair_post', 'HomeController@jobfair')->name('jobfair');
     
 
 

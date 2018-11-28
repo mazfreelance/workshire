@@ -49,7 +49,7 @@
         <div class="col-md-2 mb-md-0 mb-2">
 
           <!-- Links -->
-          <h5 class="text-uppercase">Your Opportunities</h5>
+          <h5 class="text-uppercase">Opportunities</h5>
 
           <ul class="list-unstyled">
             @if(Auth::guard('web')->check() OR Auth::guest())
@@ -59,7 +59,7 @@
             @endif
             @guest
             <li>
-              <a href="#!">Begin with us!</a>
+              <a href="{{route('jobfairForm')}}">Begin with us!</a>
             </li>
             <li>
               <a href="#!">Operator Pool</a>

@@ -21,31 +21,7 @@
 			    		@if(Auth::guard('employer')->check())
 						<div class="tab-pane fade {{Request::path() == 'employer/setting/password' ? 'show active':''}}" id="nav-password" role="tabpanel" aria-labelledby="nav-password-tab">
 							<h5 class="my-2"><span class="fa fa-key float-right"></span> Reset Password Settings</h5> 
-							<form>
-							  	<div class="form-group row">
-								    <label for="passwordUser" class="col-sm-2 col-form-label">New Password</label>
-								    <div class="col-sm-10">
-								      	<input type="password" class="form-control" id="passwordUser" placeholder="Email">
-								    </div>
-							  	</div>
-							  <div class="form-group row">
-							    <label for="newPasswordUser" class="col-sm-2 col-form-label">Confirm New Password</label>
-							    <div class="col-sm-10">
-							      <input type="password" class="form-control" id="newPasswordUser" placeholder="Username">
-							    </div>
-							  </div> 
-							  <div class="form-group row">
-							    <div class="col-sm-10">
-							      <button type="submit" class="btn btn-third">Change</button>
-							    </div>
-							  </div>
-							</form>
-						</div>
-						@else
-						<div class="tab-pane fade {{Request::path() == 'seeker/setting/password' ? 'show active':''}}" id="nav-password" role="tabpanel" aria-labelledby="nav-password-tab">
-							<h5 class="my-2"><span class="fa fa-key float-right"></span> Reset Password Settings</h5> 
-							<form id="passw_form" method="post">  
-								@csrf
+							{!! Form::open(['route' => 'employer.updatePass', 'id' => 'passw_form']) !!} 
 							  	<div class="form-group row">
 								    <label for="newpass" class="col-sm-2 col-form-label">New Password</label>
 								    <div class="col-sm-10">
@@ -65,7 +41,32 @@
 							      <button type="submit" class="btn btn-third">Change</button>
 							    </div>
 							  </div>
-							</form>
+							{!! Form::close() !!}
+						</div>
+						@else
+						<div class="tab-pane fade {{Request::path() == 'seeker/setting/password' ? 'show active':''}}" id="nav-password" role="tabpanel" aria-labelledby="nav-password-tab">
+							<h5 class="my-2"><span class="fa fa-key float-right"></span> Reset Password Settings</h5>  
+							{!! Form::open(['route' => 'seeker.updatePass', 'id' => 'passw_form']) !!} 
+							  	<div class="form-group row">
+								    <label for="newpass" class="col-sm-2 col-form-label">New Password</label>
+								    <div class="col-sm-10">
+								      	<input type="password" class="form-control" id="newpass" name="newpass"/>
+								      	<span id="error-newpass" class="text-danger invalid-feedback"></span>
+								    </div>
+							  	</div>
+							  <div class="form-group row">
+							    <label for="confirmnewpass" class="col-sm-2 col-form-label">Confirm New Password</label>
+							    <div class="col-sm-10">
+							      <input type="password" class="form-control" id="confirmnewpass" name="confirmnewpass"/>
+								      	<span id="error-confirmnewpass" class="text-danger invalid-feedback"></span>
+							    </div>
+							  </div> 
+							  <div class="form-group row">
+							    <div class="col-sm-10">
+							      <button type="submit" class="btn btn-third">Change</button>
+							    </div>
+							  </div>
+							{!! Form::close() !!}
 						</div>
 						@endif
 					</div>
@@ -79,11 +80,13 @@
 $(document).ready(function(){
 	$('#passw_form').submit(function(evt){  
 		evt.preventDefault();
-		var data = new FormData($(this)[0]); 
-		var url = "{{route('seeker.updatePass')}}";
+		var form = $(this);
+	    var data = new FormData($(this)[0]);
+	    var url = form.attr("action");
+	    var method = form.attr("method");
 		$.ajax({
 			url: url,
-			type: $(this).attr('method'),
+			type: method,
 			data: data,
 		    cache:false,
 		    contentType: false,
