@@ -57,6 +57,7 @@
         @endif 
         <!--END OF AUTH NAV-->     
       </nav>    
+      <div class="loading"><i class="fas fa-spin fa-spinner fa-2x fa-tw"></i><br><span>Loading</span></div> 
       @yield('content')
     </div>  
 </body> 

@@ -22,9 +22,11 @@
             <a class="dropdown-item {{Request::path() == 'employer/paid-candidate' ? 'active':''}}" href="{{route('employer.paid')}}">
               <i class="fa fa-money-bill-alt "></i>&nbsp;{{ __('Paid Candidate') }}
             </a>
-            <a class="dropdown-item" href="{{route('employer.message')}}">
-              <i class="fa fa-envelope"></i>&nbsp;{{ __('Message') }}
+            <!--
+            <a class="dropdown-item" href="{{--route('employer.message')--}}">
+              <i class="fa fa-envelope"></i>&nbsp;{{-- __('Message') --}}
             </a>
+            -->
             <a class="dropdown-item" href="{{route('employer.pricing')}}">
               <i class="fa fa-cubes"></i>&nbsp;{{ __('Packages & Advertisement') }}
             </a>
@@ -71,9 +73,11 @@
           <a class="dropdown-item {{Request::path() == 'seeker/profile' ? 'active':''}}" 
              href="{{ route('seeker.profile') }}"><i class="fa fa-user"></i>&nbsp;{{ __('Profile') }}
           </a>
-          <a class="dropdown-item {{Request::path() == 'seeker/message' ? 'active':''}}" 
-             href="{{ route('seeker.message') }}"><i class="fa fa-envelope"></i>&nbsp;{{ __('Message') }}
+          <!--
+          <a class="dropdown-item {{--Request::path() == 'seeker/message' ? 'active':''--}}" 
+             href="{{-- route('seeker.message') --}}"><i class="fa fa-envelope"></i>&nbsp;{{-- __('Message') --}}
            </a>
+          -->
           <a class="dropdown-item {{Request::path() == 'seeker/save-job' ? 'active':''}}" 
              href="{{route('seeker.savejob')}}"><i class="fa fa-star"></i>&nbsp;{{ __('Saved Job') }}
            </a>

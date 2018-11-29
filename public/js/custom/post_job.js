@@ -129,6 +129,7 @@ $(document).on('click', '.btn-remove-allowance', function(e) {
 /***/
 $(document).on('submit', 'form#frm', function (event) {
     event.preventDefault();
+    $('.loading').show();
     var form = $(this);
     var data = new FormData($(this)[0]);
     var url = form.attr("action");
@@ -155,8 +156,11 @@ $(document).on('submit', 'form#frm', function (event) {
                             for (control in data.errors) {   
                                 $('#' + control).addClass('is-invalid');
                                 $('#error-' + control).html(data.errors[control]);
+                                $('#' + control).focus();
                             } 
+                            $('.loading').hide();
                         } else {   
+                            $('.loading').hide();
                             $.confirm({
                                 icon: 'fa fa-check-circle',
                                 theme: 'modern',
@@ -166,7 +170,7 @@ $(document).on('submit', 'form#frm', function (event) {
                                 buttons:{
                                     okay: function(){   
                                         location.replace(data.redirect_url);   
-                                        //alert(data.redirect_url);   
+                                        //console.log(data);   
                                     }
                                 }
                             }); 
@@ -182,9 +186,12 @@ $(document).on('submit', 'form#frm', function (event) {
                             content: xhr.responseText,
                             confirm: function(){}
                         });
+                        $('.loading').hide();
                     }
                 });   
-            }, Cancel: function (){}
+            }, Cancel: function (){
+                $('.loading').hide();
+            }
         }
     });  
     return false;

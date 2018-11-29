@@ -7,21 +7,21 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMailJobAlert; 
  
-class JobAlert extends Command
+class JobDailyAlert extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'jobalert:users';
+    protected $signature = 'jobalertdaily:users';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Send an email of new job reminder';
+    protected $description = 'Send an email of new job reminder by daily';
 
     /**
      * Create a new command instance.
@@ -42,7 +42,7 @@ class JobAlert extends Command
     {   
         $users = \DB::table('users') 
                       ->select('*', 'users.id', 'job_seekers.id as seeker_id', 'notification_seeker.id as noti_id')
-                      ->join('job_seekers', 'users.id', '=', 'job_seekers.users_id')
+                      ->join('job_seekers', 'users.id', '=', 'job_seekers.user_id')
                       ->join('notification_seeker', 'users.id', '=', 'notification_seeker.user_id')
                       ->whereRaw('notification_seeker.job_alert = "Y|Daily"')
                       ->get(); 
@@ -51,6 +51,7 @@ class JobAlert extends Command
                ->whereRaw('jobpost_status = "A"')
                ->get();
        
+        
         foreach($users as $user)
         {   
             $user_id = $user->id;

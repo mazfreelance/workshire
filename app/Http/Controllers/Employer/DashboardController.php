@@ -12,6 +12,9 @@ use App\Model\jobPost;
 use App\Model\Job_Applicant;
 use App\Model\PostingDuration;
 use App\Model\EmployerTokenPost;
+ 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewJobAlert; 
 
 class DashboardController extends Controller
 {  
@@ -190,8 +193,17 @@ class DashboardController extends Controller
     $post->jobpost_statusPosting = 'SHOW';
     $post->created_at = date('Y-m-d H:i:s');
 
-    $post->save();
-    
+    $post->save(); 
+
+    //******send email to staff 
+    $email_primary = \DB::table('admin_email')->whereRaw('class = "primary"')->first(); 
+    $email_cc = \DB::table('admin_email')->whereRaw('class = "cc"')->get(); 
+    $companyname = Auth::guard('employer')->user()->employer[0]->emp_name;
+    $jobposition = $request->jobpost_position;
+    $jobdate = date('Y-m-d H:i:s');
+ 
+    Mail::send(new NewJobAlert($email_primary->email, $email_primary->name, $companyname, $jobposition, $jobdate)); 
+
     return response()->json([
       'fail' => false,
       'redirect_url' => url('employer')

@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-       'App\Console\Commands\JobAlert',
+       'App\Console\Commands\JobDailyAlert',
+       'App\Console\Commands\JobWeeklyAlert',
        'App\Console\Commands\JobCheckExpired',
     ];
 
@@ -29,18 +30,18 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
 
         //job alert daily
-        $schedule->command('jobalert:users')
+        $schedule->command('jobalertdaily:users')
                  ->everyMinute();
                  //->daily();
 
         //job alert weekly
-        $schedule->command('jobalert:users')
-                 ->weeklyOn(1, '00:00');
+        //$schedule->command('jobalertweekly:users')
+        //         ->weeklyOn(1, '00:00');
 
 
         //check expired date job post
-        $schedule->command('job_checkexpired:users')
-                 ->weeklyOn(1, '00:00');
+        //$schedule->command('job_checkexpired:users')
+                 //->weeklyOn(1, '00:00');
                  //->everyMinute();
     }
 

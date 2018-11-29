@@ -96,9 +96,11 @@
                           <a class="dropdown-item {{Request::path() == 'employer/paid-candidate' ? 'active':''}}" href="{{route('employer.paid')}}">
                             <i class="fa fa-money-bill "></i>&nbsp;{{ __('Paid Candidate') }}
                           </a>
-                          <a class="dropdown-item" href="{{route('employer.message')}}">
-                            <i class="fa fa-envelope"></i>&nbsp;{{ __('Message') }}
+                          <!--
+                          <a class="dropdown-item" href="{{--route('employer.message')--}}">
+                            <i class="fa fa-envelope"></i>&nbsp;{{-- __('Message') --}}
                           </a>
+                          -->
                           <a class="dropdown-item {{Request::path() == 'employer/pricing' ? 'active':''}}" href="{{route('employer.pricing')}}">
                             <i class="fa fa-cubes"></i>&nbsp;{{ __('Packages & Advertisement') }}
                           </a>
