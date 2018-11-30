@@ -36,27 +36,27 @@ return [
     ], 
 
     'twitter' => [
-        'client_id'     => env('TWITTER_ID', 'HXQODae2saDzx2aKPuUigi7Kb'),
-        'client_secret' => env('TWITTER_SECRET', '1640VVbBGDlEABqeO8B1y4lAwrXyXKXi6OKJ2vxdPfatrofzuW'),
-        'redirect'      => env('TWITTER_URL', 'http://localhost/whfw/login/twitter/callback'),
+        'client_id'     => env('TWITTER_ID'),
+        'client_secret' => env('TWITTER_SECRET'),
+        'redirect'      => env('TWITTER_URL'),
     ],
 
     'facebook' => [
-        'client_id'     => env('FACEBOOK_ID', '317179605543157'),
-        'client_secret' => env('FACEBOOK_SECRET', 'c978fee7b05682f324f7c49992435272'),
-        'redirect'      => env('FACEBOOK_URL', 'http://localhost/whfw/login/facebook/callback'),
+        'client_id'     => env('FACEBOOK_ID'),
+        'client_secret' => env('FACEBOOK_SECRET'),
+        'redirect'      => env('FACEBOOK_URL'),
     ],
 
     'linkedin' => [
-        'client_id'     => env('LINKEDIN_ID', '86rtcpe4ohio7h'),
-        'client_secret' => env('LINKEDIN_SECRET', 'vWnPGEfhIFRFIBY5'),
-        'redirect'      => env('LINKEDIN_URL', 'http://localhost/whfw/login/linkedin/callback'),
+        'client_id'     => env('LINKEDIN_ID'),
+        'client_secret' => env('LINKEDIN_SECRET'),
+        'redirect'      => env('LINKEDIN_URL'),
     ],
 
     'google' => [
-        'client_id'     => env('GOOGLE_ID', '800684978813-0ol0sbqs0lq8do8v0ttjb3oopqpnv117.apps.googleusercontent.com'),
-        'client_secret' => env('GOOGLE_SECRET', 'rsa08MpdbS2GCMSmaU2fkSPR'),
-        'redirect'      => env('GOOGLE_URL', 'http://localhost/whfw/login/google/callback'),
+        'client_id'     => env('GOOGLE_ID'),
+        'client_secret' => env('GOOGLE_SECRET'),
+        'redirect'      => env('GOOGLE_URL'),
     ],
 
 ];

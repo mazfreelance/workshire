@@ -183,7 +183,7 @@
 								      		</div>
 									        <form id="applyjob" method="POST" action="{{ route('seeker.process_apply') }}">
 									        	@csrf
-									        	<input type="hidden" name="seeker_id" value="{{Auth::user()->seeker[0]->id}}"/>
+									        	<input type="hidden" name="seeker_id" value="{{Auth::user()->seeker->id}}"/>
 									        	<input type="hidden" name="employer_id" value="{{$post->emp_id}}"/>
 									        	<input type="hidden" name="job_id" value="{{$post->id}}"/>
 									        	<input type="hidden" name="job_name" value="{{str_replace('-', ' ', $name)}}">
@@ -274,27 +274,7 @@
 <script>     
 
 $(document).ready(function() {  
-
-	/**count word **/
-	counter = function() {
-	    var value = $('textarea.editorCoverLetter').val();
-
-	    if (value.length == 0) {
-	        $('#wordCount').html('Words: '+0);  
-	        return;
-	    } 
-	    var regex = /\s+/gi;
-	    var wordCount = value.trim().replace(regex, ' ').split(' ').length;  
-	    $('#wordCount').html('Words: '+wordCount);  
-	}; 
-    $('textarea.editorCoverLetter').change(counter);
-    $('textarea.editorCoverLetter').keydown(counter);
-    $('textarea.editorCoverLetter').keypress(counter);
-    $('textarea.editorCoverLetter').keyup(counter);
-    $('textarea.editorCoverLetter').blur(counter);
-    $('textarea.editorCoverLetter').focus(counter);
-
-    /**submit**/
+	/**submit**/
 	$('form#applyjob').on('submit', function (event) {
 		$('.loading').show();	
 		$('.confirm_apply').attr('disabled', true);
@@ -313,8 +293,7 @@ $(document).ready(function() {
 			            btnClass: 'btn-red',
 		            	keys: ['enter'],
 			            action: function(){
-			            	$("#uploadCV").trigger('reset');
-	        				$("#image_upload_form").trigger('reset');
+	        				//$("#image_upload_form").trigger('reset');
 			            }
 			        } 
 			    }
@@ -335,8 +314,7 @@ $(document).ready(function() {
 			            btnClass: 'btn-red',
 		            	keys: ['enter'],
 			            action: function(){
-			            	$("#uploadCV").trigger('reset');
-	        				$("#image_upload_form").trigger('reset');
+	        				//$("#image_upload_form").trigger('reset');
 							$('.loading').hide(); 
 							$('.confirm_apply').attr('disabled', false);
 			            }
@@ -349,8 +327,9 @@ $(document).ready(function() {
 			var form = $(this);
 			var data = new FormData($(this)[0]);
 			var url = form.attr("action");
+			var method = form.attr("method");
 	      	$.ajax({
-				type: form.attr('method'),
+				type: method,
 				url: url,
 				data: data,
 				cache: true,
@@ -365,7 +344,7 @@ $(document).ready(function() {
 					    content: data.msg,
 					    buttons: {
 					        Okay: function () {
-					            //$.alert('Confirmed!');
+					            //$.alert(APP_URL);
 					            window.location =  APP_URL; 
 					        } 
 					    }
@@ -381,7 +360,26 @@ $(document).ready(function() {
 	          	}
 	      	}); 
 	    }
-  });
+  	});
+
+	/**count word **/
+	counter = function() {
+	    var value = $('textarea.editorCoverLetter').val();
+
+	    if (value.length == 0) {
+	        $('#wordCount').html('Words: '+0);  
+	        return;
+	    } 
+	    var regex = /\s+/gi;
+	    var wordCount = value.trim().replace(regex, ' ').split(' ').length;  
+	    $('#wordCount').html('Words: '+wordCount);  
+	}; 
+    $('textarea.editorCoverLetter').change(counter);
+    $('textarea.editorCoverLetter').keydown(counter);
+    $('textarea.editorCoverLetter').keypress(counter);
+    $('textarea.editorCoverLetter').keyup(counter);
+    $('textarea.editorCoverLetter').blur(counter);
+    $('textarea.editorCoverLetter').focus(counter); 
 
 	//posted time
 	var raw = $('#postedTimeAgo_raw').val();

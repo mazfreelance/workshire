@@ -130,85 +130,85 @@ class DashboardController extends Controller
     ];
 
     $validator = Validator::make($request->all(), $rules, $message);
-    if ($validator->fails())
-    return response()->json([
-      'fail' =>true, 
-      'errors' => $validator->errors()
-    ]); 
-     
+    if ($validator->fails()){
+      return response()->json([
+        'fail' =>true, 
+        'errors' => $validator->errors()
+      ]);
+    }else{ 
+      $validity = explode('>', $request->token_value); //package code > token value > balance
+      $package_code = explode('|', $validity[0]); //P|11 
+      if($validity[0] != 'P|26'){
+        $token_value = $validity[1]; //fixed value
+        $balance_token = $validity[2];
+      } 
+      
+      /* SUBMIT TO DB */ 
+      $post = new jobPost();
+      
+      $post->jobpost_employer = Auth::guard('employer')->user()->employer[0]->id;
+      $post->jobpost_date = date('Y-m-d H:i:s');
 
-    $validity = explode('>', $request->token_value); //package code > token value > balance
-    $package_code = explode('|', $validity[0]); //P|11 
-    if($validity[0] != 'P|26'){
-      $token_value = $validity[1]; //fixed value
-      $balance_token = $validity[2];
-    } 
-    
-    /* SUBMIT TO DB */ 
-    $post = new jobPost();
-    
-    $post->jobpost_employer = Auth::guard('employer')->user()->employer[0]->id;
-    $post->jobpost_date = date('Y-m-d H:i:s');
+      // 05/06/2018 mm/dd/yyyy
+      $raw_start_date = explode('/', $request->jobpost_startDate);
+      $start_date = $raw_start_date[2].'-'.$raw_start_date[0].'-'.$raw_start_date[1].' '.date('H:i:s');
+      $raw_end_date = explode('/', $request->jobpost_endDate);
+      $end_date = $raw_end_date[2].'-'.$raw_end_date[0].'-'.$raw_end_date[1]; 
+      $post->jobpost_startDate = $start_date;
+      $post->jobpost_endDate = $end_date;
 
-    // 05/06/2018 mm/dd/yyyy
-    $raw_start_date = explode('/', $request->jobpost_startDate);
-    $start_date = $raw_start_date[2].'-'.$raw_start_date[0].'-'.$raw_start_date[1].' '.date('H:i:s');
-    $raw_end_date = explode('/', $request->jobpost_endDate);
-    $end_date = $raw_end_date[2].'-'.$raw_end_date[0].'-'.$raw_end_date[1]; 
-    $post->jobpost_startDate = $start_date;
-    $post->jobpost_endDate = $end_date;
+      $post->jobpost_loc_city = $request->jobpost_loc_city;
+      $post->jobpost_loc_state = $request->jobpost_loc_state;
+      $post->jobpost_position = $request->jobpost_position;
+      $post->jobpost_position_level = $request->jobpost_position_level;
+      $post->job_noofvacancy = $request->job_noofvacancy;
 
-    $post->jobpost_loc_city = $request->jobpost_loc_city;
-    $post->jobpost_loc_state = $request->jobpost_loc_state;
-    $post->jobpost_position = $request->jobpost_position;
-    $post->jobpost_position_level = $request->jobpost_position_level;
-    $post->job_noofvacancy = $request->job_noofvacancy;
+      $post->jobpost_education = $request->jobpost_education;
+      if($request->jobpost_education == 'Others') $post->jobpost_edu_others = $request->postEduOthers;
+      else $post->jobpost_edu_others = null;
 
-    $post->jobpost_education = $request->jobpost_education;
-    if($request->jobpost_education == 'Others') $post->jobpost_edu_others = $request->postEduOthers;
-    else $post->jobpost_edu_others = null;
+      $post->jobpost_exp = $request->jobpost_exp;
+      $post->jobpost_years_exp = $request->selectExp2;
+      $post->jobpost_desc = $request->jobpost_desc;
 
-    $post->jobpost_exp = $request->jobpost_exp;
-    $post->jobpost_years_exp = $request->selectExp2;
-    $post->jobpost_desc = $request->jobpost_desc;
+      $post->jobpost_field_study = $request->jobpost_field_study;
+      if($request->jobpost_field_study == 'Other') $post->jobpost_field_others = $request->postFieldOthers;
+      else $post->jobpost_field_others = null;
+       
+      $post->jobpost_emp_type = $request->jobpost_emp_type;
+      $post->jobpost_minSalary = $request->jobpost_minSalary;
+      $post->jobpost_maxSalary = $request->jobpost_maxSalary;
+      //optional 
 
-    $post->jobpost_field_study = $request->jobpost_field_study;
-    if($request->jobpost_field_study == 'Other') $post->jobpost_field_others = $request->postFieldOthers;
-    else $post->jobpost_field_others = null;
-     
-    $post->jobpost_emp_type = $request->jobpost_emp_type;
-    $post->jobpost_minSalary = $request->jobpost_minSalary;
-    $post->jobpost_maxSalary = $request->jobpost_maxSalary;
-    //optional 
+      $allow = isset($request->allowance) ? implode(',', Input::get('allowance')) : '';
+      $skill = isset($request->skill) ? implode(',', Input::get('skill')) : '';
+      $post->jobpost_allowance = $allow;
+      $post->jobpost_skill = $skill;
 
-    $allow = isset($request->allowance) ? implode(',', Input::get('allowance')) : '';
-    $skill = isset($request->skill) ? implode(',', Input::get('skill')) : '';
-    $post->jobpost_allowance = $allow;
-    $post->jobpost_skill = $skill;
+      $post->jobpost_postby = Auth::guard('employer')->user()->employer[0]->emp_ctc_person;
+      $post->jobpost_company_name = Auth::guard('employer')->user()->employer[0]->emp_name;
+      $post->jobpostCreditPlan = $validity[0];
+      $post->jobpost_status = 'R';
+      $post->jobpost_statusPosting = 'SHOW';
+      $post->created_at = date('Y-m-d H:i:s');
 
-    $post->jobpost_postby = Auth::guard('employer')->user()->employer[0]->emp_ctc_person;
-    $post->jobpost_company_name = Auth::guard('employer')->user()->employer[0]->emp_name;
-    $post->jobpostCreditPlan = $validity[0];
-    $post->jobpost_status = 'R';
-    $post->jobpost_statusPosting = 'SHOW';
-    $post->created_at = date('Y-m-d H:i:s');
+      $post->save(); 
 
-    $post->save(); 
+      //******send email to staff 
+      $email_primary = \DB::table('admin_email')->whereRaw('class = "primary"')->whereRaw('type = "job"')->first(); 
+      $email_cc = \DB::table('admin_email')->whereRaw('class = "cc"')->get(); 
+      $companyname = Auth::guard('employer')->user()->employer[0]->emp_name;
+      $jobposition = $request->jobpost_position;
+      $jobdate = date('Y-m-d H:i:s');
+   
+      Mail::send(new NewJobAlert($email_primary->email, $email_primary->name, $companyname, $jobposition, $jobdate)); 
 
-    //******send email to staff 
-    $email_primary = \DB::table('admin_email')->whereRaw('class = "primary"')->first(); 
-    $email_cc = \DB::table('admin_email')->whereRaw('class = "cc"')->get(); 
-    $companyname = Auth::guard('employer')->user()->employer[0]->emp_name;
-    $jobposition = $request->jobpost_position;
-    $jobdate = date('Y-m-d H:i:s');
- 
-    Mail::send(new NewJobAlert($email_primary->email, $email_primary->name, $companyname, $jobposition, $jobdate)); 
-
-    return response()->json([
-      'fail' => false,
-      'redirect_url' => url('employer')
-      //'redirect_url' => $allow
-    ]);
+      return response()->json([
+        'fail' => false,
+        'redirect_url' => url('employer')
+        //'redirect_url' => $allow
+      ]);
+    }
   }
 
   public function update_job(Request $request, $id)

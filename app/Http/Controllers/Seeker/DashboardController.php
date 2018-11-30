@@ -75,9 +75,9 @@ class DashboardController extends Controller
 		$job_appl->appl_date = $apply_date;
 		$job_appl->appl_available = $status_available;
 		$job_appl->appl_process_status = 'Processing';
-		$job_applicant->save();
-
-      
+		
+    $job_applicant->save();
+ 
     $emp = employer::find($employer);
     $userEmp = User_Employer::find($emp->users_id);
     $email = $userEmp->email;
@@ -96,10 +96,4 @@ class DashboardController extends Controller
 		return $msg;
   }   
   
-  public function sendmail(Request $request)
-  {  
-    $mail = 'azmintalentsuites@gmail.com'; 
-    Mail::to($mail)->send(new JobAppliedNoti($request->input('job_name')));
-    dd('mail sent');
-  }
 }

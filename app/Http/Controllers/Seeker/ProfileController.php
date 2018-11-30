@@ -194,6 +194,6 @@ class ProfileController extends Controller
                                ->where('level', '=', 1)
                                ->first();
 
-    return view('seeker.profile.complete', compact('seek', 'photo', 'resume', 'edu', 'exp')); 
+    return Auth::guard('web')->user()->complete ? redirect()->intended(route('main'))  : view('seeker.profile.complete', compact('seek', 'photo', 'resume', 'edu', 'exp')); 
   }
 }

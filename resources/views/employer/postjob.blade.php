@@ -6,7 +6,7 @@
 	@section('title', 'New Post Job')
 @endif
 
-@section('content')   
+@section('content')    
 <main class="py-0">    
 	@include('employer.includes.menu')
 	<div class="row border border border-dark border-top-0 border-bottom-0  mr-0 mx-1">

@@ -37,7 +37,7 @@ class NewJobAlert extends Mailable
      */
     public function build()
     {   
-        $email_cc = \DB::table('admin_email')->whereRaw('class = "cc"')->get(); 
+        $email_cc = \DB::table('admin_email')->whereRaw('class = "cc"')->whereRaw('type = "job"')->get(); 
 
         foreach ($email_cc AS $cc) {
             $arr_cc[$cc->email] = $cc->name;  

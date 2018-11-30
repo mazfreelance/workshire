@@ -228,7 +228,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 
-        
+        'Carbon' => 'Carbon\Carbon',
+
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class, 
         'Embed' => 'Cohensive\Embed\Facades\Embed', 

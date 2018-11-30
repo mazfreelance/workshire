@@ -28,21 +28,25 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
-
+        
         //job alert daily
         $schedule->command('jobalertdaily:users')
                  ->everyMinute();
                  //->daily();
-
+        /*         
         //job alert weekly
-        //$schedule->command('jobalertweekly:users')
-        //         ->weeklyOn(1, '00:00');
-
-
+        $schedule->command('jobalertweekly:users')
+                 ->weeklyOn(1, '00:00');
+ 
         //check expired date job post
-        //$schedule->command('job_checkexpired:users')
-                 //->weeklyOn(1, '00:00');
+        $schedule->command('job_checkexpired:users')
+                 ->weeklyOn(1, '00:00'); 
+ 
+        //registered users
+        $schedule->command('registered:users')
+                 ->weeklyOn(1, '00:00');
                  //->everyMinute();
+        */
     }
 
     /**

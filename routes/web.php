@@ -255,7 +255,10 @@ Route::group(['prefix' => 'posts'], function() {
   Route::delete('delete/{id}', 'PostController@destroy');
 });
 
-Route::get('sendmail', 'Seeker\DashboardController@sendmail'); 
+Route::get('sendmail', function() { 
+    \Mail::to($mail)->send(new JobAppliedNoti('JOB POSITION'));
+    dd('mail sent');
+});
 Route::get('test', function() {return view('emails.applyjobnoti'); }); 
 Route::get('jobalert', function() { 
     $totaljobs = \DB::table('job_postings')
