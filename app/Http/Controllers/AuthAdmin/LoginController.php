@@ -25,15 +25,11 @@ class LoginController extends Controller
      * @return void
      */
     public function __construct()
-    {   
-        if(Auth::guard('admin')->check()){
-            $this->redirectTo = route('admin.dashboard'); 
-        }
-        
+    {    
+        $this->redirectTo = route('admin.dashboard');   
         $this->middleware('guest:admin')->except(['logout']);
-    }
- 
-
+    } 
+    
     public function showLoginForm()
     {
         return view('authAdmin.login');
@@ -67,6 +63,6 @@ class LoginController extends Controller
     {
         Auth::guard('admin')->logout();
 //        $request->session()->invalidate();
-        return redirect('/admins');
+        return redirect('/admin');
     } 
 }

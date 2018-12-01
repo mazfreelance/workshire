@@ -2,8 +2,7 @@
 	<div class="row">
 		<div class="col"> 
 			<h4>Complete Profile</h4>
-			<form role="form" method="post" action="{{route('seeker.profile.update')}}" id="editprofile">
-				@csrf  
+			{!! Form::open(['id' => 'editprofile', 'route' => 'seeker.account.complete.post']) !!}
 				<input type="hidden" name="id" value="{{$seek->id}}"/>
 			    <div class="form-group row">
 			        <label class="col-lg-3 col-form-label form-control-label">Type</label>
@@ -20,7 +19,7 @@
 					  	</div>
 						<span id="error-seektype" class="invalid-feedback"></span>
 			        </div>
-			    </div> 
+			    </div>
 			    <div class="form-group row">
 			        <label class="col-lg-3 col-form-label form-control-label">Full name</label>
 			        <div class="col-lg-9">
@@ -81,12 +80,15 @@
 						  	<input type="text" class="form-control" name="nric_ic" id="nric_ic" 
 						  	aria-describedby="basic-addon1" value="{{$len == 12 ? $nric_ic[2]:''}}" maxlength="4"/> 
 
-							<input type="hidden" name="nric_full" id="nric_full" value="{{$seek->seeker_nric}}"/>
-							<span id="error-nric_full" class="text-danger"></span>
+							
 						  	<span id="error-nric_date" class="invalid-feedback"></span>
 							<span id="error-nric_state" class="invalid-feedback"></span>
 							<span id="error-nric_ic" class="invalid-feedback"></span> 
 						</div> 
+
+						<input type="hidden" class="form-control" name="nric_full" id="nric_full" value="{{$seek->seeker_nric}}"/>
+						<span id="error-nric_full" class="invalid-feedback"></span> 
+
 					  	<!--passport_field-->
 			            <div class="mb-3" id="passport_field" style="display:none;"> 
 						  	<input type="text" class="form-control" name="nric" id="nric" 
@@ -100,7 +102,7 @@
 			        <div class="col-lg-9">     
 			            <div class="input-group mb-3">  
 						  	<select class="custom-select" name="day" id="day" aria-describedby="basic-addon2">
-						    	<option value="" selected>Select day</option> 
+						    	<option value="" selected disabled>Select day</option> 
 					    		@foreach(range(01, 31) as $x)
 					    		<option value="{{$x}}" {{$x == date('d', strtotime($seek->seeker_DOB)) ? ' selected':''}}>
 					    			{{$x}}
@@ -111,7 +113,7 @@
 					    		<span class="input-group-text" id="basic-addon2">-</span>
 						  	</div>
 						  	<select class="custom-select" name="month" id="month" aria-describedby="basic-addon2">
-						    	<option value="" selected>Select month</option> 
+						    	<option value="" selected disabled>Select month</option> 
 					    		@foreach(range(01, 12) as $x)
 					    		<option value="{{$x}}" {{$x == date('m', strtotime($seek->seeker_DOB)) ? ' selected':''}}>
 					    			{{$x}}
@@ -122,7 +124,7 @@
 					    		<span class="input-group-text" id="basic-addon2">-</span>
 						  	</div> 
 						  	<select class="custom-select" name="year" id="year" aria-describedby="basic-addon2">
-						    	<option value="" selected>Select year</option> 
+						    	<option value="" selected disabled>Select year</option> 
 					    		@foreach(range(1950, date('Y')) as $x)
 					    		<option value="{{$x}}" {{$x == date('Y', strtotime($seek->seeker_DOB)) ? ' selected':''}}>
 					    			{{$x}}
@@ -159,7 +161,7 @@
 			        </div>
 			        <div class="col-lg-3"> 
 			        	<select class="custom-select mr-sm-2" name="seeker_state" id="seeker_state">
-					        <option value="" selected>Choose State...</option> 
+					        <option value="" selected disabled>Choose State...</option> 
 			                @foreach($state_array as $state)   
 			                	<option value="{{$state->state_name}}" {{$state->state_name == $seek->seeker_state ? ' selected':''}}>
 			                		{{$state->state_name}}
@@ -182,7 +184,7 @@
 			        <label class="col-lg-3 col-form-label form-control-label">Expected Salary</label>
 			        <div class="col-lg-9">
 			        	<select class="custom-select mr-sm-2" name="seeker_expect_salary" id="seeker_expect_salary">
-					        <option value="" selected>Choose State...</option> 
+					        <option value="" selected disabled>Choose State...</option> 
 			                @foreach($salarys as $salary)   
 			                	<option value="{{$salary->rangeValue}}"
 			                		{{$salary->rangeValue == $seek->seeker_expect_salary ? ' selected':''}}>
@@ -215,7 +217,7 @@
 			        <div class="col-lg-9">     
 
 						<select class="form-control custom-control" name="lang[]" id="lang" multiple>
-							<option value="" disabled>Select one...</option>
+							<option value="" disabled disabled>Select one...</option>
 							<?php 
 							$langDB = explode(',', $seek->seeker_language);
 							$arrayLang = array('Malay', 'English', 'Mandarin', 'Tamil');
@@ -249,7 +251,7 @@
 							</div>
 						</div>
 						@endforeach 
-						<div  class="onerowskill"></div> 
+						<div class="onerowskill"></div> 
 			        </div>
 			    </div>
 			    <div class="form-group row">
@@ -259,7 +261,7 @@
 			            <input type="submit" class="btn btn-primary" value="Save Changes">
 			        </div>
 			    </div>
-			</form> 
+			{!! Form::close() !!}
 		</div>
 	</div>
 </div>

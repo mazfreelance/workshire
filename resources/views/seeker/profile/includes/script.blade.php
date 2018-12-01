@@ -230,7 +230,23 @@
 		$(this).parents('.category-skill').remove();
 	}); 
 
+	$(document).on('click, change', '#lang', function(e){
+ 		e.preventDefault(); 
+ 		$('#lang :selected').each(function(i, sel){  
+		    $(sel).val() == 'Other' ? $('#other_language').prop('disabled', false) : $('#other_language').prop('disabled', true);
+		}); 
+ 	});
+ 	$('#lang :selected').each(function(i, sel){  
+	    $(sel).val() == 'Other' ? $('#other_language').prop('disabled', false) : $('#other_language').prop('disabled', true);
+	}); 
 
+ 	/* COMPLETE PROFILE */
+	$('.completeprof').show();
+	$(document).on('click', '.updProf', function(e){
+		e.preventDefault();
+		$('.completeprof').toggle();
+	});
+	
 	/*===========================================================*/ 
 	//submittion edit profile
 	$(document).on('submit', 'form#editprofile', function (event){
@@ -251,17 +267,19 @@
 	            $('.is-invalid').removeClass('is-invalid');
 	            if (data.fail) { 
 	            	$.each(data.errors, function (key, value) {  
-					  if(key.indexOf(".") != -1){
-					    var arr = key.split("."); 
-                   	 	$("input[name='"+arr[0]+"[]']:eq("+arr[1]+")").addClass('is-invalid');
-	                    $("input[name='"+arr[0]+"[]']:eq("+arr[1]+")").focus(); 
-	                    $('#error-' + arr[0]).html(value[0]); 
-	                    alert(value[0]);
-					  }else{ 
+					  	if(key.indexOf(".") != -1){
+						    var arr = key.split("."); 
+	                   	 	$("input[name='"+arr[0]+"[]']:eq("+arr[1]+")").addClass('is-invalid');
+		                    $("input[name='"+arr[0]+"[]']:eq("+arr[1]+")").focus(); 
+		                    $('#error-' + arr[0]).html(value[0]);  
+					  	} 
+					  	if(key == 'seektype' || key == 'travel' || key == 'gender'){
+					  		$('input[name="' + key + '"]').addClass('is-invalid');
+		                   	$('#error-' + key).html(value);
+					  	}
 	                    $('#' + key).addClass('is-invalid');
 	                    $('#error-' + key).html(value);
-	                    $('#' + key).focus();  
-					  } 
+	                    $('#' + key).focus();
 					});  
 	                $('.loading').hide();
 	            } else {   

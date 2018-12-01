@@ -46,7 +46,7 @@
      @yield('css')
  </head>
 
-@if(Request::path() == 'admins/login' or Request::path() == 'password/reset') 
+@if(Request::path() == 'admin/login' or Request::path() == 'password/reset') 
     @yield('content') 
 @else
     

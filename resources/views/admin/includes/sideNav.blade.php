@@ -1,15 +1,17 @@
 <aside class="main-sidebar hidden-print " >
     <section class="sidebar" id="sidebar-scroll"> 
         <div class="user-panel">
-            <div class="f-left image"><img src="{{asset('admin/assets/images/avatar-1.png') }}" alt="User Image" class="img-circle"></div>
+            <div class="f-left image"><img src="{{asset('public/admin/assets/images/avatar-1.png') }}" alt="User Image" class="img-circle"></div>
             <div class="f-left info">
-                <p>{{Auth::guard('admin')->user()->name}}</p>
-                <p class="designation">
-                    @if(Auth::guard('admin')->user()->role->id == 3) 
-                        Super Admin&nbsp;
-                    @elseif(Auth::guard('admin')->user()->role->id == 4) 
-                        Posting Admin&nbsp;
-                    @endif
+                <p>{{ Auth::user()->name }}</p>
+                <p class="designation"> 
+                    @auth('admin')  
+                        @if(Auth::user()->role->id == 3) 
+                            Super Admin&nbsp;
+                        @elseif(Auth::user()->role->id == 4) 
+                            Posting Admin&nbsp;
+                        @endif 
+                    @endauth  
                     <i class="icofont icofont-caret-down m-l-5"></i>
                 </p>
             </div>

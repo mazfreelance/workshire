@@ -86,6 +86,7 @@ Route::group(['as' => 'seeker.', 'prefix' => 'seeker', 'namespace' => 'Seeker', 
     Route::get('profile/resume/{id}', 'ProfileController@resume')->name('resume');  
     //Routes which needs to check if profile is complete or not 
     Route::get('complete/profile', 'ProfileController@complete')->name('account.complete');  
+    Route::post('complete/profile/post', 'ProfileController@complete_post')->name('account.complete.post'); 
 
     //setting 
     Route::get('setting', 'SettingController@showAccount')->name('setting');  
@@ -162,16 +163,16 @@ Route::group(['as' => 'employer.', 'prefix' => 'employer'], function() {
 }); 
 
 /* ADMINISTRATOR */  
-Route::group(['as' => 'admin.', 'prefix' => 'admin'], function(){  
-    Route::get('/', 'Admin\DashboardController@index')->name('dashboard'); 
-    Route::get('setting/search-candidate', 'Admin\SettingController@search_candidate')->name('search_candidate'); 
-    Route::get('setting/candidate-expired', 'Admin\SettingController@candidate_expired')->name('candidate_expired'); 
-    Route::get('setting/mail', 'Admin\SettingController@mail')->name('mail'); 
-    Route::get('setting/web', 'Admin\SettingController@web')->name('web');  
-    Route::get('setting/package', 'Admin\SettingController@package')->name('package'); 
-    Route::get('setting/package/employer', 'Admin\SettingController@package_employer')->name('package_employer'); 
-    Route::get('setting/package/topup/add', 'Admin\SettingController@package_add')->name('package_add'); 
-    Route::get('setting/package/topup/reload', 'Admin\SettingController@package_reload')->name('package_reload');  
+Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 'Admin'], function(){  
+    Route::get('/', 'DashboardController@index')->name('dashboard'); 
+    Route::get('setting/search-candidate', 'SettingController@search_candidate')->name('search_candidate'); 
+    Route::get('setting/candidate-expired', 'SettingController@candidate_expired')->name('candidate_expired'); 
+    Route::get('setting/mail', 'SettingController@mail')->name('mail'); 
+    Route::get('setting/web', 'SettingController@web')->name('web');  
+    Route::get('setting/package', 'SettingController@package')->name('package'); 
+    Route::get('setting/package/employer', 'SettingController@package_employer')->name('package_employer'); 
+    Route::get('setting/package/topup/add', 'SettingController@package_add')->name('package_add'); 
+    Route::get('setting/package/topup/reload', 'SettingController@package_reload')->name('package_reload');  
 }); 
 
 /* CONTACT */  
