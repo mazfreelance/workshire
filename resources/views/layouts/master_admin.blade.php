@@ -46,7 +46,7 @@
      @yield('css')
  </head>
 
-@if(Request::path() == 'admin/login' or Request::path() == 'password/reset') 
+@if(Request::path() == 'admin/login' or Request::path() == 'admin/password/reset') 
     @yield('content') 
 @else
     
@@ -103,9 +103,16 @@
 <script src="{{asset('public/admin/assets/plugins/waypoints/jquery.waypoints.min.js') }}"></script>
 <script src="{{asset('public/admin/assets/plugins/countdown/js/jquery.counterup.js') }}"></script>
 
+<!-- Float Chart js -->
+<script src="{{asset('public/admin/assets/plugins/flot/jquery.flot.js') }}"></script>
+<script src="{{asset('public/admin/assets/plugins/flot/jquery.flot.categories.js') }}"></script>
+<script src="{{asset('public/admin/assets/plugins/flot/jquery.flot.pie.js') }}"></script>
+
+
 <!-- custom js -->
 <script type="text/javascript" src="{{asset('public/admin/assets/js/main.min.js') }}"></script>
 <script type="text/javascript" src="{{asset('public/admin/assets/pages/dashboard.js') }}"></script>
+<script type="text/javascript" src="{{asset('public/admin/assets/pages/chart-float.js') }}"></script>
 <script type="text/javascript" src="{{asset('public/admin/assets/pages/elements.js') }}"></script>
 <script src="{{asset('public/admin/assets/js/menu.min.js') }}"></script>
 @yield('js')

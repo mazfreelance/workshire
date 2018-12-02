@@ -53,8 +53,8 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'namespace' => 'AuthAdmin']
     Route::post('logout', 'LoginController@logout')->name('logout');
     Route::get('/password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.request');
     Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-    //Route::get('/password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
-    //Route::post('/password/reset', 'ResetPasswordController@reset'); 
+    Route::get('/password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
+    Route::post('/password/reset', 'ResetPasswordController@reset'); 
 }); 
 
  
@@ -173,6 +173,21 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'auth:admin
     Route::get('setting/package/employer', 'SettingController@package_employer')->name('package_employer'); 
     Route::get('setting/package/topup/add', 'SettingController@package_add')->name('package_add'); 
     Route::get('setting/package/topup/reload', 'SettingController@package_reload')->name('package_reload');  
+
+    Route::match(['get', 'post'], 'post', 'SettingController@add_email')->name('post');
+    Route::match(['get', 'put'], 'update/{id}', 'SettingController@update_email')->name('update_email');
+    Route::get('delete_email/{id}', 'SettingController@destroy_email')->name('delete_email');  
+
+    Route::get('setting/user', 'SettingController@user')->name('user'); 
+    Route::match(['get', 'post'], 'user/create', 'SettingController@create_user')->name('create_user');
+    Route::match(['get', 'put'], 'user/update/{id}', 'SettingController@update_user')->name('update_user');
+    Route::get('user/delete_user/{id}', 'SettingController@destroy_user')->name('delete_user');  
+  
+
+    Route::get('seeker', 'DashboardController@seeker')->name('seeker');  
+    Route::get('seeker-getData', 'DashboardController@seeker_getData')->name('seeker_getData');  
+    Route::get('employer', 'DashboardController@employer')->name('employer');  
+    Route::get('other', 'DashboardController@other')->name('other');  
 }); 
 
 /* CONTACT */  
@@ -184,7 +199,7 @@ Route::group(['prefix' => 'contact'], function(){
 });
 
 /* GLOBAL USE */
-Route::get('public/document/uploadsCV/{id}', 'DocumentController@getDocument');
+Route::get('public/document/uploadsCV/{id}', 'DocumentController@getDocument')->name('resume');
 Route::get('profile/print/{id}', 'DocumentController@print');
 Route::get('poskod', 'HomeController@poskod')->name('poskod');
 Route::get('jobfair', 'HomeController@jobfairForm')->name('jobfairForm');

@@ -1,6 +1,6 @@
 @extends('layouts.master_admin')
 
-@section('title', 'Setting | Mail')
+@section('title', 'Setting | User')
 
 @section('content') 
 <div class="content-wrapper">
@@ -10,13 +10,11 @@
         <div class="row">
             <div class="col-sm-12 p-0">
                 <div class="main-header">
-                    <h4>Setting | Mail</h4>
+                    <h4>Setting | User</h4>
                     <ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
                         <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}"><i class="icofont icofont-home"></i></a>
                         </li>
                         <li class="breadcrumb-item"><a href="">User Setting</a>
-                        </li>
-                        <li class="breadcrumb-item"><a href="{{route('admin.mail')}}">Mail</a>
                         </li>
                     </ol>
                 </div>
@@ -29,7 +27,7 @@
         		<!-- Col content-2 --> 
 				<div class="card">
                     <div class="card-header">
-                    	Setting for Simple Mail Transfer Protocol (SMTP)
+                    	Setting for User
                     </div>  
                     <div class="card-block">
                         <div class="row">
@@ -54,13 +52,13 @@
                                 @endif
 
 
-                                <h5>Email CC</h5>
+                                <h5>Admin User</h5>
                                 <button type="button" class="btn btn-primary waves-effect waves-light" style="margin-bottom:1em" 
                                 id="addEmail">
                                    <i class="icofont icofont-plus"></i>
                                      <span class="m-l-10">
                                         {{isset($editEmail) ? 'Edit ': 'Add'}}
-                                        E-mail
+                                        User
                                     </span>
                                 </button>
 
@@ -69,7 +67,7 @@
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">{{isset($editEmail) ? 'Update existing ': 'Add new'}} email</h5>
+                                                <h5 class="modal-title" id="exampleModalLabel">{{isset($editEmail) ? 'Update existing ': 'Add new'}} user</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -78,29 +76,16 @@
                                             @if(isset($editEmail))
                                                 {!! Form::model($editEmail,['method'=>'put','id'=>'frm']) !!}
                                             @else
-                                                {{ Form::open(array('route' => 'admin.post')) }}  
-                                            @endif 
+                                                {{ Form::open(array('route' => 'admin.create_user')) }}  
+                                            @endif   
                                                 <div class="form-group row">
-                                                    <label for="h-email" class="col-md-2 col-form-label form-control-label">
-                                                        Notification Email
-                                                    </label>
-                                                    <div class="col-md-10"> 
-                                                        <select class="form-control{{ $errors->has('type') ? ' is-invalid' : '' }}"
-                                                        name="type" id="type">
-                                                            <option value="" disabled selected>Select ..</option>
-                                                            <option value="job" 
-                                                            {{isset($editEmail) ?($editEmail->type == 'job'?'selected':'') : null}}>
-                                                            Job Alert
-                                                            </option>
-                                                            <option value="signup" 
-                                                            {{isset($editEmail) ?($editEmail->type == 'signup'?'selected':'') : null}}>
-                                                            Sign Up Alert
-                                                            </option>
-                                                        </select>
+                                                    <label for="h-name" class="col-md-2 col-form-label form-control-label">Name</label>
+                                                    <div class="col-md-10">
+                                                        <input type="text" id="name" name="name" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="Name" value="{{isset($editEmail) ?$editEmail->name : old('name') }}">
 
-                                                        @if ($errors->has('type'))
+                                                        @if ($errors->has('name'))
                                                             <span class="invalid-feedback text-danger" role="alert">
-                                                                <strong>{!! $errors->first('type') !!}</strong>
+                                                                <strong>{!! $errors->first('name') !!}</strong>
                                                             </span>
                                                         @endif
                                                     </div>
@@ -109,7 +94,7 @@
                                                 <div class="form-group row">
                                                     <label for="h-email" class="col-md-2 col-form-label form-control-label">Email</label>
                                                     <div class="col-md-10">
-                                                        <input type="text" id="email" name="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="Email" value="{{isset($editEmail) ?$editEmail->email : null}}">
+                                                        <input type="text" id="email" name="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="Email" value="{{isset($editEmail) ?$editEmail->email : old('email') }}">
 
                                                         @if ($errors->has('email'))
                                                             <span class="invalid-feedback text-danger" role="alert">
@@ -120,16 +105,22 @@
                                                 </div> 
                                                  
                                                 <div class="form-group row">
-                                                    <label for="h-password" class="col-md-2 col-form-label form-control-label">Name</label>
+                                                    <label for="h-password" class="col-md-2 col-form-label form-control-label">Password</label>
                                                     <div class="col-md-10">
-                                                        <input id="name" name="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="Name" value="{{isset($editEmail) ?$editEmail->name : null}}">
+                                                        <input id="password" name="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="Password"> 
 
-
-                                                        @if ($errors->has('name'))
+                                                        @if ($errors->has('password'))
                                                             <span class="invalid-feedback text-danger" role="alert">
-                                                                <strong>{!! $errors->first('name') !!}</strong>
+                                                                <strong>{!! $errors->first('password') !!}</strong>
                                                             </span>
                                                         @endif
+                                                    </div>
+                                                </div>  
+
+                                                <div class="form-group row">
+                                                    <label for="h-password" class="col-md-2 col-form-label form-control-label">Confirm Password</label>
+                                                    <div class="col-md-10">
+                                                        <input id="password_confirmation" name="password_confirmation" type="password" class="form-control" placeholder="Password">
                                                     </div>
                                                 </div>  
                                                  
@@ -157,11 +148,8 @@
                                         </tr>
                                     </thead>
                                     <tbody>   
-                                        @php $i=1 @endphp
-                                        <tr>
-                                            <td colspan="4" class="bg-default p-10">Job Email</td>
-                                        </tr>
-                                        @foreach($emailJob as $ej)
+                                        @php $i=1 @endphp 
+                                        @foreach($user as $ej)
                                         <tr>
                                             <td class="w-25">{{$i++}}</td>
                                             <td class="w-50"> 
@@ -172,103 +160,30 @@
                                             </td> 
                                             <td class="w-25"> 
                                                 <div class="label-main"> 
-                                                    <label class="label bg-danger">{{$ej->class}}</label>
+                                                    @if($ej->role_id == 3)
+                                                    <label class="label bg-success">Owner</label>
+                                                    @else
+                                                    <label class="label bg-warning">Administrator</label> 
+                                                    @endif
                                                 </div> 
                                             </td>
                                             <td class="w-25 text-center">
                                                 <button class="btn btn-flat flat-info txt-info waves-effect waves-light" 
-                                                onClick="location.href='{{route('admin.update_email', ['id' => $ej->id])}}'">
+                                                onClick="location.href='{{route('admin.delete_user', ['id' => $ej->id])}}'">
                                                     Edit
                                                 </button>
-                                                @if($ej->class !== 'primary') 
+                                                @if($ej->role_id !== 3) 
                                                 <button class="btn btn-flat flat-danger txt-danger waves-effect waves-light" 
-                                                onClick="location.href='{{route('admin.delete_email', ['id' => $ej->id])}}'">
+                                                onClick="location.href='{{route('admin.delete_user', ['id' => $ej->id])}}'">
                                                     Delete
                                                 </button>  
                                                 @endif
                                             </td>
                                         </tr>  
-                                        @endforeach
-                                        <tr>
-                                            <td colspan="4" class="bg-default p-10">Sign Up Email</td>
-                                        </tr>
-                                        @foreach($emailSignup as $es)
-                                        <tr>
-                                            <td class="w-25">{{$i++}}</td>
-                                            <td class="w-50"> 
-                                                <div class="label-main">
-                                                    <label class="label-lg bg-primary text-lowercase">{{$es->email}}</label>
-                                                </div> 
-                                                <p>{{$es->name}}</p>
-                                            </td> 
-                                            <td class="w-25"> 
-                                                <div class="label-main"> 
-                                                    <label class="label bg-danger">{{$es->class}}</label>
-                                                </div> 
-                                            </td>
-                                            <td class="w-25 text-center"> 
-                                                <button class="btn btn-flat flat-info txt-info waves-effect waves-light" 
-                                                onClick="location.href='{{route('admin.update_email', ['id' => $es->id])}}'">
-                                                    Edit
-                                                </button>
-                                                @if($es->class !== 'primary') 
-                                                <button class="btn btn-flat flat-danger txt-danger waves-effect waves-light" 
-                                                onClick="location.href='{{route('admin.delete_email', ['id' => $es->id])}}'">
-                                                    Delete
-                                                </button>  
-                                                @endif
-                                            </td>
-                                        </tr>  
-                                        @endforeach
+                                        @endforeach 
                                     </tbody>
                                 </table>
-                            </div>
-                            <!--
-                            <div class="col-sm-12 table-responsive">
-                                <h5>Default Email</h5>
-                                <button type="button" class="btn btn-primary waves-effect waves-light" style="margin-bottom:1em">
-                                   <i class="icofont icofont-edit"></i>
-                                     <span class="m-l-10">Edit default</span>
-                                 </button>
-
-                                <table class="table table-hover table-striped"> 
-                                    <tbody>  
-                                        <tr>
-                                            <th class="table-inverse  w-25 nowrap">MAIL DRIVER</th>
-                                            <td class="w-100 nowrap">smtp</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="table-inverse  w-25 nowrap">MAIL HOST</th>
-                                            <td class="w-100 nowrap"></td>
-                                        </tr>
-                                        <tr>
-                                            <th class="table-inverse  w-25 nowrap">MAIL PORT</th>
-                                            <td class="w-100 nowrap"></td>
-                                        </tr>
-                                        <tr>
-                                            <th class="table-inverse  w-25 nowrap">MAIL FROM ADDRESS</th>
-                                            <td class="w-100 nowrap">noreply@workshire.com.my</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="table-inverse  w-25 nowrap">MAIL FROM NAME</th>
-                                            <td class="w-100 nowrap"></td>
-                                        </tr>
-                                        <tr>
-                                            <th class="table-inverse  w-25 nowrap">MAIL ENCRYPTION</th>
-                                            <td class="w-100 nowrap"></td>
-                                        </tr>
-                                        <tr>
-                                            <th class="table-inverse  w-25 nowrap">MAIL USERNAME</th>
-                                            <td class="w-100 nowrap"></td>
-                                        </tr>
-                                        <tr>
-                                            <th class="table-inverse  w-25 nowrap">MAIL PASSWORD</th>
-                                            <td class="w-100 nowrap"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            -->
+                            </div> 
                         </div>
 
                     </div>
@@ -287,7 +202,7 @@
 @endsection
 @section('js')
 <script>
-$(function () {    
+$(function () {     
     $(document).on('click', '#addEmail', function(e){
         e.preventDefault();
         $('#addEmailModal').modal('show');

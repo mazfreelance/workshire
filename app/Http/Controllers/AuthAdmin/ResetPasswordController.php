@@ -29,7 +29,7 @@ class ResetPasswordController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/admins';
+    protected $redirectTo;
 
     /**
      * Create a new controller instance.
@@ -38,7 +38,8 @@ class ResetPasswordController extends Controller
      */
     public function __construct()
     {  
-       $this->middleware('guest:admin');
+        $this->redirectTo = route('admin.dashboard');   
+        $this->middleware('guest:admin');
     }
 
      public function guard()
@@ -47,10 +48,10 @@ class ResetPasswordController extends Controller
     }
 
     public function broker(){
-        return Password::broker('users_admin');
+        return Password::broker('admins');
     }
 
-    public function showResetForm(Request $request, $token = null){
+    public function showResetForm(Request $request, $token = null){ 
         return view('authAdmin.passwords.reset')
              ->with(['token' => $token, 'email' => $request->email]);
     }

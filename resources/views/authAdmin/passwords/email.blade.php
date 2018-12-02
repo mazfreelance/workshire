@@ -1,6 +1,6 @@
 @extends('layouts.master_admin')
 
-@section('title', 'Admin Reset Password')
+@section('title', 'Admin Forgot Password')
 
 @section('content')
 <body>
@@ -10,13 +10,13 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="login-card card-block">
-
+                        
                         @if (session('status'))
                             <div class="alert alert-success" role="alert">
                                 {{ session('status') }}
                             </div>
                         @endif
-
+                        
                         <form class="md-float-material" method="POST" action="{{ route('admin.password.email') }}" aria-label="{{ __('Reset Password') }}">
                         @csrf 
                             <div class="text-center">
