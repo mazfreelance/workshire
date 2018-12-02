@@ -58,7 +58,14 @@ class DashboardController extends Controller
 
         return Datatables::of($query) 
             ->addColumn('resume_loc', function ($user) {
-                return '<a href="' . route('resume', $user->id) .'">'.$user->name.'</a>'; 
+                return '<a href="' . route('resume', $user->resume_loc) .'" target="_blank">'.$user->resume_loc.'</a>'; 
+            })
+            ->rawColumns(['action','resume_loc'])
+            ->editColumn('created_at', function ($user) { 
+                return date('d/M/y H:i:s a', strtotime($user->created_at) );
+            })
+            ->editColumn('seeker_DOB', function ($user) { 
+                return date('d/M/y', strtotime($user->seeker_DOB) );
             })
             ->make(true);
     } 
