@@ -168,35 +168,32 @@ class ProfileController extends Controller
           'errors' => $validator->errors()
         ]);          
 
-        $file = $request->file('photo'); 
+        $user = Auth::guard('employer')->user();
+        $name = $user->employer[0]->emp_name;
+        $file = $request->file('photo');  
+        $input['imagename'] = $name.'-'.time().'.'.$file->getClientOriginalExtension();  
 
-        $imagename = time().'.'.$file->getClientOriginalExtension(); 
-   
-        $destinationPath = public_path('/default_pictures');  
+        $destinationPath = public_path('/default_pictures/medium');
+        $img = Image::make($file->getRealPath())
+                ->resize(250, 250);
+        $img->save($destinationPath.'/'.$input['imagename']);
+ 
+        $destinationPath = public_path('/default_pictures/small');
+        $img2 = Image::make($file->getRealPath())
+                ->resize(50, 50);
+        $img2->save($destinationPath.'/'.$input['imagename']);
+        //$destinationPath = public_path('/default_pictures');
+        //$file->move($destinationPath, $input['imagename']);  
 
-        //get filename with extension
-        $filenamewithextension = $file->getClientOriginalName();
+        $emp = employer::find($user->employer[0]->users_id);
 
-        //get filename without extension
-        $filename = pathinfo($filenamewithextension, PATHINFO_FILENAME);
+        if(file_exists(public_path().'/default_pictures/small/'.$emp->emp_logo_loc) AND file_exists(public_path().'/default_pictures/medium/'.$emp->emp_logo_loc) AND $emp->emp_logo_loc != ''){ 
+            unlink(public_path().'/default_pictures/small/'.$emp->emp_logo_loc); 
+            unlink(public_path().'/default_pictures/medium/'.$emp->emp_logo_loc); 
+        }
 
-        //get file extension
-        $extension = $file->getClientOriginalExtension();
-
-        //filename to store
-        $filenametostore = $filename.'_'.uniqid().'.'.$extension;
-
-        Storage::put('public/default_pictures/'. $filenametostore, fopen($file, 'r+'));
-        Storage::put('public/default_pictures/thumbnail/'. $filenametostore, fopen($file, 'r+'));
-
-        //Resize image here
-        $thumbnailpath = public_path('default_pictures'.$filenametostore);
-        $img = Image::make($thumbnailpath)->resize(250, 250, function($constraint) {
-            $constraint->aspectRatio();
-        });
-        $img->save($thumbnailpath);
-
-
+        $emp->emp_logo_loc = $input['imagename'];
+        $emp->save();
 
         return response()->json([
           'fail' => false,
