@@ -288,7 +288,7 @@
 	                    theme: 'modern',
 	                    type: 'green',
 	                    title: false,
-	                    content: '<p>Successfully saved job. Your job post will be approval soon during working days. Thank you and continue keep to support us.</p>',
+	                    content: '<p>Successfully updated profile.</p>',
 	                    buttons:{
 	                        okay: function(){   
 	                            location.replace(data.redirect_url);   
@@ -305,7 +305,7 @@
 	                icon: 'fa fa-times-circle',
 	                theme: 'modern',
 	                type: 'red',
-	                title: 'Fail to save job',
+	                title: 'Fail to update profile',
 	                content: xhr.responseText,
 	                confirm: function(){}
 	            });

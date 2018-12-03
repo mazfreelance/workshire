@@ -56,17 +56,16 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'namespace' => 'AuthAdmin']
     Route::get('/password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
     Route::post('/password/reset', 'ResetPasswordController@reset'); 
 }); 
-
  
-/* JOB SEEKER */    
-// JOB POST LIST 
+/* JOB SEEKER */      
 Route::group(['namespace' => 'Seeker'], function() {
-    Route::get('/', 'jobPostController@index')->name('main'); 
+    Route::get('/', 'jobPostController@index')->name('main');  
+
     Route::get('ViewJob/{name}/{id}', 'jobPostController@view')->name('view.job'); 
     Route::get('show/{id}', 'jobPostController@show'); 
     Route::get('saveJOB', 'jobPostController@saveJOB')->name('save_job');
     Route::get('unsaveJOB', 'jobPostController@unsaveJOB')->name('unsave_job');
-}); 
+});  
 
 //middleware seeker
 Route::group(['as' => 'seeker.', 'prefix' => 'seeker', 'namespace' => 'Seeker', 'middleware' => 'auth:web'], function(){
@@ -108,9 +107,7 @@ Route::group(['as' => 'employer.', 'prefix' => 'employer', 'namespace' => 'Emplo
     Route::match(['get', 'put'], 'update/{id}', 'DashboardController@update_job')->name('update'); 
     Route::delete('delete/{id}', 'DashboardController@destroy');
     Route::get('show/{id}', 'DashboardController@show_post');
-
-    //Routes which needs to check if profile is complete or not 
-    Route::get('complete/profile', 'ProfileController@complete')->name('account.complete');  
+ 
 
     //candidate
     Route::get('candidate-fresh', 'CandidateController@candidate_search_fresh')->name('candidate.fresh'); 
@@ -127,6 +124,10 @@ Route::group(['as' => 'employer.', 'prefix' => 'employer', 'namespace' => 'Emplo
 
     //profile
     Route::get('profile', 'ProfileController@index')->name('profile'); 
+    //Routes which needs to check if profile is complete or not 
+    Route::get('complete/profile', 'ProfileController@complete')->name('account.complete'); 
+    Route::post('profile/post', 'ProfileController@create')->name('profile_post'); 
+    Route::post('complete/profile/upload', 'ProfileController@upload_photo')->name('upload_photo'); 
 
     //setting
     Route::get('setting', 'SettingController@index')->name('setting'); 

@@ -44,6 +44,7 @@ class NewJobAlert extends Mailable
         } 
         
         return $this->view('emails.messages')   
+                    ->from('noreply@workshire.com.my', 'Workshire NOREPLY')
                     ->to($this->email, $this->name)
                     ->cc($email_cc->toArray())
                     ->subject('1 new job post need to approve'); 

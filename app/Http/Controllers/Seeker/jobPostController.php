@@ -66,12 +66,16 @@ class jobPostController extends Controller
                     ->leftjoin('job_applications', 'job_postings.id', '=', 'job_applications.appl_jobpostid')  
                     ->paginate(10); 
 
-    //return value                  
-    if($request->ajax()) return view('seeker.jposts.index', compact('posts'));
-    else{ 
-      if(Auth::guard('web')->check()){
-        return !Auth::guard('web')->user()->complete ? redirect()->intended(route('seeker.account.complete')) : view('seeker.jposts.ajax', compact('posts')); 
-      }else return view('seeker.jposts.ajax', compact('posts'));  
+    //return value  
+    if(Auth::guard('employer')->check()) return redirect()->intended(route('employer.dashboard'));
+    elseif(Auth::guard('admin')->check()) return redirect()->intended(route('admin.dashboard'));
+    else{                
+      if($request->ajax()) return view('seeker.jposts.index', compact('posts'));
+      else{ 
+        if(Auth::guard('web')->check()){
+          return !Auth::guard('web')->user()->complete ? redirect()->intended(route('seeker.account.complete')) : view('seeker.jposts.ajax', compact('posts')); 
+        }else return view('seeker.jposts.ajax', compact('posts'));  
+      }
     }
   }
  

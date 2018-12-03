@@ -29,6 +29,7 @@ class ApplyJob extends Mailable
     public function build()
     {
         return $this->view('emails.applyjobnoti') 
+                    ->from('noreply@workshire.com.my', 'Workshire NOREPLY')
                     ->subject('[NOREPLY] Job Application received');
     }
 }

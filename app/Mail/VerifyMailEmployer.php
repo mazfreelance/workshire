@@ -29,6 +29,7 @@ class VerifyMailEmployer extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.verifyUserEmployer');
+        return $this->view('emails.verifyUserEmployer') 
+                    ->from('noreply@workshire.com.my', 'Workshire NOREPLY');
     }
 }

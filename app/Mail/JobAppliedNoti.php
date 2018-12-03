@@ -32,6 +32,7 @@ class JobAppliedNoti extends Mailable
     {
         //return $this->view('view.name');
         return $this->view('emails.jobappliednoti') 
+                    ->from('noreply@workshire.com.my', 'Workshire NOREPLY')
                     ->subject('[NOREPLY] You have 1 applicant applied job posting on position '.$this->name); 
     }
 }
