@@ -33,6 +33,7 @@
 </style>
 <main class="py-0 my-2"> 
 	<div class="container py-2">
+		<p class="text-danger">Complete and verify your profile.</p>  
 		<table class="table  table-sm">
 	        <thead class="table-info">
 	        	<tr>
@@ -64,6 +65,14 @@
 						</ul>
 					</td> 
 				</tr>
+				@if($completeProfile = '100%' AND $completePhoto = '100%')
+				<tr>
+					<td colspan="3">
+						<button class="btn btn-md btn-success" 
+						onClick="location.href='{{ route('employer.account.verify.complete', ['id' => Auth::guard('employer')->user()->id]) }}'">Verify profile</button>
+					</td>
+				</tr>
+				@endif
 	        </tbody>
 	    </table>
 	</div> 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Employer;
  
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 use DB;
 
@@ -20,7 +21,7 @@ class CandidateController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:employer'); // (auth:'guards')
+        //$this->middleware('auth:employer'); // (auth:'guards')
     }
 
     /*
@@ -55,6 +56,7 @@ class CandidateController extends Controller
 		$seekers = job_seeker::join('job_seeker_education', function ($join) use ($request)
 					{
 			            $join->on('job_seekers.id', '=', 'job_seeker_education.seeker_id')
+			                 ->whereRaw("job_seeker_education.level = 1")
 			                 ->whereRaw("job_seeker_education.institute like '%".$request->session()->get('search_institute')."%'")
 			                 ->whereRaw("job_seeker_education.highest_education like '%".$request->session()->get('search_education')."%'")
 			                 ->whereRaw("job_seeker_education.major_study like '%".$request->session()->get('search_fos_search')."%'");
@@ -81,7 +83,7 @@ class CandidateController extends Controller
         					->first();		
 
         $totalTakenResume = PaidCandidate::selectRaw('count(*) as total')
-                            ->where('employer_id', '=', Auth::user()->employer[0]->id)
+                            ->where('employer_id', '=', Auth::guard('employer')->user()->employer[0]->id)
                             ->where('seeker_type', '=', 'FRESH')
                             ->first();
   
@@ -151,6 +153,7 @@ class CandidateController extends Controller
 		$seekers = job_seeker::join('job_seeker_education', function ($join) use ($request)
 					{
 			            $join->on('job_seekers.id', '=', 'job_seeker_education.seeker_id')
+			                 ->whereRaw("job_seeker_education.level = 1")
 			                 ->whereRaw("job_seeker_education.institute like '%".$request->session()->get('search_institute')."%'")
 			                 ->whereRaw("job_seeker_education.highest_education like '%".$request->session()->get('search_education')."%'")
 			                 ->whereRaw("job_seeker_education.major_study like '%".$request->session()->get('search_fos_search')."%'");
@@ -177,7 +180,7 @@ class CandidateController extends Controller
         					->first();			
 
         $totalTakenResume = PaidCandidate::selectRaw('count(*) as total')
-                            ->where('employer_id', '=', Auth::user()->employer[0]->id)
+                            ->where('employer_id', '=', Auth::guard('employer')->user()->employer[0]->id)
                             ->where('seeker_type', '=', 'EXPERIENCE')
                             ->first();
   
@@ -224,24 +227,42 @@ class CandidateController extends Controller
     	OPERATOR CANDIDATES 
     */
     public function candidate_search_operator(Request $request)
-    {
+    {	
+
+		$request->session()->put('search_gender', $request
+				            ->has('search_gender') ? $request->get('search_gender') : ($request->session()
+				            ->has('search_gender') ? $request->session()->get('search_gender') : ''));  
+
+		$request->session()->put('search_availability', $request
+				            ->has('search_availability') ? $request->get('search_availability') : ($request->session()
+				            ->has('search_availability') ? $request->session()->get('search_availability') : '')); 
+    	
+		$request->session()->put('search_working', $request
+				            ->has('search_working') ? $request->get('search_working') : ($request->session()
+				            ->has('search_working') ? $request->session()->get('search_working') : '')); 
+
     	/** QUERY SELECTION START **/ 
-		$seekers = Operator::orderBy('operator_pool.name', 'ASC') 
-        		   ->paginate(25); 
+    	if($request->session()->get('search_availability') != '' OR $request->session()->get('search_gender') != '' OR $request->session()->get('search_working') != ''){
+		$seekers = Operator::orderBy('operator_pool.name', 'ASC')  
+					   		->whereRaw("availability_work = '".$request->session()->get('search_availability')."'")   
+						    ->whereRaw("gender like '%".$request->session()->get('search_gender')."%'")  
+						    ->whereRaw("working_status like '%".$request->session()->get('search_working')."%'") 
+        		   		    ->paginate(25); 
+       	}else{
+   		$seekers = Operator::orderBy('operator_pool.name', 'ASC')  
+    		   		    ->paginate(25); 
+       	}
   
 		$paidC = PaidCandidate::where('employer_id', '=', Auth::guard('employer')->user()->employer[0]->id)
 					   ->with('seekerDtl')
 					   ->orderBy('id', 'DESC')
 					   ->get(); 
 
-        $totalSeeker = job_seeker::selectRaw('count(*) as total') 
-					        ->join('job_seeker_education', 'job_seekers.id', '=', 'job_seeker_education.seeker_id')
-							->whereRaw("seeker_type = 'FRESH'")
-        					->first();		
+        $totalSeeker = Operator::count();		
 
         $totalTakenResume = PaidCandidate::selectRaw('count(*) as total')
-                            ->where('employer_id', '=', Auth::user()->employer[0]->id)
-                            ->where('seeker_type', '=', 'FRESH')
+                            ->where('employer_id', '=', Auth::guard('employer')->user()->employer[0]->id)
+                            ->where('seeker_type', '=', 'OPERATOR')
                             ->first();
   
 		$duration = CandidateDuration::where('candidate_type', '=', 'Operator')->first(); 
@@ -267,11 +288,11 @@ class CandidateController extends Controller
         /** REQUEST AJAX START **/ 
 		if($request->ajax())
 	    {
-      		return view('employer.candidate.operator.index', compact('seekers'));
+      		return view('employer.candidate.operator.index', compact('seekers', 'duration', 'currToken', 'totalSeeker', 'totalTakenResume'));
 	    }
 	    else
 	    {
-      		return view('employer.candidate.operator.ajax', compact('seekers'));
+      		return view('employer.candidate.operator.ajax', compact('seekers', 'duration', 'currToken', 'totalSeeker', 'totalTakenResume'));
 	    }  
     }
 
@@ -363,10 +384,11 @@ class CandidateController extends Controller
 					            $join->on('employer_paidforcandidate.seeker_id', '=', 'job_seekers.id')
 									 ->whereRaw("job_seekers.seeker_state like '%".$request->session()->get('search_state')."%'") 
 									 ->whereRaw("job_seekers.seeker_type like '%".$request->session()->get('search_talent_type')."%'");
-					        })  
+					        })   
 						  ->join('job_seeker_education', function ($join) use ($request)
 							{
 					            $join->on('job_seekers.id', '=', 'job_seeker_education.seeker_id')
+		                 			 ->whereRaw("job_seeker_education.level = 1")
 					                 ->whereRaw("job_seeker_education.institute like '%".$request->session()->get('search_institute')."%'")
 					                 ->whereRaw("job_seeker_education.highest_education like '%".$request->session()->get('search_education')."%'")
 									 ->whereRaw("job_seeker_education.major_study like '%".$request->session()->get('search_fos_search')."%'");
@@ -377,7 +399,7 @@ class CandidateController extends Controller
 
 
         $totalTakenResume = PaidCandidate::selectRaw('count(*) as total')
-                            ->where('employer_id', '=', Auth::user()->employer[0]->id)
+                            ->where('employer_id', '=', Auth::guard('employer')->user()->employer[0]->id)
                             ->first();
   
         $duration = CandidateDuration::all();
@@ -400,7 +422,7 @@ class CandidateController extends Controller
 					                $query->select(DB::raw(1))
 					                      ->from('employer_paidforcandidate')
 					                      ->whereRaw('employer_paidforcandidate.seeker_id = job_seeker_education.seeker_id')
-					                      ->whereRaw('employer_paidforcandidate.employer_id = '.Auth::user()->employer[0]->id);
+					                      ->whereRaw('employer_paidforcandidate.employer_id = '.Auth::guard('employer')->user()->employer[0]->id);
 					            }) 
                              ->groupby('education_for_count.fosname')
                              ->orderby('education_for_count.fosname', 'ASC')
@@ -415,5 +437,16 @@ class CandidateController extends Controller
 	    {
 	      return view('employer.candidate.paid.ajax', compact('paid_candidate', 'totalTakenResume', 'duration', 'currToken', 'eduCats'), ['edu'=>JobSeeker_Education::all(), 'exp'=>JobSeeker_Experience::all()]);
 	    } 
+    }
+
+    public function seeker_profile($id)
+    {    
+	    $seeker = job_seeker::find(decrypt($id));
+	    $experience = JobSeeker_Experience::where('seeker_id', '=', decrypt($id))
+	                                        ->orderby('exp_toDt', 'DESC')
+	                                        ->get();
+	    $education = JobSeeker_Education::where('seeker_id', '=', decrypt($id))->get();
+
+	    return view('employer.candidate.seeker_profile', compact('seeker', 'education', 'experience'));   
     }
 }

@@ -50,13 +50,11 @@
 										<li>Token Balance:&nbsp;{{$tokenRs->balance}}</li> 
 										@endif
 										<li>Token Taken: {{$totalTakenResume->total}}
-											<ol>
-											@if(isset($totalTakenResumeFresh->total))
-												<li>Fresh: {{$totalTakenResumeFresh->total}}</li>
-											@endif
-											@if(isset($totalTakenResumeExp->total))
-												<li>Experience: {{$totalTakenResumeExp->total}}</li>
-											@endif 
+											<ol> 
+												<li>Fresh: {{$totalFresh}}</li> 
+												<li>Experience: {{$totalExp}}</li> 
+												<li>Operator: {{$totalOtr}}</li> 
+												<li>Senior Citizen: {{$totalSr}}</li> 
 											</ol>
 										</li> 
 									</ul> 

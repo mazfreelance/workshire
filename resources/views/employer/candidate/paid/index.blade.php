@@ -37,57 +37,25 @@
 		                		$dur = $duration[1];
 		                	else 
 		                		$dur = $duration[0];
-		                ?>  
-						@if( date('Y-m-d', strtotime($paids->expiredDate)) < date('Y-m-d'))
-			                <a 	class="btn btn-outline-primary btn-sm buy_candidate" href="" 
+		                ?>   
+						@if( date('Y-m-d', strtotime($paids->expiredDate)) < date('Y-m-d')) 
+			                <a class="btn btn-outline-primary btn-sm buy_candidate" href="" 
 		                		data="&employer={{Auth::guard('employer')->user()->employer[0]->id}}
 	                				&seeker={{$paids->seeker_id}}
 	                				&tokenVal={{$dur->token_value}}
 	                				&duration={{$dur->duration}}
-	                				&type=OPERATOR&statBuy=Renew
+	                				&type={{$paids->seeker_type}}
+	                				&statBuy=Renew
 	                				&paidID={{$paids->id}}"
 	                			data-duration="{{$dur->duration}}"
 	                			data-token="{{$dur->token_value}}">
 		                    	Renew
-			                </a> 
+			                </a>  
 			                <!-- Modal #buy_candidate -->
-							<div class="modal fade" tabindex="-1" role="dialog" id="buy_candidate_modal">
-							  	<div class="modal-dialog modal-sm" role="document">
-								    <div class="modal-content">
-								      	<div class="modal-header">
-								        	<h5 class="modal-title" id="buy_candidateLabel">
-								        		Renew candidate profile 
-								        	</h5>
-								        	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								          		<span aria-hidden="true">&times;</span>
-								        	</button>
-								      	</div>
-								      	<div class="modal-body">
-								        	<h5>
-								        		Your remaining tokens:  {{ isset($currToken) ? $currToken->balance : 'Please add new token to proceed'}} 
-								        	</h5> 
-								        	<a href="" class="small">Add topup</a>
-											<div>
-												Click "Renew" to purchase <span class="font-weight-bold">or</span> "Abort" to cancel the purchasing.
-											</div> 
-											<div class="d-sm-flex justify-content-center mt-2">
-												<button class="btn btn-md btn-danger" data-dismiss="modal">Abort</button>
-												@if(isset($currToken))
-												<button type="button" id="" class="btn btn-md btn-primary submit_buy ml-3">Renew</button>
-												@else 
-												<button type="button" id="" class="btn btn-md btn-primary ml-3" disabled>Renew</button> 
-												@endif
-											</div>
-											<hr>
-											<div class="small font-italic">
-												Notes: <span class="font-weight-bold" id="token_value"></span> token will be deduct after purchase the profile. This profile available to view for <span class="font-weight-bold" id="dur_token"></span> after purchase.
-											</div>
-								      	</div> 
-							    	</div>
-							  	</div>
-							</div>
-						@else 
-			                <a class="btn btn-outline-success btn-sm" href="{{url('employer/applicant/profile/seeker/'.encrypt($paids->seeker_id))}}" target="_blank">
+			                @include('employer.candidate.paid.modal') 
+						@else   
+			                <a class="btn btn-outline-success btn-sm" target="_blank" 
+			                href="{{route('employer.seekerProf', ['id' => encrypt($paids->seeker_id)])}}">
 		                    	View
 			                </a>
 						@endif
@@ -95,6 +63,7 @@
 					<h4 class="text-uppercase">{{$paids->seeker_name}}</h4> 
 				</div>
 			</div>
+
 		    <div class="row">   
 				<div class="col-sm col-md">
 					<h6><i class="fa fa-book"></i>&nbsp;
@@ -156,7 +125,7 @@
           	</nav>   
 			@else  
 		        <div class="row my-1">
-		          <img src="{{url('images/icon/search_not_found.png')}}" style="pointer-events: none;"/>
+		          <img src="{{asset('public/images/icon/search_not_found.png')}}" style="pointer-events: none;"/>
 		        </div>
 			@endif
 		</div>

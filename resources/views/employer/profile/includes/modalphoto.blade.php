@@ -19,6 +19,14 @@
               </span>
               <input type="text" class="form-control" readonly>
           </div>
+              
+          <p id="error1" style="display:none; color:#FF0000;">
+              Invalid Image Format! Image Format Must Be JPG, JPEG, PNG or GIF.
+          </p>
+          <p id="error2" style="display:none; color:#FF0000;">
+              Maximum File Size Limit is 4MB.
+          </p>
+
           <hr>
           <h6 class="mt-3 font-weight-bold">Preview image</h6>
           <div class="row">
@@ -37,13 +45,12 @@
             </div>
           </div> 
         </div>  
-
-
+ 
         <div class="form-group row">
             <label class="col-lg-3 col-form-label form-control-label"></label>
             <div class="col-lg-9">
-                <input type="reset" class="btn btn-secondary" value="Cancel">
-                <input type="submit" class="btn btn-primary" value="Save Changes">
+                <input type="reset" class="btn btn-secondary" value="Reset" data-dismiss="modal">
+                <input type="submit" id="savephoto" class="btn btn-primary" value="Save Changes">
             </div>
         </div>
         {{ Form::close() }}

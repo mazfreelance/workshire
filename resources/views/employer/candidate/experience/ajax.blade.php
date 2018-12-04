@@ -23,7 +23,9 @@
 @endsection
 
 @section('js') 
+@include('employer.candidate.includes.script') 
 <script>
+  /*
 $(function () {  
   $("select.chosen").chosen(); 
   $('.resume_attach').tooltip();
@@ -201,6 +203,6 @@ $(function () {
           }
       });
   }
-}); 
+}); */
 </script>
 @endsection

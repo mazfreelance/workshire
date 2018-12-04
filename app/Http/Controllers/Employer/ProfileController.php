@@ -201,4 +201,13 @@ class ProfileController extends Controller
           //'redirect_url' => $dob
         ]);
     }
+
+    public function verify_complete($id){
+
+        $user = User_Employer::find($id);
+        $user->complete = 1;
+        $user->save();
+
+        return back()->with('success', 'Successfully to verified profile');
+    }
 }

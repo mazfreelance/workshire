@@ -66,7 +66,6 @@
         $(this).is(':checked') ? $('#other_benefit').prop('disabled',false) : $('#other_benefit').prop('disabled',true); 
     });    
 
-	$('#photoModal').modal('show');
 	$(document).on('click', '#addphoto', function(e){
 		e.preventDefault();
 		$('#photoModal').modal('show');
@@ -140,6 +139,9 @@
 	});  
 
 	//image
+	$('#img-upload250').attr('src', '{{ asset('public/images/favicon/whv2-310.png') }}');
+    $('#img-upload50').attr('src', '{{ asset('public/images/favicon/whv2-310.png') }}');
+
 	$(document).on('change', '.btn-file :file', function() {
 		var input = $(this),
 			label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
@@ -171,9 +173,28 @@
 	    }
 	}
 
-	$("#imgInp").change(function(){
-	    readURL(this);
-	}); 
+	$(document).on('change', "#imgInp", function(){
+	    var ext = $(this).val().split('.').pop().toLowerCase();
+	    if ($.inArray(ext, ['gif','png','jpg','jpeg']) == -1){
+	    	$('#error1').slideDown("slow");
+			$('#error2').slideUp("slow");
+			$('#savephoto').prop('disabled', true);
+			a=0;
+	    }else{
+	    	var picsize = (this.files[0].size);
+			if (picsize > 4000000){
+				$('#error2').slideDown("slow");
+				$('#savephoto').prop('disabled', true);
+				a=0;
+			}else{
+				a=1;
+				$('#error2').slideUp("slow");
+				$('#savephoto').prop('disabled', false);
+			} 
+			$('#error1').slideUp("slow");
+	    	readURL(this);
+	    }
+	});  
 
 
 	$(document).on('submit', 'form#uploadphoto', function (event){

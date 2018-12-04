@@ -6,8 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller; 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
- 
+use Illuminate\Support\Facades\Input; 
+
+use App\Model\employer;
 use App\Model\jobPost;
 use App\Model\Job_Applicant;
 use App\Model\PostingDuration;
@@ -74,9 +75,31 @@ class DashboardController extends Controller
 
   public function post_job()
   {  
-    $EmpPosts = EmployerTokenPost::where('employer_id', '=', Auth::guard('employer')->user()->employer[0]->id)->first();
-    $postDurs = PostingDuration::where('post_type', '=', $EmpPosts->package_plan)->first();   
-    return view('employer.postjob', compact('EmpPosts', 'postDurs')); 
+    $user = Auth::guard('employer')->user();
+    if( !Auth::guard('employer')->user()->complete ){
+
+        $emp = employer::selectraw("*, ISNULL(NULLIF(emp_aboutus,'')) + ISNULL(NULLIF(emp_size,'')) +
+                                   ISNULL(NULLIF(emp_type,''))  + ISNULL(NULLIF(emp_industry,'')) + 
+                                   ISNULL(NULLIF(emp_workhour,'')) + ISNULL(NULLIF(emp_spoken_language,'')) +
+                                   ISNULL(NULLIF(emp_benefit,'')) + ISNULL(NULLIF(emp_address,'')) + 
+                                   ISNULL(NULLIF(emp_town,'')) + ISNULL(NULLIF(emp_city,'')) + 
+                                   ISNULL(NULLIF(emp_state,'')) + 
+                                   ISNULL(NULLIF(emp_zipcode,'')) + ISNULL(NULLIF(emp_ctc_tel,'')) + 
+                                   ISNULL(NULLIF(emp_ctc_person,'')) 
+                                   AS incomplete")//14
+                       ->where('users_id', '=', $user->id)
+                       ->first(); 
+
+        $photo = employer::selectraw("ISNULL(NULLIF(emp_logo_loc,'')) AS incomplete")
+                           ->where('users_id', '=', $user->id)
+                           ->first();   
+      return view('employer.profile.complete', compact('emp', 'photo'));
+    }else{
+      $EmpPosts = EmployerTokenPost::where('employer_id', '=', $user->employer[0]->id)->first();
+      $postDurs = PostingDuration::where('post_type', '=', $EmpPosts->package_plan)->first();   
+
+      return view('employer.postjob', compact('EmpPosts', 'postDurs')); 
+    } 
   }
 
   public function create_job(Request $request)

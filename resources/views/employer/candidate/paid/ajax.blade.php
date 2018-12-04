@@ -40,6 +40,7 @@ $(function () {
     $(document).on('click', '.submit_buy', function(){  
       var bal = parseInt("<?php echo isset($currToken) ? $currToken->balance : '' ?>"); 
       var tokenVal = parseInt(data_token);  
+
       if(bal >= tokenVal){ 
         $.ajax({
           url: url,
@@ -70,7 +71,9 @@ $(function () {
             $('#buy_candidate_modal').modal('hide');
           }
         });
-      }else{ 
+      }
+      else
+      { 
         $.confirm({
             icon: 'fa fa-times-circle',
             theme: 'modern',

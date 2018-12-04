@@ -130,20 +130,24 @@ class SettingController extends Controller
             {
                 $pp_R = explode('|', $tokenRs->package_plan);
                 $plans_R = PackagePlan::find($pp_R[1]);
-                $totalTakenResumeFresh = PaidCandidate::selectRaw('SUM(buy_tokenTaken) as total')
-                                        ->where('employer_id', '=', Auth::user()->employer[0]->id) 
+
+                $totalFresh = PaidCandidate::where('employer_id', '=', Auth::user()->employer[0]->id) 
                                         ->where('seeker_type', '=', 'FRESH')
-                                        ->first();
-                $totalTakenResumeExp = PaidCandidate::selectRaw('SUM(buy_tokenTaken) as total')
-                                        ->where('employer_id', '=', Auth::user()->employer[0]->id) 
+                                        ->count();
+                $totalExp = PaidCandidate::where('employer_id', '=', Auth::user()->employer[0]->id)
                                         ->where('seeker_type', '=', 'EXPERIENCE')
-                                        ->first();
+                                        ->count(); 
+                $totalOtr = PaidCandidate::where('employer_id', '=', Auth::user()->employer[0]->id)->where('seeker_type', '=', 'OPERATOR')
+                                         ->count();
+                $totalSr = PaidCandidate::where('employer_id', '=', Auth::user()->employer[0]->id)->where('seeker_type', '=', 'SENIOR')
+                                         ->count();
+
                 $totalTakenResume = PaidCandidate::selectRaw('SUM(buy_tokenTaken) as total')
                                         ->where('employer_id', '=', Auth::user()->employer[0]->id)  
                                         ->first();
             }
             
-            return view('setting.plan', compact('tokenRs', 'tokenPs', 'plans_R', 'plans_P', 'totalTakenResumeFresh', 'totalTakenResumeExp', 'totalTakenResume'));
+            return view('setting.plan', compact('tokenRs', 'tokenPs', 'plans_R', 'plans_P', 'totalFresh', 'totalExp', 'totalTakenResume', 'totalOtr', 'totalSr'));
         }
         else return view('setting.plan', compact('tokenRs', 'tokenPs'));
     } 

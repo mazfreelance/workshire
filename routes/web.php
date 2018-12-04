@@ -115,11 +115,13 @@ Route::group(['as' => 'employer.', 'prefix' => 'employer', 'namespace' => 'Emplo
     Route::get('candidate-intern', 'CandidateController@candidate_search_intern')->name('candidate.intern'); 
     Route::get('candidate-operator', 'CandidateController@candidate_search_operator')->name('candidate.operator'); 
     Route::get('buy_candidate', 'CandidateController@buy_candidate'); 
-    Route::get('paid-candidate', 'CandidateController@paid')->name('paid'); 
+    Route::get('paid-candidate', 'CandidateController@paid')->name('paid');
+    Route::get('seeker/profile/{id}', 'CandidateController@seeker_profile')->name('seekerProf');
+
 
     //applicant
     Route::match(['get', 'put'],'applicant/{name}/{id}', 'ApplicantController@applicant')->name('applicant'); 
-    Route::get('applicant/profile/seeker/{id}', 'ApplicantController@seeker_profile'); 
+    Route::get('applicant/profile/seeker/{id}', 'ApplicantController@seeker_profile')->name('applicant'); 
     Route::get('status_applicant/{id}', 'ApplicantController@applicant_status'); 
 
     //profile
@@ -128,6 +130,7 @@ Route::group(['as' => 'employer.', 'prefix' => 'employer', 'namespace' => 'Emplo
     Route::get('complete/profile', 'ProfileController@complete')->name('account.complete'); 
     Route::post('profile/post', 'ProfileController@create')->name('profile_post'); 
     Route::post('complete/profile/upload', 'ProfileController@upload_photo')->name('upload_photo'); 
+    Route::get('complete/verify/{id}', 'ProfileController@verify_complete')->name('account.verify.complete');
 
     //setting
     Route::get('setting', 'SettingController@index')->name('setting'); 

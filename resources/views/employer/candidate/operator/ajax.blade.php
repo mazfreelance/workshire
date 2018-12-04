@@ -12,4 +12,16 @@
   </div>
   <!-- Footer -->  
   @include('includes.footer') 
+@endsection 
+
+@section('css')
+<style>
+.cursor{ cursor: grab; }
+.cursorgrabbing{ cursor: grabbing; } 
+.active{background-color: lightblue;}
+</style> 
+@endsection
+
+@section('js')  
+@include('employer.candidate.includes.script') 
 @endsection

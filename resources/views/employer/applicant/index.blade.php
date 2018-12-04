@@ -36,7 +36,7 @@
 							                <a class="btn btn-outline-danger btn-sm times" href="javascript:ajaxLoad_redirect('{{url('employer/status_applicant/'.'Reject|'.$code)}}')" data-toggle="tooltip" data-placement="top" title="REJECT">
 						                    	<i class="fa fa-times-circle"></i>
 							                </a> 
-
+							                
 							            @elseif($jobAppl->appl_process_status == 'Accept' OR $jobAppl->appl_process_status == 'Reject') 
 							                <a class="btn btn-outline-info btn-sm profile" href="{{url('employer/applicant/profile/seeker/'.encrypt($jobAppl->appl_seeker))}}" data-toggle="tooltip" data-placement="top" title="View {{$jobAppl->seeker_name}}&#39;s profile" target="_blank">
 						                    	<i class="fa fa-user"></i>
