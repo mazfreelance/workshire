@@ -21,23 +21,33 @@
     <link href="{{ asset('public/css/bootstrap-social.css') }}" rel="stylesheet">  
 
     <!-- Custom Styles --> 
+    <link href="{{ asset('public/css/custom/login-signup.css') }}" rel="stylesheet"> 
 </head>
 <body style="background-color:#efefef" class="gothic">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">{{ __('Register') }}</div>
-
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('register') }}" aria-label="{{ __('Register') }}">
-                            @csrf
-
-                            <div class="form-group row">
-                                <label for="username" class="col-md-5 col-form-label text-md-right">{{ __('Username') }}</label>
-
-                                <div class="col-md-6"> 
-                                    <input id="username" type="text" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" name="username" value="{{ old('username') }}" autofocus> 
+    <div class="container register">
+        <div class="row">
+            <div class="col-md-3 register-left">
+                <img src="{{asset('public/images/icon/wh-circle.png')}}" alt=""/>
+                <a href="{{ route('main') }}" class="d-block" title="Back to Home"><i class="fas fa-home"></i></a>
+                <h3>Welcome</h3>
+                <p><span class="futura font-weight-bold">Workshire</span> help company to find the right candidates for your hiring</p>
+                <button class="btnInput" onclick="location.href='{{ route('login') }}'">Login</button>
+                <br/>
+            </div>
+            <div class="col-md-9 register-right">
+                <ul class="nav nav-tabs-single nav-justified" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="" role="tab" aria-controls="home" aria-selected="true">New Seekers</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <h3 class="register-heading">Apply as a Seeker</h3>
+                        {{ Form::open(array('route' => 'register', 'aria-label' => 'Register')) }}
+                        <div class="row register-form">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" type="email" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" name="username" id="username" value="{{ old('username') }}" placeholder="Your Username *" autofocus/> 
 
                                     @if ($errors->has('username'))
                                         <span class="invalid-feedback" role="alert">
@@ -45,16 +55,11 @@
                                         </span>
                                     @endif
                                 </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="email" class="col-md-5 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
-
-                                <div class="col-md-6">
-                                    @if(!empty($email)) 
-                                        <input id="email" type="text" class="form-control" name="email" value="{{ $email }}"/>
+                                <div class="form-group"> 
+                                    @if(!empty($email))  
+                                        <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" id="email" value="{{ $email }}" placeholder="Your Email *"/>
                                     @else
-                                        <input id="email" type="text" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}">
+                                        <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" id="email" value="{{ old('email') }}" placeholder="Your Email *"/>
                                     @endif
 
                                     @if ($errors->has('email'))
@@ -63,16 +68,11 @@
                                         </span>
                                     @endif
                                 </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="name" class="col-md-5 col-form-label text-md-right">{{ __('Name') }}</label>
-
-                                <div class="col-md-6">  
-                                    @if(!empty($name))
-                                        <input id="name" type="text" class="form-control" name="name" value="{{ $name }}"/>
+                                <div class="form-group">
+                                    @if(!empty($name)) 
+                                        <input type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" id="name" value="{{ $name }}" placeholder="Your Full Name *"/> 
                                     @else
-                                        <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}"/>
+                                        <input type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" id="name" value="{{ old('name') }}" placeholder="Your Full Name *"/> 
                                     @endif
 
                                     @if ($errors->has('name')) 
@@ -81,36 +81,9 @@
                                         </span>
                                     @endif
                                 </div>
-                            </div> 
-
-                            <div class="form-group row">
-                                <label for="password" class="col-md-5 col-form-label text-md-right">{{ __('Password') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password">
-
-                                    @if ($errors->has('password'))
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('password') }}</strong>
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="password-confirm" class="col-md-5 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation">
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="password-confirm" class="col-md-5 col-form-label text-md-right">{{ __('How you know about us ?') }}</label>
-
-                                <div class="col-md-6">
+                                <div class="form-group">
                                     <select class="custom-select form-control{{ $errors->has('survey') ? ' is-invalid' : '' }}" name="survey">
-                                        <option value="" selected>Select one ...</option>
+                                        <option value="" selected disabled>How do you know about us?</option>
                                         <?php 
                                         $surveys = array('Facebook', 'Instagram', 'LinkedIn', 'Job Fair', 'WhatsApp Group', 'Recruitement Drive', 'Printed Advert');
                                         sort($surveys);
@@ -134,14 +107,28 @@
                                             <strong>{{ $errors->first('other_survey') }}</strong>
                                         </span>
                                     @endif
-                                </div> 
-                            </div> 
+                                </div>
+                                
+                                <div class="form-group">
+                                    <hr class="d-lg-none">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" id="password" placeholder="Password *"/>
 
-                            <div class="form-group row">
-                                <label for="password-confirm" class="col-md-5 col-form-label text-md-right">{{ __('Subscriptions') }}</label>
-
-                                <div class="col-md-6"> 
+                                    @if ($errors->has('password'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('password') }}</strong>
+                                        </span>
+                                    @endif 
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control"  placeholder="Confirm Password *" name="password_confirmation" id="password_confirmation"/>
+                                </div>
+                                <div class="form-group">
                                     <label for="" class="small">
+                                        <h6>Subscriptions</h6>
                                         I would like to receive notifications on Workshire.com.my products,Job Opportunities, job seeker services & career advice
                                     </label> 
                                     <div class="custom-control custom-radio custom-control-inline">
@@ -174,39 +161,32 @@
                                     <input type="hidden" name="profile_remind" value="N" />
                                     <input type="hidden" name="promo_alert" value="N" />
                                 </div>
+
+                                <input type="submit" class="btnRegister"  value="Register"/>
                             </div>
 
-                            <div class="form-group row mb-0">
-                                <div class="col-md-6 offset-md-5">
-                                    <button type="submit" class="btn btn-primary">
-                                        {{ __('Register') }}
-                                    </button>
+                            <div class="col-md-12 text-center">
+                                <hr class="bg-dark">
+                                <label class="d-block"><i class="fa fa-sign-in-alt"></i> {!! __('or Social Register')!!}</label>
+                                <!--SOCIAL MEDIA REGISTER-->   
+                                <a href="{{route('loginsocial', ['twitter'])}}" class="btn btn-social-icon btn-twitter"><i class="fab fa-twitter"></i></a>
+                                <a href="{{route('loginsocial', ['facebook'])}}" class="btn btn-social-icon btn-facebook"><i class="fab fa-facebook-f"></i></a>
+                                <a href="{{route('loginsocial', ['linkedin'])}}" class="btn btn-social-icon btn-linkedin"><i class="fab fa-linkedin-in"></i></a> 
+                                <a href="{{route('loginsocial', ['google'])}}" class="btn btn-social-icon btn-google-plus"><i class="fab fa-google"></i></a>   
+                                <!--END OF SOCIAL MEDIA REGISTER--> 
+
+
+                                <div class="form-group mt-5">
+                                    By signing up you agree to our <a href="{{route('term&conds')}}" target="_blank">Terms of Use</a> and <a href="{{route('privacy')}}" target="_blank">Privacy Policy</a>.
                                 </div>
                             </div>
-
-                            <hr class="bg-dark">
-
-                            <!--SOCIAL MEDIA REGISTER-->  
-                            <div class="form-group row mt-3">
-                                <label for="password-confirm" class="col-md-6 col-form-label text-center">Or Register with</label> 
-                                <div class="col-md-6 col-md-offset-2">
-                                    <a href="{{route('loginsocial', ['twitter'])}}" class="btn btn-social-icon btn-twitter"><i class="fab fa-twitter"></i></a>
-                                    <a href="{{route('loginsocial', ['facebook'])}}" class="btn btn-social-icon btn-facebook"><i class="fab fa-facebook-f"></i></a>
-                                    <a href="{{route('loginsocial', ['linkedin'])}}" class="btn btn-social-icon btn-linkedin"><i class="fab fa-linkedin-in"></i></a> 
-                                    <a href="{{route('loginsocial', ['google'])}}" class="btn btn-social-icon btn-google-plus"><i class="fab fa-google"></i></a>  
-                                </div>
-                            </div> 
-                            <!--END OF SOCIAL MEDIA REGISTER--> 
-
-                            <div class="form-group text-center">
-                                By signing up you agree to our <a href="{{route('term&conds')}}" target="_blank">Terms of Use</a> and <a href="{{route('privacy')}}" target="_blank">Privacy Policy</a>.
-                            </div>
-                        </form>
+                        </div>
+                        {{ Form::close() }}
                     </div>
                 </div>
             </div>
-        </div>
-    </div>   
+        </div> 
+    </div>
 </body>  
 <!-- Scripts -->  
 <script src="{{ asset('public/js/app.js') }}"></script>

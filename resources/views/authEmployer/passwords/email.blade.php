@@ -21,50 +21,75 @@
     <link href="{{ asset('public/css/bootstrap-social.css') }}" rel="stylesheet">  
 
     <!-- Custom Styles --> 
+    <link href="{{ asset('public/css/custom/login-signup.css') }}" rel="stylesheet"> 
 </head>
 <body style="background-color:#efefef" class="gothic">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">{{ __('Reset Password') }}</div>
+    <div class="container register">
+        <div class="row">
+            <div class="col-md-3 register-left">
+                
+                @if (session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
 
-                    <div class="card-body">
-                        @if (session('status'))
-                            <div class="alert alert-success" role="alert">
-                                {{ session('status') }}
-                            </div>
-                        @endif
+                <img src="{{asset('public/images/icon/wh-circle.png')}}" alt=""/>
+                <a href="{{ route('employer.main') }}" class="d-block" title="Back to Home"><i class="fas fa-home"></i></a>
+                <h3>Welcome</h3>
+                <p><span class="futura font-weight-bold">Workshire</span> help company to find the right candidates for your hiring</p>
+                <p style="margin-top:-7em">
+                    <h5>Forgot password?</h5>
+                    <ol class="text-left small ml-3">
+                        <li>Place your registered email</li>
+                        <li>Click &#39;<span class="font-italic">Send Password Reset Link</span>&#39; to get link to reset your password</li>
+                        <li>Check your e-mail inbox, if not found check on spam messages.</li> 
+                    </ol> 
+                </p> 
+                <br/>
+            </div>
+            <div class="col-md-9 register-right">
+                <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#login" role="tab" aria-controls="home" aria-selected="true">Forgot ?</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab" href="{{ route('employer.login') }}" role="tab" aria-controls="profile" aria-selected="false">Login</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="home-tab">
+                        <h3 class="register-heading">Forgot password</h3>
 
-                        <form method="POST" action="{{ route('employer.password.email') }}" aria-label="{{ __('Reset Password') }}">
-                            @csrf
+                        {{ Form::open(array('route' => 'employer.password.email', 'aria-label' => 'Forgot Password')) }}
+                        <div class="row register-form">  
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label><i class="fa fa-user"></i> {!! __('E-mail address')!!}</label>  
 
-                            <div class="form-group row">
-                                <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" >
-
+                                    <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" autofocus>
                                     @if ($errors->has('email'))
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('email') }}</strong>
                                         </span>
                                     @endif
                                 </div>
-                            </div>
 
-                            <div class="form-group row mb-0">
-                                <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        {{ __('Send Password Reset Link') }}
-                                    </button>
+                                <div class="form-group">
+                                    <hr class="d-lg-none">
                                 </div>
+
+                                <input type="submit" class="btnRegister"  value="Send Password Reset Link"/>
                             </div>
-                        </form>
+                        </div>
+                        {{ Form::close() }}
                     </div>
                 </div>
             </div>
-        </div>
+        </div> 
     </div>
 </body>  
 <!-- Scripts -->  

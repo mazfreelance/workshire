@@ -21,23 +21,33 @@
     <link href="{{ asset('public/css/bootstrap-social.css') }}" rel="stylesheet">  
 
     <!-- Custom Styles --> 
+    <link href="{{ asset('public/css/custom/login-signup.css') }}" rel="stylesheet"> 
 </head>
-<body style="background-color:#efefef" class="gothic">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">{{ __('Register') }}</div>
-
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('employer.register.submit') }}" aria-label="{{ __('Register') }}">
-                            @csrf
-
-                            <div class="form-group row">
-                                <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" autofocus>
+<body style="background-color:#efefef" class="gothic">  
+    <div class="container register">
+        <div class="row">
+            <div class="col-md-3 register-left">
+                <img src="{{asset('public/images/icon/wh-circle.png')}}" alt=""/>
+                <a href="{{ route('employer.main') }}" class="d-block" title="Back to Home"><i class="fas fa-home"></i></a>
+                <h3>Welcome</h3>
+                <p><span class="futura font-weight-bold">Workshire</span> help company to find the right candidates for your hiring</p>
+                <button class="btnInput" onclick="location.href='{{ route('employer.login') }}'">Login</button>
+                <br/>
+            </div>
+            <div class="col-md-9 register-right">
+                <ul class="nav nav-tabs-single nav-justified" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="" role="tab" aria-controls="home" aria-selected="true">New Employer</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <h3 class="register-heading">Apply as a Employer</h3>
+                        {{ Form::open(array('route' => 'employer.register.submit', 'aria-label' => 'Register')) }}
+                        <div class="row register-form">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" id="email" value="{{ old('email') }}" placeholder="Your Email *" autofocus/> 
 
                                     @if ($errors->has('email'))
                                         <span class="invalid-feedback" role="alert">
@@ -45,13 +55,8 @@
                                         </span>
                                     @endif
                                 </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" >
+                                <div class="form-group">
+                                    <input type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" id="name" value="{{ old('name') }}" placeholder="Your Company Name *"/>
 
                                     @if ($errors->has('name'))
                                         <span class="invalid-feedback" role="alert">
@@ -59,14 +64,8 @@
                                         </span>
                                     @endif
                                 </div>
-                            </div> 
-
-
-                            <div class="form-group row">
-                                <label for="ssm_no" class="col-md-4 col-form-label text-md-right">{{ __('Company Register Number (SSM Number)') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="ssm_no" type="text" class="form-control{{ $errors->has('ssm_no') ? ' is-invalid' : '' }}" name="ssm_no" value="{{ old('ssm_no') }}">
+                                <div class="form-group">
+                                    <input type="email" class="form-control{{ $errors->has('ssm_no') ? ' is-invalid' : '' }}" name="ssm_no" id="ssm_no" value="{{ old('ssm_no') }}" placeholder="Your Company SSM Number *"/> 
 
                                     @if ($errors->has('ssm_no'))
                                         <span class="invalid-feedback" role="alert">
@@ -74,13 +73,14 @@
                                         </span>
                                     @endif
                                 </div>
-                            </div> 
-
-                            <div class="form-group row">
-                                <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password">
+                                
+                                <div class="form-group">
+                                    <hr class="d-lg-none">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" id="password" placeholder="Password *"/>
 
                                     @if ($errors->has('password'))
                                         <span class="invalid-feedback" role="alert">
@@ -88,22 +88,12 @@
                                         </span>
                                     @endif
                                 </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation">
+                                <div class="form-group">
+                                    <input type="password" class="form-control"  placeholder="Confirm Password *" name="password_confirmation" id="password_confirmation"/>
                                 </div>
-                            </div>
-
-
-                            <div class="form-group row">
-                                <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Subscriptions') }}</label>
-
-                                <div class="col-md-6"> 
+                                <div class="form-group">
                                     <label for="" class="small">
+                                        <h6>Subscriptions</h6>
                                         I would like to receive notifications on Workshire.com.my products,Job Opportunities, job seeker services & career advice
                                     </label> 
                                     <div class="custom-control custom-radio custom-control-inline">
@@ -122,23 +112,23 @@
                                     @endif
                                     <input type="hidden" name="job_alert" value="N" />
                                     <input type="hidden" name="profile_remind" value="N" />
-                                    <input type="hidden" name="promo_alert" value="N" />
+                                    <input type="hidden" name="promo_alert" value="N" /> 
                                 </div>
-                            </div>
 
-                            <div class="form-group row mb-0">
-                                <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        {{ __('Register') }}
-                                    </button>
+                                <input type="submit" class="btnRegister"  value="Register"/>
+                            </div>
+                            <div class="col-md-12 text-center">
+                                <div class="form-group mt-3">
+                                    By signing up you agree to our <a href="{{route('term&conds')}}" target="_blank">Terms of Use</a> and <a href="{{route('privacy')}}" target="_blank">Privacy Policy</a>.
                                 </div>
                             </div>
-                        </form>
+                        </div>
+                        {{ Form::close() }}
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </div> 
+    </div> 
 </body>  
 <!-- Scripts -->  
 <script src="{{ asset('public/js/app.js') }}"></script>

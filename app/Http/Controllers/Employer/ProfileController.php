@@ -208,6 +208,6 @@ class ProfileController extends Controller
         $user->complete = 1;
         $user->save();
 
-        return back()->with('success', 'Successfully to verified profile');
+        return redirect()->route('employer.dashboard')->with('success', 'Successfully to verified profile');
     }
 }

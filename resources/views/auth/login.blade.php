@@ -21,125 +21,120 @@
     <link href="{{ asset('public/css/bootstrap-social.css') }}" rel="stylesheet">  
 
     <!-- Custom Styles --> 
+    <link href="{{ asset('public/css/custom/login-signup.css') }}" rel="stylesheet"> 
 </head>
 <body style="background-color:#efefef" class="gothic">
-    <main class="py-0"> 
-        <div class="wrap"> 
-            <div class="row border border-dark">
-                <div class="col-sm-8 w3ls-loginpanel ml-sm-3"> 
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="btn-group d-flex justify-content-center" role="group" aria-label="Button group with nested dropdown"> 
-                                <span class="py-2 px-3 bg-primary text-light border border-dark border-left-0 border-top-0 border-bottom-0">
-                                    <i class="fa fa-backspace"></i>
-                                </span> 
-                                <a class="btn btn-primary text-light btn-md w-75" href="{{route('main')}}">Back to Home</a>
-                            </div>
-                        </div> 
-                    </div> 
-                    <hr>
-                    @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-                    @if (session('warning'))
-                        <div class="alert alert-warning">
-                            {{ session('warning') }}
-                        </div>
-                    @endif
-                    <form class="text-center" method="POST" action="{{ route('login.submit') }}" aria-label="{{ __('Login') }}">
-                        @csrf 
-                        <div class="form-row"> 
-                            <div class="col text-left">  
-                                <label><i class="fa fa-user"></i> {!! __('Username or e-mail')!!}</label>  
+    <div class="container register">
+        <div class="row">
+            <div class="col-md-3 register-left">
+                
+                @if (session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
+                @if (session('warning'))
+                    <div class="alert alert-warning">
+                        {{ session('warning') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
 
-                                <input id="username" type="text" class="w-100 form-control{{ $errors->has('email') || $errors->has('username') ? ' is-invalid' : '' }}" name="username" value="{{ old('username') }}" required autofocus>
+                <img src="{{asset('public/images/icon/wh-circle.png')}}" alt=""/>
+                <a href="{{ route('main') }}" class="d-block" title="Back to Home"><i class="fas fa-home"></i></a>
+                <h3>Welcome</h3>
+                <p><span class="futura font-weight-bold">Workshire</span> help company to find the right candidates for your hiring</p>
+                <p style="margin-top:-7em">
+                    <h5>Short Description</h5>
+                    <p>
+                        Based in Penang, Malaysia and supported by team of professionals with over 20 years Human Resource Management Experiences
+                    </p>
+                </p> 
+                <br/>
+            </div>
+            <div class="col-md-9 register-right">
+                <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#login" role="tab" aria-controls="home" aria-selected="true">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab" href="{{ route('password.request') }}" role="tab" aria-controls="profile" aria-selected="false">Forgot?</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="home-tab">
+                        <h3 class="register-heading">Login as a Seeker&nbsp;&nbsp;</h3>
 
-                                @if ($errors->has('email'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
+                        {{ Form::open(array('route' => 'login.submit', 'aria-label' => 'Login')) }}
+                        <div class="row register-form">  
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label><i class="fa fa-user"></i> {!! __('Username or e-mail')!!}</label>  
 
-                                @if ($errors->has('username'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('username') }}</strong>
-                                    </span>
-                                @endif
-                            </div>  
-                        </div>
-                        <div class="form-row mt-2"> 
-                            <div class="col text-left">  
-                                <label><i class="fa fa-key"></i> {!! __('Password')!!}</label> 
-                                <input id="password" type="password" class="w-100 form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+                                    <input id="username" type="text" class="w-100 form-control{{ $errors->has('email') || $errors->has('username') ? ' is-invalid' : '' }}" name="username" value="{{ old('username') }}" required autofocus>
 
-                                @if ($errors->has('password'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div> 
-                        </div>
-                        <div class="form-row mt-2"> 
-                            <div class="col text-sm-left">   
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="remember" id="remember" {{ old('remember') ? 'checked' : '' }}/>
+                                    @if ($errors->has('email'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('email') }}</strong>
+                                        </span>
+                                    @endif
+
+                                    @if ($errors->has('username'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('username') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fa fa-key"></i> {!! __('Password')!!}</label> 
+                                    <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password">
+
+                                    @if ($errors->has('password'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('password') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                                <div class="form-group ml-3">
+                                    <input class="form-check-input" type="checkbox" value="remember" id="remember" 
+                                    {{ old('remember') ? 'checked' : '' }}/>
                                     <label class="form-check-label" for="remember">
                                         {!! __('Remember me')!!}
                                     </label>
                                 </div>
-                            </div>  
-                        </div>
-                        <div class="form-row mt-3"> 
-                            <div class="col-sm-1">  
-                                <button class="btn btn-success btn-md" type="submit">{!! __('Log in')!!}</button>
-                            </div> 
-                            <div class="col-sm-5">  
-                                <a class="btn btn-link btn-md" href="{{ route('password.request') }}">{!! __('Forgot password?')!!}</a>
-                            </div> 
-                        </div>
-                        <div class="form-row mt-3"> 
-                            <div class="col text-sm-left small">  
-                                New in <span class="futura">Workshire</span>? 
-                                <a class="btn btn-link btn-sm" href="{{ route('register') }}">{!! __('Sign up with us')!!}</a>
-                            </div>  
-                        </div> 
-                        <div class="form-row mt-3"> 
-                            <label for="password-confirm" class="col-md-12 col-form-label text-center">
-                                <hr class="hr-text" data-content="Or Login with">
-                            </label> 
-                            <div class="col-md-12 col-md-offset-2">
-                                <a href="{{route('loginsocial', ['twitter'])}}" class="btn btn-social-icon btn-twitter"><i class="fab fa-twitter"></i></a>
-                                <a href="{{route('loginsocial', ['facebook'])}}" class="btn btn-social-icon btn-facebook"><i class="fab fa-facebook-f"></i></a>
-                                <a href="{{route('loginsocial', ['linkedin'])}}" class="btn btn-social-icon btn-linkedin"><i class="fab fa-linkedin-in"></i></a> 
-                                <a href="{{route('loginsocial', ['google'])}}" class="btn btn-social-icon btn-google-plus"><i class="fab fa-google"></i></a> 
+                                <div class="form-group">
+                                    New in <span class="futura">Workshire</span>? 
+                                    <a class="btn btn-link btn-sm" href="{{ route('register') }}">{!! __('Sign up with us')!!}</a>
+                                </div>
+
+                                <input type="submit" class="btnRegister"  value="Login"/>
                             </div>
-                        </div>  
-                    </form>
-
-
-                </div>  
-                <div class="col-sm w3ls-subscribe">
-                    <h5 class="futura font-weight-bold text-light">Workshire</h5>
-                    <h6>Aug 6th, 18 - Wednesday</h6>  
-
-                    <blockquote class="quote-card blue-card">
-                        <p class="text-dark">
-                            Your opportunities to achieve the best career in Malaysia
-                        </p> 
-                        <cite>
-                            <span class="futura">Workshire</span> Team
-                        </cite>
-                    </blockquote>
-
-                    <div class="align-text-bottom text-dark mt-5" style="margin-bottom:-2em;">
-                        <span class=""><i class="fa fa-map-marker-alt"></i> </span>
+                            <div class="col-md-6"> 
+                                <div class="form-group d-lg-none">
+                                    <hr>
+                                </div> 
+                                <div class="form-group">
+                                    <label><i class="fa fa-sign-in-alt"></i> {!! __('or Social Login')!!}</label> 
+                                    <div class="col-md-12 col-md-offset-2">
+                                        <a href="{{route('loginsocial', ['twitter'])}}" class="btn btn-social-icon btn-twitter"><i class="fab fa-twitter"></i></a>
+                                        <a href="{{route('loginsocial', ['facebook'])}}" class="btn btn-social-icon btn-facebook"><i class="fab fa-facebook-f"></i></a>
+                                        <a href="{{route('loginsocial', ['linkedin'])}}" class="btn btn-social-icon btn-linkedin"><i class="fab fa-linkedin-in"></i></a> 
+                                        <a href="{{route('loginsocial', ['google'])}}" class="btn btn-social-icon btn-google-plus"><i class="fab fa-google"></i></a> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{ Form::close() }}
                     </div>
                 </div>
             </div>
-        </div>  
-    </main> 
+        </div> 
+    </div> 
 </body>  
 <!-- Scripts -->  
 <script src="{{ asset('public/js/app.js') }}"></script>

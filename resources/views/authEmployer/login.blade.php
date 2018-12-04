@@ -21,101 +21,106 @@
     <link href="{{ asset('public/css/bootstrap-social.css') }}" rel="stylesheet">  
 
     <!-- Custom Styles --> 
+    <link href="{{ asset('public/css/custom/login-signup.css') }}" rel="stylesheet"> 
 </head>
 <body style="background-color:#efefef" class="gothic">
-    <main class="py-0"> 
-
-
-        <div class="wrap mb-4"> 
-            <div class="row border border-dark">
-                <div class="col-sm w3ls-subscribe">
-                    <h5 class="futura font-weight-bold text-light">Workshire</h5>
-                    <h6>Aug 6th, 18 - Wednesday</h6>  
-
-                    <blockquote class="quote-card blue-card">
-                        <p class="text-dark">
-                            Your opportunities to achieve the best career in Malaysia
-                        </p> 
-                        <cite>
-                            <span class="futura">Workshire</span> Team
-                        </cite>
-                    </blockquote>
-
-                    <div class="align-text-bottom text-dark mt-5" style="margin-bottom:-2em;">
-                        <span class=""><i class="fa fa-map-marker"></i> Penang, My</span>
+    <div class="container register">
+        <div class="row">
+            <div class="col-md-3 register-left">
+                
+                @if (session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                </div>
-                <div class="col-sm-8 w3ls-loginpanel ml-sm-3 my-auto"> 
-                    @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-                    @if (session('warning'))
-                        <div class="alert alert-warning">
-                            {{ session('warning') }}
-                        </div>
-                    @endif
+                @endif
+                @if (session('warning'))
+                    <div class="alert alert-warning">
+                        {{ session('warning') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
 
-                    <form class="text-center" method="POST" action="{{ route('employer.login.submit') }}" aria-label="{{ __('Login') }}">
-                        @csrf 
-                        <div class="form-row"> 
-                            <div class="col text-left">  
-                                <label><i class="fa fa-user"></i> {!! __('E-mail address')!!}</label>  
+                <img src="{{asset('public/images/icon/wh-circle.png')}}" alt=""/>
+                <a href="{{ route('employer.main') }}" class="d-block" title="Back to Home"><i class="fas fa-home"></i></a>
+                <h3>Welcome</h3>
+                <p><span class="futura font-weight-bold">Workshire</span> help company to find the right candidates for your hiring</p>
+                <p style="margin-top:-7em">
+                    <h5>Benefit</h5>
+                    <ol class="text-left small ml-3">
+                        <li>Free job posting</li>
+                        <li>Free resume tokens where term & conditions applied</li>
+                        <li>Faster and simple steps</li>
+                        <li>Reliable team to support your unique requirement</li>
+                    </ol> 
+                </p> 
+                <br/>
+            </div>
+            <div class="col-md-9 register-right">
+                <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#login" role="tab" aria-controls="home" aria-selected="true">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab" href="{{ route('employer.password.request') }}" role="tab" aria-controls="profile" aria-selected="false">Forgot?</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="home-tab">
+                        <h3 class="register-heading">Login as a Employer</h3>
 
-                                <input id="email" type="email" class="w-100 form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
-                                @if ($errors->has('email'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>  
-                        </div>
-                        <div class="form-row mt-2"> 
-                            <div class="col text-left">  
-                                <label><i class="fa fa-key"></i> {!! __('Password')!!}</label> 
-                                <input id="password" type="password" class="w-100 form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+                        {{ Form::open(array('route' => 'employer.login.submit', 'aria-label' => 'Login')) }}
+                        <div class="row register-form">  
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label><i class="fa fa-user"></i> {!! __('E-mail address')!!}</label>  
 
-                                @if ($errors->has('password'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div> 
-                        </div>
-                        <div class="form-row mt-2"> 
-                            <div class="col text-sm-left">   
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="remember" id="remember" {{ old('remember') ? 'checked' : '' }}/>
+                                    <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" autofocus>
+                                    @if ($errors->has('email'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('email') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fa fa-key"></i> {!! __('Password')!!}</label> 
+                                    <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password">
+
+                                    @if ($errors->has('password'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('password') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                                <div class="form-group ml-3">
+                                    <input class="form-check-input" type="checkbox" value="remember" id="remember" 
+                                    {{ old('remember') ? 'checked' : '' }}/>
                                     <label class="form-check-label" for="remember">
                                         {!! __('Remember me')!!}
                                     </label>
                                 </div>
-                            </div>  
-                        </div>
-                        <div class="form-row mt-3"> 
-                            <div class="col-sm-1">  
-                                <button class="btn btn-success btn-md" type="submit">{!! __('Log in')!!}</button>
-                            </div> 
-                            <div class="col-sm-5">  
-                                <a class="btn btn-link btn-md" href="{{ route('employer.password.request') }}">{!! __('Forgot password?')!!}</a>
-                            </div> 
-                        </div>
-                        <div class="form-row mt-3"> 
-                            <div class="col text-sm-left small">  
-                                New in <span class="futura">Workshire</span>? 
-                                <a class="btn btn-link btn-sm" href="{{ route('employer.register') }}">{!! __('Sign up with us')!!}</a>
-                            </div>  
-                        </div>
-                    </form>
-                </div> 
+                                <div class="form-group">
+                                    New in <span class="futura">Workshire</span>? 
+                                    <a class="btn btn-link btn-sm" href="{{ route('employer.register') }}">{!! __('Sign up with us')!!}</a>
+                                </div>
 
+                                <div class="form-group">
+                                    <hr class="d-lg-none">
+                                </div>
 
-
-                
+                                <input type="submit" class="btnRegister"  value="Login"/>
+                            </div>
+                        </div>
+                        {{ Form::close() }}
+                    </div>
+                </div>
             </div>
-        </div>   
-    </main>
+        </div> 
+    </div>
 </body>  
 <!-- Scripts -->  
 <script src="{{ asset('public/js/app.js') }}"></script>

@@ -11,16 +11,6 @@
 	@include('employer.includes.menu')
 	<div class="row border border border-dark border-top-0 border-bottom-0  mr-0 mx-1">
 		<div class="col-sm-12 pl-sm-5 pt-sm-1 pt-0 pl-4 text-center">
-
-			@if (session('success'))
-		        <div class="alert alert-success">
-		            {{ session('success') }}
-		            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-		        <span aria-hidden="true">&times;</span>
-		      </button>
-		        </div>
-		    @endif
-		    
 			<h3 class="text-primary">{{isset($jposts)?'Edit':'New'}} Post Job</h3> 
 			<hr style="margin-bottom:0.1em">
 		</div>
