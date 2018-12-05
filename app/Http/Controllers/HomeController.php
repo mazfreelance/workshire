@@ -129,4 +129,68 @@ class HomeController extends Controller
             ]);
         }
     }
+
+
+    public function operatorForm(){
+        return view('operator.index');
+    }
+
+    public function operator(Request $request){
+        $rules = [
+            'name' => 'required',
+            'nric_full' => 'required_if:ic_type,malay',
+            'passport' => 'required_if:ic_type,non malay',
+            'gender' => 'required',
+            'contact_num' => 'required|numeric',
+            'email' => 'nullable|email|unique:users',
+            'highEdu' => 'required',
+            'seeker_zip' => 'required|numeric|digits:5',
+            'seeker_state' => 'required',
+            'workSTAT' => 'required',
+            'workPOS' => 'required_if:workSTAT,Yes',
+            'other_workpos' => 'required_if:workPOS,Others',
+            'workEXP' => 'required',
+            'workAvailability' => 'required'
+        ];
+        $message = [  
+            'highEdu.required' => 'The highest education field is required.',                              
+            'contact_num.required' => 'The contact number field is required.',                            
+            'seeker_zip.required' => 'The postcode field is required.',                                   
+            'seeker_state.required' => 'The state field is required.',                                    
+            'workSTAT.required' => 'The working status field is required.',                           
+            'workEXP.required' => 'The working experience field is required.',                       
+            'workAvailability.required' => 'The availability to work field is required.', 
+
+
+            'nric_full.required_if' => 'The National Registration Identity Card field is required when type is Malaysian',     
+            'passport.required_if' => 'The Passport Number field is required when type is Non Malaysian',    
+            'workPOS.required_if' => 'The working position field is required.',     
+            'other_workpos.required_if' => 'The other work position field is required when working position is :value.'     
+        ]; 
+
+        $validator = Validator::make($request->all(), $rules, $message);
+        if ($validator->fails()){
+            return response()->json([
+              'fail' =>true, 
+              'errors' => $validator->errors()
+            ]); 
+        }else{  
+
+            //send to dB 
+            Operator::create([
+                'user_id' => $user->id,
+                'seeker_name' => $request->input('name'), 
+                'seeker_nric' => $nric, 
+                'seeker_ctc_tel1' => $request->input('contact_num'), 
+                'seeker_noYrsExp' => $request->input('working'), 
+                'seeker_survey_list' => $request->input('survey'), 
+                'seeker_survey_others' => $request->input('other_survey')
+            ]); 
+         
+            return response()->json([
+              'fail' =>false, 
+              'redirect_url' => route('operatorForm')
+            ]);
+        }
+    }
 }

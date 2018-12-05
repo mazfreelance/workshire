@@ -56,6 +56,8 @@
 		var nric_ic = $('#nric_ic').val();
 		var full = nric_date+''+nric_state+''+nric_ic;
 		$('#nric_full').val(full);
+
+		nric_ic%2==0? $('#gender2').prop('checked', true) : $('#gender1').prop('checked', true);
 	});
  
 	$(document).on('change, keyup', '#seeker_zip' , function(e){
@@ -246,6 +248,26 @@
 		e.preventDefault();
 		$('.completeprof').toggle();
 	});
+
+	/** OPERATOR START **/
+	$(document).on('change', '#workSTAT', function(){
+		if($(this).val() == 'Yes'){
+            if($('#workPOS').val() == 'Others'){
+                $('#workPOS').attr('disabled', false);
+                $('#other_workpos').attr('disabled', false);
+            }else{ 
+                $('#workPOS').attr('disabled', false);
+                $('#other_workpos').attr('disabled', true);
+            }
+        }else if($(this).val() == 'No'){
+            $('#workPOS').attr('disabled', true);
+            $('#other_workpos').attr('disabled', true);  
+        }  
+	});
+	$(document).on('change', '#workPOS', function(){ 
+        $(this).val() == 'Others' ? $('#other_workpos').attr('disabled', false) : $('#other_workpos').attr('disabled', true); 
+    }); 
+	/** OPERATOR END **/
 	
 	/*===========================================================*/ 
 	//submittion edit profile
@@ -337,6 +359,9 @@
 					  	}
 					  	if(key=='achievement_grade' || key=='achievement_cgpa' || key=='achievement_class'){
 							$('input[name="achieve"]').addClass('is-invalid');
+						} 
+					  	if(key=='gender'){
+							$('input[name="'+key+'"]').addClass('is-invalid');
 						} 
                     	$('#' + key).addClass('is-invalid');
                     	$('#error-' + key).html(value);

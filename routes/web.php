@@ -208,6 +208,74 @@ Route::get('profile/print/{id}', 'DocumentController@print');
 Route::get('poskod', 'HomeController@poskod')->name('poskod');
 Route::get('jobfair', 'HomeController@jobfairForm')->name('jobfairForm');
 Route::post('jobfair_post', 'HomeController@jobfair')->name('jobfair');
+Route::get('operator', 'HomeController@operatorForm')->name('operatorForm');
+Route::post('operator_post', 'HomeController@operator')->name('operator');
+
+
+
+
+
+
+
+Route::group(['prefix' => 'route'], function(){
+    //Clear Cache facade value:
+    Route::get('/clear-cache', function() {
+        $exitCode = \Artisan::call('cache:clear');
+        return '<h1>Cache facade value cleared</h1>';
+    });
+
+    //Reoptimized class loader:
+    Route::get('/optimize', function() {
+        $exitCode = \Artisan::call('optimize');
+        return '<h1>Reoptimized class loader</h1>';
+    });
+
+    //Route cache:
+    Route::get('/route-cache', function() {
+        $exitCode = \Artisan::call('route:cache');
+        return '<h1>Routes cached</h1>';
+    });
+
+    //Clear Route cache:
+    Route::get('/route-clear', function() {
+        $exitCode = \Artisan::call('route:clear');
+        return '<h1>Route cache cleared</h1>';
+    });
+
+    //Clear View cache:
+    Route::get('/view-clear', function() {
+        $exitCode = \Artisan::call('view:clear');
+        return '<h1>View cache cleared</h1>';
+    });
+
+    //Clear Config cache:
+    Route::get('/config-cache', function() {
+        $exitCode = \Artisan::call('config:cache');
+        return '<h1>Clear Config cleared</h1>';
+    });
+
+    //view routes
+    Route::get('/routes_view', function() {
+        $routeCollection = \Route::getRoutes();
+        echo "<table style='width:100%'>";
+            echo "<tr>";
+                echo "<td width='10%'><h4>HTTP Method</h4></td>";
+                echo "<td width='10%'><h4>Route</h4></td>";
+                echo "<td width='10%'><h4>Name</h4></td>";
+                echo "<td width='70%'><h4>Corresponding Action</h4></td>";
+            echo "</tr>";
+            foreach ($routeCollection as $value) {
+                echo "<tr>";
+                    echo "<td>" . $value->methods()[0] . "</td>";
+                    echo "<td>" . $value->uri() . "</td>";
+                    echo "<td>" . $value->getName() . "</td>";
+                    echo "<td>" . $value->getActionName() . "</td>";
+                echo "</tr>";
+            }
+        echo "</table>";
+    });
+});
+
     
 
 
@@ -264,6 +332,7 @@ Route::get('/employer/search-candidate', function () {  return view('employer.ca
 */ 
 
 
+Route::get('email', function() {return view('emails.jobalert'); });
 Route::get('/live_search', 'LivesearchController@index');
 Route::get('/live_search/action', 'LivesearchController@action')->name('live_search.action');
 
@@ -318,5 +387,4 @@ Route::get('jobalert', function() {
     // \Log::info($seek);
 
     return $totalUsers;
-});
-Route::get('email', function() {return view('emails.jobalert'); }); 
+}); 

@@ -377,7 +377,20 @@ class CandidateController extends Controller
 		$request->session()->put('search_education', $request
 				            ->has('search_education') ? $request->get('search_education') : ($request->session()
 				            ->has('search_education') ? $request->session()->get('search_education') : '')); 
- 
+ 		
+ 		if($request->session()->get('search_talent_type') == 'OPERATOR'){
+ 		$paid_candidate = PaidCandidate::select('*', 'operator_pool.id')
+						  ->join('operator_pool', function ($join) use ($request)
+							{
+					            $join->on('employer_paidforcandidate.seeker_id', '=', 'operator_pool.id')
+									 ->whereRaw("operator_pool.state like '%".$request->session()->get('search_state')."%'") 
+									 ->whereRaw("operator_pool.position = '".$request->session()->get('search_talent_type')."'");
+					        })   
+						  ->whereRaw("employer_paidforcandidate.seeker_type = '".$request->session()->get('search_talent_type')."'")
+						  ->whereRaw('employer_paidforcandidate.employer_id = '.Auth::guard('employer')->user()->employer[0]->id) 
+						  ->orderBy('employer_paidforcandidate.created_at', 'DESC')
+						  ->paginate(10); 
+ 		}else{
 		$paid_candidate = PaidCandidate::select('*', 'employer_paidforcandidate.id')
 						  ->join('job_seekers', function ($join) use ($request)
 							{
@@ -396,7 +409,7 @@ class CandidateController extends Controller
 						  ->whereRaw('employer_paidforcandidate.employer_id = '.Auth::guard('employer')->user()->employer[0]->id) 
 						  ->orderBy('employer_paidforcandidate.created_at', 'DESC')
 						  ->paginate(10); 
-
+		}				  
 
         $totalTakenResume = PaidCandidate::selectRaw('count(*) as total')
                             ->where('employer_id', '=', Auth::guard('employer')->user()->employer[0]->id)
