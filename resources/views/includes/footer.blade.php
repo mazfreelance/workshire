@@ -83,20 +83,19 @@
 
           <ul class="social-network social-circle">
             <li>
-              <a href="#" class="icoRss" title="Rss"><i class="fa fa-rss"></i></a>
+              <a href="https://www.facebook.com/workshire.com.my/" class="icoFacebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
             </li>
             <li>
-              <a href="#" class="icoFacebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+              <a href="https://twitter.com/Workshire_" class="icoTwitter" title="Twitter"><i class="fab fa-twitter"></i></a>
             </li>
             <li>
-              <a href="#" class="icoTwitter" title="Twitter"><i class="fab fa-twitter"></i></a>
+              <a href="https://www.instagram.com/workshire/" class="icoGoogle" title="Instagram"><i class="fab fa-instagram"></i></a>
             </li>
-            <li>
-              <a href="#" class="icoGoogle" title="Google +"><i class="fab fa-google-plus"></i></a>
-            </li>
+            <!--
             <li>
               <a href="#" class="icoLinkedin" title="Linkedin"><i class="fab fa-linkedin"></i></a>
             </li>
+            -->
           </ul>
         </div>
         <!-- Grid column -->

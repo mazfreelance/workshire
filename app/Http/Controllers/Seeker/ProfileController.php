@@ -204,10 +204,6 @@ class ProfileController extends Controller
       'gender' => 'required',
 
       'nric_full' => 'required_if:ic_type,==,malay',
-      //'nric_date' => 'required_with:nric_full|numeric|digits:6',
-      //'nric_state' => 'required_with:nric_full|numeric|digits:2',
-      //'nric_ic' => 'required_with:nric_full|numeric|digits:4',
-
       'nric' => 'required_if:ic_type,==,non malay',
  
       'day' => 'required|integer|date_format:d',
@@ -223,23 +219,25 @@ class ProfileController extends Controller
       'seeker_expect_salary' => 'required',
 
       'travel' => 'required',
-
-      'lang.*' => 'required',
+      
+      'lang' => 'required|array|min:1', 
       'skill.*' => 'required', 
     ];
+
+    if($request->input('lang') !== null)
+    {
+        if(in_array('Other', $request->input('lang')))
+        {
+          $additionalRules = [
+            'other_language' =>  'required'
+          ];
+          $rules = $rules+$additionalRules;
+        }
+    }
+
     $message = [  
       'seektype.required' => 'The type field is required',
       'name.required' => 'The full name field is required', 
-
-      //'nric_date.required_if' => 'The National Registration Identity Card first field is required',
-      //'nric_state.required_if' => 'The National Registration Identity Card second field is required',
-      //'nric_ic.required_if' => 'The National Registration Identity Card third field is required',
-      //'nric_date.numeric' => 'The National Registration Identity Card first field must be number.',
-      //'nric_state.numeric' => 'The National Registration Identity Card second field must be number.',
-      //'nric_ic.numeric' => 'The National Registration Identity Card third field must be number.',
-      //'nric_date.digits' => 'The National Registration Identity Card first field must be :digits digits.',
-      //'nric_state.digits' => 'The National Registration Identity Card second field must be :digits digits.',
-      //'nric_ic.digits' => 'The National Registration Identity Card third field must be :digits digits.',
   
       'nric.required_if' => 'The Passport Number field is required', 
 
@@ -253,7 +251,7 @@ class ProfileController extends Controller
       'seeker_ctc_tel1.numeric' => 'The telephone number must be number.',
       'seeker_expect_salary.required' => 'The expected salary field is required.',
 
-      'lang.*.required' => 'The language field is required',
+      'lang.required' => 'The language field is required',
       'skill.*.required' => 'The skill field is required', 
     ]; 
 
@@ -264,8 +262,6 @@ class ProfileController extends Controller
       'errors' => $validator->errors()
     ]);
 
-
-    /*
     //request == save()
     $seeker = job_seeker::find($request->input('id'));
 
@@ -274,11 +270,10 @@ class ProfileController extends Controller
     $seeker->seeker_gender = $request->input('gender'); 
 
     $ic_type = $request->input('ic_type');
-    if($ic_type == 'malay') $nric = $request->input('nric_date').''.$request->input('nric_state').''.$request->input('nric_ic');
+    if($ic_type == 'malay') $nric = $request->input('nric_full');
     else $nric = $request->input('nric');
 
-    $seeker->seeker_DOB = $nric; 
-
+    $seeker->seeker_nric = $nric; 
 
     $day = $request->input('day');
     $month = $request->input('month');
@@ -292,14 +287,14 @@ class ProfileController extends Controller
     $seeker->seeker_state = $request->input('seeker_state'); 
     $seeker->seeker_ctc_tel1 = $request->input('seeker_ctc_tel1');
     $seeker->seeker_expect_salary = $request->input('seeker_expect_salary');
+    $seeker->seeker_will_travel = $request->input('travel');
     $seeker->seeker_language = implode(',', $request->input('lang'));
     $seeker->seeker_skillSets = implode(',', $request->input('skill')); 
     $seeker->save();
-    */
+   
     return response()->json([
       'fail' => false,
-      'redirect_url' => route('seeker.account.complete')
-      //'redirect_url' => $dob
+      'redirect_url' => route('seeker.account.complete') 
     ]);
   }
 }
