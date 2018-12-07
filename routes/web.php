@@ -49,7 +49,7 @@ Route::group(['as' => 'employer.', 'prefix' => 'employer', 'namespace' => 'AuthE
 //LOGIN,RESET [ADMIN]
 Route::group(['as' => 'admin.', 'prefix' => 'admin', 'namespace' => 'AuthAdmin'], function(){  
     Route::get('login', 'LoginController@showLoginForm')->name('login'); 
-    Route::post('login', 'LoginController@login')->name('login.submit');
+    Route::post('login/submit', 'LoginController@login')->name('login.submit');
     Route::post('logout', 'LoginController@logout')->name('logout');
     Route::get('/password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.request');
     Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
