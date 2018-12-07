@@ -61,6 +61,7 @@ class RegisteredUsers extends Command
                                ->whereRaw('Date(created_at) BETWEEN Date("'.$monday.'") AND Date("'.$sunday.'")')
                                ->count();
 
+        if($totalUsersSeeker > 0 OR $totalUsersEmployer > 0)
         Mail::send(new SendMailableRegisteredUsers($totalUsersSeeker, $totalUsersEmployer, $monday, $sunday));
     }
 }

@@ -23,7 +23,7 @@ Route::group(['namespace' => 'Auth'], function() {
             ->where('social','twitter|facebook|linkedin|google'); 
     
     //verify user
-    Route::get('/user/verify/{token}', 'RegisterController@verifyUser');
+    Route::get('/user/verify/{token}', 'RegisterController@verifyUser')->name('verify_user');
 
     //logout 
     Route::post('user/logout', 'LoginController@userLogout')->name('user.logout');
@@ -214,66 +214,25 @@ Route::post('operator_post', 'HomeController@operator')->name('operator');
 
 
 
-
-
-
-Route::group(['prefix' => 'route'], function(){
-    //Clear Cache facade value:
-    Route::get('/clear-cache', function() {
-        $exitCode = \Artisan::call('cache:clear');
-        return '<h1>Cache facade value cleared</h1>';
-    });
-
-    //Reoptimized class loader:
-    Route::get('/optimize', function() {
-        $exitCode = \Artisan::call('optimize');
-        return '<h1>Reoptimized class loader</h1>';
-    });
-
-    //Route cache:
-    Route::get('/route-cache', function() {
-        $exitCode = \Artisan::call('route:cache');
-        return '<h1>Routes cached</h1>';
-    });
-
-    //Clear Route cache:
-    Route::get('/route-clear', function() {
-        $exitCode = \Artisan::call('route:clear');
-        return '<h1>Route cache cleared</h1>';
-    });
-
-    //Clear View cache:
-    Route::get('/view-clear', function() {
-        $exitCode = \Artisan::call('view:clear');
-        return '<h1>View cache cleared</h1>';
-    });
-
-    //Clear Config cache:
-    Route::get('/config-cache', function() {
-        $exitCode = \Artisan::call('config:cache');
-        return '<h1>Clear Config cleared</h1>';
-    });
-
-    //view routes
-    Route::get('/routes_view', function() {
-        $routeCollection = \Route::getRoutes();
-        echo "<table style='width:100%'>";
+//view routes
+Route::get('route', function() {
+    $routeCollection = \Route::getRoutes();
+    echo "<table style='width:100%'>";
+        echo "<tr>";
+            echo "<td width='10%'><h4>HTTP Method</h4></td>";
+            echo "<td width='10%'><h4>Route</h4></td>";
+            echo "<td width='10%'><h4>Name</h4></td>";
+            echo "<td width='70%'><h4>Corresponding Action</h4></td>";
+        echo "</tr>";
+        foreach ($routeCollection as $value) {
             echo "<tr>";
-                echo "<td width='10%'><h4>HTTP Method</h4></td>";
-                echo "<td width='10%'><h4>Route</h4></td>";
-                echo "<td width='10%'><h4>Name</h4></td>";
-                echo "<td width='70%'><h4>Corresponding Action</h4></td>";
+                echo "<td>" . $value->methods()[0] . "</td>";
+                echo "<td>" . $value->uri() . "</td>";
+                echo "<td>" . $value->getName() . "</td>";
+                echo "<td>" . $value->getActionName() . "</td>";
             echo "</tr>";
-            foreach ($routeCollection as $value) {
-                echo "<tr>";
-                    echo "<td>" . $value->methods()[0] . "</td>";
-                    echo "<td>" . $value->uri() . "</td>";
-                    echo "<td>" . $value->getName() . "</td>";
-                    echo "<td>" . $value->getActionName() . "</td>";
-                echo "</tr>";
-            }
-        echo "</table>";
-    });
+        }
+    echo "</table>";
 });
 
     
@@ -329,7 +288,7 @@ Route::get('/employer/applicant', function () {
 Route::get('/employer/invite', function () { return view('employer.invite'); });
 Route::get('/employer/post-job', function () { return view('employer.postjob'); });
 Route::get('/employer/search-candidate', function () {  return view('employer.candidate');});
-*/ 
+
 
 
 Route::get('email', function() {return view('emails.jobalert'); });
@@ -360,31 +319,14 @@ Route::get('jobalert', function() {
                       ->join('notification_seeker', 'users.id', '=', 'notification_seeker.user_id')
                       ->whereRaw('notification_seeker.job_alert = "Y|Daily"')
                       ->get();  
-    $seek = App\Model\job_seeker::where('users_id', '=', 2)->first();
- 
-    /* preferences check
-    $totalUsers = \DB::table('users') 
-              ->select('*', 'users.id', 'job_seekers.id as seeker_id', 'notification_seeker.id as noti_id')
-              ->join('job_seekers', 'users.id', '=', 'job_seekers.users_id')
-              ->join('notification_seeker', 'users.id', '=', 'notification_seeker.user_id')
-              ->whereRaw('notification_seeker.job_alert = "Y|Daily"')
-              ->whereRaw('notification_seeker.user_id = 2')
-              ->get();  
-    $array = array(); 
-    foreach ($totalUsers as $user)
-    {    
-        $keyword = isset($user->preferences_keyword) ? $user->preferences_keyword : '';
-        $location = isset($user->preferences_location) ? $user->preferences_location : '';
-        $category = isset($user->preferences_category) ? $user->preferences_category : '';
-         
-        $jobs = \DB::table('job_postings')  
-               ->whereRaw('jobpost_status = "A" AND (jobpost_loc_state LIKE "%'.$location.'%" OR jobpost_position LIKE "%'.$keyword.'%" OR jobpost_field_study LIKE "%'.$category.'%")')
-               ->get();
-        
-    }
-    echo $jobs->count() > 0 ?  'yes':'no';*/
-
-    // \Log::info($seek);
-
+    $seek = App\Model\job_seeker::where('users_id', '=', 2)->first(); 
+    // \Log::info($seek); 
     return $totalUsers;
 }); 
+ 
+
+Route::get('emailview', function () {
+    return view('emails.applyjobnoti');
+});
+
+*/
