@@ -243,7 +243,7 @@
 	}); 
 
  	/* COMPLETE PROFILE */
-	$('.completeprof').show();
+	$('.completeprof').hide();
 	$(document).on('click', '.updProf', function(e){
 		e.preventDefault();
 		$('.completeprof').toggle();
@@ -269,6 +269,33 @@
     }); 
 	/** OPERATOR END **/
 	
+	$(document).on('click', '#addphoto', function(e){
+		e.preventDefault();
+		$('#photoModal').modal('show');
+	});
+
+	$(document).on('click', '#addresume', function(e){
+		e.preventDefault();
+		$('#resumeModal').modal('show');
+	});
+
+	$(document).on('click', '#addedu', function(e){
+		e.preventDefault();
+		$('#eduModal').modal('show');
+	});
+
+	$(document).on('click', '#addexp', function(e){
+		e.preventDefault();
+		$('#expModal').modal('show');
+	});
+	$('#eduModal').modal('show');
+	$('#displayAddEdu').show();
+
+	$(document).on('click', '#eduBtn', function(e){
+		e.preventDefault();
+		$('#displayAddEdu').toggle();
+	});
+
 	/*===========================================================*/ 
 	//submittion edit profile
 	$(document).on('submit', 'form#editprofile', function (event){
@@ -399,7 +426,156 @@
 	    });   
 	});
 
+	//image
+	$('#img-upload250').attr('src', '{{ asset('public/images/favicon/whv2-310.png') }}');
+    $('#img-upload50').attr('src', '{{ asset('public/images/favicon/whv2-310.png') }}');
 
+	$(document).on('change', '.btn-file :file', function() {
+		var input = $(this),
+			label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+		input.trigger('fileselect', [label]);
+	});
+
+	$('.btn-file :file').on('fileselect', function(event, label) {
+	    
+	    var input = $(this).parents('.input-group').find(':text'),
+	        log = label;
+	    
+	    if( input.length ) {
+	        input.val(log);
+	    } else {
+	        if( log ) alert(log);
+	    }
+    
+	});
+	function readURL(input) {
+	    if (input.files && input.files[0]) {
+	        var reader = new FileReader();
+	        
+	        reader.onload = function (e) {
+	            $('#img-upload250').attr('src', e.target.result);
+	            $('#img-upload50').attr('src', e.target.result);
+	        }
+	        
+	        reader.readAsDataURL(input.files[0]);
+	    }
+	}
+	function readURLResume(input) {
+	    if (input.files && input.files[0]) {
+	        var reader = new FileReader();
+	        
+	        reader.onload = function (e) {
+	            $('#resumesrc').attr('src', e.target.result);
+	        }
+	        
+	        reader.readAsDataURL(input.files[0]);
+	    }
+	}
+
+	$(document).on('change', "#imgInp", function(){
+	    var ext = $(this).val().split('.').pop().toLowerCase();
+	    if ($.inArray(ext, ['gif','png','jpg','jpeg']) == -1){
+	    	$('#error1').slideDown("slow");
+			$('#error2').slideUp("slow");
+			$('#savephoto').prop('disabled', true);
+			a=0;
+	    }else{
+	    	var picsize = (this.files[0].size);
+			if (picsize > 4000000){
+				$('#error2').slideDown("slow");
+				$('#savephoto').prop('disabled', true);
+				a=0;
+			}else{
+				a=1;
+				$('#error2').slideUp("slow");
+				$('#savephoto').prop('disabled', false);
+			} 
+			$('#error1').slideUp("slow");
+	    	readURL(this);
+	    }
+	});  
+
+	$(document).on('change', "#ResumeInp", function(){
+	    var ext = $(this).val().split('.').pop().toLowerCase();
+	    if ($.inArray(ext, ['pdf']) == -1){
+	    	$('#error3').slideDown("slow");
+			$('#error4').slideUp("slow");
+			$('#saveresume').prop('disabled', true);
+			a=0;
+	    }else{
+	    	/*
+	    	var resumesize = (this.files[0].size);
+			if (resumesize > 4000000){
+				$('#error4').slideDown("slow");
+				$('#saveresume').prop('disabled', true);
+				a=0;
+			}else{
+				a=1;
+				$('#error4').slideUp("slow");
+				$('#saveresume').prop('disabled', false);
+			} 
+			*/
+			$('#error3').slideUp("slow");
+			$('#saveresume').prop('disabled', false);
+	    	readURLResume(this);
+	    }
+	}); 
+
+
+	$(document).on('submit', 'form#uploadphoto', function (event){
+		event.preventDefault();
+		$('.loading').show();
+	    var form = $(this);
+	    var data = new FormData($(this)[0]);
+	    var url = form.attr("action");
+	    var method = form.attr("method");
+	    $.ajax({
+	        type: method,
+	        url: url,
+	        data: data,
+	        cache: false,
+	        contentType: false,
+	        processData: false,
+	        success: function (data) { 
+	            $('.is-invalid').removeClass('is-invalid');
+	            if (data.fail) { 
+	            	$.each(data.errors, function (key, value) {   
+	                    $('#' + key).addClass('is-invalid');
+	                    $('#error-' + key).html(value);
+	                    $('#' + key).focus();
+					});  
+	                $('.loading').hide();
+	            } else {   
+	                $.confirm({
+	                    icon: 'fa fa-check-circle',
+	                    theme: 'modern',
+	                    type: 'green',
+	                    title: false,
+	                    content: '<p>' + data.success + '.</p>',
+	                    buttons:{
+	                        okay: function(){   
+	                            location.replace(data.redirect_url);   
+	                            //alert(data.redirect_url);   
+	                            //$('.loading').hide();
+	                        }
+	                    }
+	                }); 
+	            }
+	        },
+	        error: function (xhr, textStatus, errorThrown){
+	            //alert("Error: " + errorThrown);
+	            $('.loading').hide();
+	            $.alert({
+	                icon: 'fa fa-times-circle',
+	                theme: 'modern',
+	                type: 'red',
+	                title: 'Fail to upload default pictures',
+	                content: xhr.responseText,
+	                confirm: function(){}
+	            });
+	        }
+	    });   
+	});  
 
 
 

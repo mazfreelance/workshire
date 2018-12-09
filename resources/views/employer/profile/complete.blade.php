@@ -2,35 +2,7 @@
 
 @section('title', 'Profile')
 
-@section('content')
-<style>
-.btn-file {
-    position: relative;
-    overflow: hidden;
-}
-.btn-file input[type=file] {
-    position: absolute;
-    top: 0;
-    right: 0;
-    min-width: 100%;
-    min-height: 100%;
-    font-size: 100px;
-    text-align: right;
-    filter: alpha(opacity=0);
-    opacity: 0;
-    outline: none;
-    background: white;
-    cursor: inherit;
-    display: block;
-}
-
-#img-upload250{
-    height: 250px;width: 250px;
-}
-#img-upload50{
-    height: 50px;width: 50px;
-}
-</style>
+@section('content') 
 <main class="py-0 my-2"> 
 	<div class="container py-2">
 		<p class="text-danger">Complete and verify your profile.</p>  
@@ -65,7 +37,7 @@
 						</ul>
 					</td> 
 				</tr>
-				@if($completeProfile = '100%' AND $completePhoto = '100%')
+				@if($completeProfile == '100' AND $completePhoto == '100')
 				<tr>
 					<td colspan="3">
 						<button class="btn btn-md btn-success" 

@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Image;
-use Illuminate\Support\Facades\Storage;
 
 use App\User_Employer;
 use App\Model\employer; 

@@ -2134,3 +2134,34 @@ section.pricing {
   CHECKBOX DESIGN END
 **/
  
+
+ /*
+upload css image
+ */
+ 
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+#img-upload250{
+    height: 250px;width: 250px;
+}
+#img-upload50{
+    height: 50px;width: 50px;
+}

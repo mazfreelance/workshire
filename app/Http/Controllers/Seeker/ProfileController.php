@@ -6,7 +6,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Image;
 
+use App\User;
 use App\Model\job_seeker;
 use App\Model\JobSeeker_Education;
 use App\Model\JobSeeker_Experience;  
@@ -160,7 +162,7 @@ class ProfileController extends Controller
   public function complete(){
 
     $id = Auth::guard('web')->user()->id; 
-    $seek = job_seeker::selectraw("id, ISNULL(NULLIF(seeker_address,'')) + ISNULL(NULLIF(seeker_city,'')) +
+    $seek = job_seeker::selectraw("*, ISNULL(NULLIF(seeker_address,'')) + ISNULL(NULLIF(seeker_city,'')) +
                                    ISNULL(NULLIF(seeker_state,'')) + ISNULL(NULLIF(seeker_zip,'')) +
                                    ISNULL(NULLIF(seeker_ctc_tel1,'')) + ISNULL(NULLIF(seeker_DOB,'')) + 
                                    ISNULL(NULLIF(seeker_nric,'')) + ISNULL(NULLIF(seeker_gender,'')) +
@@ -238,8 +240,9 @@ class ProfileController extends Controller
     $message = [  
       'seektype.required' => 'The type field is required',
       'name.required' => 'The full name field is required', 
-  
-      'nric.required_if' => 'The Passport Number field is required', 
+
+      'nric_full.required_if' => 'The National Registration Identity Card field is required when type is Malaysian',     
+      'nric.required_if' => 'The Passport Number field is required when type is Non Malaysian',    
 
       'seeker_address.required' => 'The address field is required.',
       'seeker_zip.required' => 'The poscode field is required.',
@@ -269,8 +272,7 @@ class ProfileController extends Controller
     $seeker->seeker_name = $request->input('name');
     $seeker->seeker_gender = $request->input('gender'); 
 
-    $ic_type = $request->input('ic_type');
-    if($ic_type == 'malay') $nric = $request->input('nric_full');
+    if($request->input('ic_type') == 'malay') $nric = $request->input('nric_full');
     else $nric = $request->input('nric');
 
     $seeker->seeker_nric = $nric; 
@@ -281,20 +283,124 @@ class ProfileController extends Controller
     $dob = date('Y-m-d', strtotime($year.'-'.$month.'-'.$day));
 
     $seeker->seeker_DOB = $dob; 
+
     $seeker->seeker_address = $request->input('seeker_address');
     $seeker->seeker_zip = $request->input('seeker_zip');
     $seeker->seeker_city = $request->input('seeker_city');
-    $seeker->seeker_state = $request->input('seeker_state'); 
+    $seeker->seeker_state = $request->input('seeker_state');
+
     $seeker->seeker_ctc_tel1 = $request->input('seeker_ctc_tel1');
     $seeker->seeker_expect_salary = $request->input('seeker_expect_salary');
     $seeker->seeker_will_travel = $request->input('travel');
     $seeker->seeker_language = implode(',', $request->input('lang'));
     $seeker->seeker_skillSets = implode(',', $request->input('skill')); 
+
     $seeker->save();
    
     return response()->json([
       'fail' => false,
       'redirect_url' => route('seeker.account.complete') 
     ]);
+  }
+
+  public function upload_photo(Request $request)
+  {   
+      $rules = [
+        'photo' => 'required|mimes:jpeg,bmp,png',
+      ];  
+
+      $validator = Validator::make($request->all(), $rules);
+      if ($validator->fails()) //return back()->withInput()->withErrors($validator); 
+      return response()->json([
+        'fail' =>true, 
+        'errors' => $validator->errors()
+      ]);          
+
+      $user = Auth::guard('web')->user();
+      $name = $user->seeker->seeker_name;
+
+      $file = $request->file('photo');  
+      $input['imagename'] = $name.'-'.time().'.'.$file->getClientOriginalExtension();  
+
+      $destinationPath = public_path('/default_pictures/medium');
+      $img = Image::make($file->getRealPath())
+              ->resize(250, 250);
+      $img->save($destinationPath.'/'.$input['imagename']);
+
+      $destinationPath = public_path('/default_pictures/small');
+      $img2 = Image::make($file->getRealPath())
+              ->resize(50, 50);
+      $img2->save($destinationPath.'/'.$input['imagename']);
+      //$destinationPath = public_path('/default_pictures');
+      //$file->move($destinationPath, $input['imagename']);  
+
+      $seekers = job_seeker::find($user->seeker->id);
+
+      if(file_exists(public_path().'/default_pictures/small/'.$seekers->seeker_profile_photo_loc) AND file_exists(public_path().'/default_pictures/medium/'.$seekers->seeker_profile_photo_loc) AND $seekers->seeker_profile_photo_loc != ''){ 
+          unlink(public_path().'/default_pictures/small/'.$seekers->seeker_profile_photo_loc); 
+          unlink(public_path().'/default_pictures/medium/'.$seekers->seeker_profile_photo_loc); 
+      }
+
+      $seekers->seeker_profile_photo_loc = $input['imagename'];
+      $seekers->save();
+
+      return response()->json([
+        'fail' => false,
+        'redirect_url' => route('seeker.account.complete'),
+        'success' => 'Successfully uploaded default pictures'
+      ]);
+  }
+
+  public function upload_resume(Request $request)
+  {   
+      $rules = [
+        'photo' => 'required|mimes:pdf',
+      ];  
+
+      $validator = Validator::make($request->all(), $rules);
+      if ($validator->fails()) //return back()->withInput()->withErrors($validator); 
+      return response()->json([
+        'fail' =>true, 
+        'errors' => $validator->errors()
+      ]);          
+
+      $user = Auth::guard('web')->user();
+      $name = $user->seeker->seeker_name;
+      
+      $file = $request->file('photo');  
+      $input['imagename'] = $name.'-'.time().'.'.$file->getClientOriginalExtension();
+      $destinationPath = public_path('/document/uploadsCV');
+      $file->move($destinationPath, $input['imagename']);
+
+      $resume = Resume::where('seeker_id', '=', $user->seeker->id)->first();
+      if(isset($resume)){
+        if(file_exists(public_path().'/document/uploadsCV/'.$resume->resume_loc) AND file_exists(public_path().'/document/uploadsCV/'.$resume->resume_loc) AND $resume->resume_loc != ''){ 
+            unlink(public_path().'/document/uploadsCV/'.$resume->resume_loc);  
+        }
+
+        $resume->resume_loc = $input['imagename'];
+        $resume->save();
+      }
+      else{
+        Resume::create([
+            'seeker_id' => $user->seeker->id,
+            'resume_loc' => $input['imagename']
+        ]); 
+      }
+        
+      return response()->json([
+        'fail' => false,
+        'redirect_url' => route('seeker.account.complete'),
+        'success' => 'Successfully uploaded resume'
+      ]);
+  }
+
+  public function verify_complete($id)
+  {
+      $user = User::find($id);
+      $user->complete = 1;
+      $user->save();
+
+      return redirect()->route('seeker.dashboard')->with('success', 'Successfully to verified profile');
   }
 }

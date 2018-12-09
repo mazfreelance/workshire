@@ -31,15 +31,13 @@
 							</li>
 							<li>
 								{{ $completePhoto = round(100 - ($photo->incomplete * 100) / 1) }}%
-								(<a href="" class="small">Click update photo</a>)
+								(<a href="" class="small" id="addphoto">Click update photo</a>)
+								@include('seeker.profile.includes.modalphoto')
 							</li>
 							<li>
-								<?php $completeResume = '' ?>
-								@if($resume !== null) 
-									{{ $completeResume = round(100 - ($resume->incomplete * 100) / 1) }}%	
-								@else 0%  
-								@endif 
-								(<a href="" class="small">Click update resume</a>)
+								{{ $completeResume = isset($resume) ? round(100 - ($resume->incomplete * 100) / 1) : 0 }}%
+								(<a href="" class="small" id="addresume">Click update resume</a>)
+								@include('seeker.profile.includes.modalresume')
 							</li>
 						</ul>
 					</td> 
@@ -47,31 +45,34 @@
 				<tr>
 					<td>2.</td>
 					<td>Education</td>
-					<td> 
-						<?php $completeEdu = '' ?>
-						@if($edu !== null) 
-							{{ $completeEdu = round(100 - ($edu->incomplete * 100) / 6) }}%	
-						@else 0%  
-						@endif 
-						(<a href="" class="small">Click update education</a>)
+					<td>   
+						{{ $completeEdu = isset($edu) ? round(100 - ($edu->incomplete * 100) / 6) : 0 }}%	 
+						(<a href="" class="small" id="addedu">Click update education</a>)
+						@include('seeker.profile.includes.modaledu')
 					</td> 
 				</tr>
 				<tr>
 					<td>3.</td>
 					<td>Experience</td>
 					<td> 
-						<?php $completeExp = '' ?>
-						@if($exp !== null)
-							{{ $completeExp = round(100 - ($exp->incomplete * 100) / 6) }}%	
-						@else 0%  
-						@endif 
-						(<a href="" class="small">Click update experience</a>)
+						{{ $completeExp = isset($exp) ? round(100 - ($exp->incomplete * 100) / 6) : 0 }}%	 
+						(<a href="" class="small" id="addexp">Click update experience</a>)
+						@include('seeker.profile.includes.modalexp')
 					</td> 
 				</tr>
+				{{ $completeResume }}
+				@if($completeProfile == '100' AND $completePhoto = '100'  AND $completeResume == '100' AND $completeEdu == '100' OR $completeExp == '100')
+				<tr>
+					<td colspan="3">
+						<button class="btn btn-md btn-success" 
+						onClick="location.href='{{ route('seeker.account.verify.complete', ['id' => Auth::guard('web')->user()->id]) }}'">Verify profile</button>
+					</td>
+				</tr>
+				@endif
 	        </tbody>
 	    </table>
 	</div> 
-	@include('seeker.profile.complete.updprof')
+	@include('seeker.profile.includes.updprof')
 </main>
 	@include('seeker.profile.includes.script') 
 	<!-- Footer -->  

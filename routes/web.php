@@ -86,6 +86,9 @@ Route::group(['as' => 'seeker.', 'prefix' => 'seeker', 'namespace' => 'Seeker', 
     //Routes which needs to check if profile is complete or not 
     Route::get('complete/profile', 'ProfileController@complete')->name('account.complete');  
     Route::post('complete/profile/post', 'ProfileController@complete_post')->name('account.complete.post'); 
+    Route::post('complete/profile/upload', 'ProfileController@upload_photo')->name('upload_photo'); 
+    Route::post('complete/profile/upload_resume', 'ProfileController@upload_resume')->name('upload_resume'); 
+    Route::get('complete/verify/{id}', 'ProfileController@verify_complete')->name('account.verify.complete');
 
     //setting 
     Route::get('setting', 'SettingController@showAccount')->name('setting');  

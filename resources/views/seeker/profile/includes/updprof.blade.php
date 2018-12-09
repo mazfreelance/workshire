@@ -1,7 +1,7 @@
 <div class="container card completeprof">
 	<div class="row">
 		<div class="col"> 
-			<h4>Complete Profile</h4>
+			<h4 class="pt-4">Complete Profile</h4>
 			{!! Form::open(['id' => 'editprofile', 'route' => 'seeker.account.complete.post']) !!}
 				<input type="hidden" name="id" value="{{$seek->id}}"/>
 			    <div class="form-group row">
@@ -46,7 +46,7 @@
 			    <div class="form-group row">
 			        <label class="col-lg-3 col-form-label form-control-label">National Registration Identity Card / Passport Number</label>
 			        <div class="col-lg-9">  
-			            <?php 	$raw_nric = $seek->seeker_nric; 
+			            @php 	$raw_nric = $seek->seeker_nric; 
 			            		$len = strlen($raw_nric);
 							  	if( $len == 12 )
 							  	{
@@ -54,15 +54,15 @@
 									$nric_state = str_split($raw_nric,2);  
 									$nric_ic = str_split($raw_nric,4);    
 								}
-						?> 
+						@endphp
 						<div class="custom-control custom-radio custom-control-inline">
 						    <input type="radio" class="custom-control-input" id="ic_type1" name="ic_type" value="malay" 
-						    {{$len == 12? ' checked':''}}/>
+						    {{ isset($seek->seeker_nric) ? $len == 12 ? ' checked' : '' : ' checked' }}/>
 						    <label class="custom-control-label" for="ic_type1">Malaysian</label>
 					  	</div>
 			            <div class="custom-control custom-radio custom-control-inline">
 						    <input type="radio" class="custom-control-input" id="ic_type2" name="ic_type" value="non malay" 
-						    {{$len != 12? ' checked':''}}/>
+						    {{ isset($seek->seeker_nric) ? $len !== 12 ? ' checked' : '' : '' }}/>
 						    <label class="custom-control-label" for="ic_type2">Non Malaysian</label>
 					  	</div> 
 					  	<!--nric_field-->
