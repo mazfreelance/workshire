@@ -1,4 +1,84 @@
-<main class="py-0">  
+<main class="py-0"> 
+
+
+
+  <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12  py-0 pl-3 pr-1 featcard">
+      <div id="featured" class="carousel slide carousel-fade" data-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">        
+            <div class="card bg-dark text-white">
+              <img class="card-img img-fluid" src="{{asset('public/images/slider/third.jpg')}}" alt="" style="height:200px">
+                <div class="card-img-overlay d-flex linkfeat">
+                  <a href="http://makro.id/review-gsp-amerika-ingin-perdagangan-saling-menguntungkan" class="align-self-end">
+                    <span class="badge">Ekspor</span> 
+                    <h4 class="card-title">Review GSP: Amerika Ingin Perdagangan Saling Menguntungkan</h4>
+                      <p class="textfeat" style="display: none;">makro.id – Duta Besar Amerika Serikat untuk Indonesia Joseph R. Donovan menegaskan, langkah pemerintah Amerika Serikat meninjau ulang pemberian Generalized System od Preferenes (GSP) akan menguntungkan kedua belah pihak. Menurut Donovan,</p>
+                  </a>
+                </div>
+            </div>
+          </div>
+          <div class="carousel-item">       
+            <div class="card bg-dark text-white">
+              <img class="card-img img-fluid" src="http://admin.makro.id/media/post_img_sm/dpr-setujui-penambahan-anggaran-bp-batam-rp565-miliar-1531258457.jpeg" alt="" style="height:200px">
+              <div class="card-img-overlay d-flex linkfeat">
+                <a href="http://makro.id/dpr-setujui-penambahan-anggaran-bp-batam-rp565-miliar" class="align-self-end">
+                  <span class="badge">Pertumbuhan Ekonomi</span> 
+                  <h4 class="card-title">DPR Setujui Penambahan Anggaran BP Batam Rp565 Miliar</h4>
+                  <p class="textfeat" style="display: none;">makro.id - Dewan Perwakilan Rakyat (DPR) menyetujui penambahan anggaran Badan Pengusahaan (BP) Batam Rp565 miliar. Dengan penambahan anggaran di tahun 2019 tersebut diharapkan dapat mendorong percepatan pembangunan Kota Batam.Anggota Komisi</p>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<style>
+/*HYPER LINK*/
+a:hover{
+  
+}
+a, a:focus , a:hover{ 
+  text-decoration: none;
+  color: inherit;
+}
+ a:hover, .btn{
+  outline:none!important;
+}
+
+/*ROUNDED CORNER*/
+*{
+  -webkit-border-radius: 0 !important;
+     -moz-border-radius: 0 !important;
+          border-radius: 0 !important;
+}
+/*CATEGORIES BADGE*/
+.badge {
+  font-weight: 600;
+  font-size: 13px;
+  color: white;
+  background-color: #289dcc;
+}
+/*FEATURED*/
+.mg-2, .mg-4{
+  margin-left:-20px;
+}
+.linkfeat{
+  background: rgba(76,76,76,0);
+  background: -moz-linear-gradient(top, rgba(76,76,76,0) 0%, rgba(48,48,48,0) 49%, rgba(19,19,19,1) 100%);
+  background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(76,76,76,0)), color-stop(49%, rgba(48,48,48,0)), color-stop(100%, rgba(19,19,19,1)));
+  background: -webkit-linear-gradient(top, rgba(76,76,76,0) 0%, rgba(48,48,48,0) 49%, rgba(19,19,19,1) 100%);
+  background: -o-linear-gradient(top, rgba(76,76,76,0) 0%, rgba(48,48,48,0) 49%, rgba(19,19,19,1) 100%);
+  background: -ms-linear-gradient(top, rgba(76,76,76,0) 0%, rgba(48,48,48,0) 49%, rgba(19,19,19,1) 100%);
+  background: linear-gradient(to bottom, rgba(76,76,76,0) 0%, rgba(48,48,48,0) 49%, rgba(19,19,19,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', endColorstr='#131313', GradientType=0 );
+}
+</style>
+
+
+
   <div class="row bg-third border border-bottom-primary py-2 pl-sm-4 mr-0"> 
     <div class="container">
       <div class="row mx-1">
