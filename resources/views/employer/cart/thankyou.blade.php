@@ -6,11 +6,7 @@
 @section('js')
 <script>
     $( document ).ready(function() {
-        $(".printInvoice").printPage({
-            url: "{{ URL::to('employer/thankyou')}}",
-            attr: "href",
-            message:"Your document is being created"
-        });
+        
     }); 
 </script>
 @endsection
@@ -38,7 +34,7 @@
 			    			Your order has been placed. Our team will accept your order as soon as possible.
 			    			Thank you using the services that provided.
 			    		</p>
-                        <button class="btn btn-success btn-md printInvoice" data-toggle="tooltip" data-placement="top" title=""><i class="fa fa-print"></i></button> 
+                        <button class="btn btn-success btn-md" data-toggle="tooltip" data-placement="top" title="" onClick="location.href='{{route('employer.invoice')}}'">See invoice</button> 
     			  		</div>
 				</div>
 

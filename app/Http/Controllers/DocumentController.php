@@ -44,7 +44,6 @@ class DocumentController extends Controller
             $seeker = job_seeker::find(decrypt($id));
             $user = User::find($seeker->user_id);
             $experience = JobSeeker_Experience::where('seeker_id', '=', decrypt($id))
-                                                ->orderby('level', 'ASC')
                                                 ->orderby('exp_toDt', 'DESC')
                                                 ->get();
             $education = JobSeeker_Education::where('seeker_id', '=', decrypt($id)) 

@@ -17,9 +17,11 @@
 		                    <div class="row"> 
 		                        <div class="col-12">
 		                            <h5 class="mt-2"><span class="fa fa-book float-right"></span> Education</h5>
-		                            <button class="btn btn-sm btn-primary my-1" data-toggle="tooltip" data-placement="top" title="Add/Edit Education">
+		                            <button class="btn btn-sm btn-primary my-1" data-toggle="tooltip" data-placement="top" title="Add/Edit Education" id="addedu">
 		                            	<i class="fa fa-plus-circle"></i> or <i class="fa fa-edit"></i>
 		                            </button>
+		                            @include('seeker.profile.includes.modaledu')
+
 	                            	@for ($i = 0; $i < count($edu_detail); $i++) 
 		                            <div class="container row text-left px-4 mb-2"> 
 										<div class="col-5 table-bordered bg-dark text-white">Institution</div>
@@ -49,9 +51,11 @@
 	                            <hr> 
 		                        <div class="col-12">
 		                            <h5 class="mt-2"><span class="fa fa-building float-right"></span> Work Experience</h5> 
-		                            <button class="btn btn-sm btn-primary my-1" data-toggle="tooltip" data-placement="top" title="Add/Edit Experience">
+		                            <button class="btn btn-sm btn-primary my-1" data-toggle="tooltip" data-placement="top" title="Add/Edit Experience" id="addexp">
 		                            	<i class="fa fa-plus-circle"></i> or <i class="fa fa-edit"></i>
 		                            </button>
+		                            @include('seeker.profile.includes.modalexp')
+		                            
 		                            @for ($i = 0; $i < count($exp_detail); $i++) 
 		                            <div class="container row text-left px-4 mb-2">
 										<div class="col-5 table-bordered bg-dark text-white">Company</div>

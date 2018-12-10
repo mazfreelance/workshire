@@ -21,4 +21,4 @@
 @endforeach
 
  
-<button type="submit" name="submit" id="paypalbtn" value="PayPal" class="btn-primary btn-sm btnPAY" formaction="https://www.paypal.com/cgi-bin/webscr"><i class="fab fa-paypal"></i> Paypall</button>
+<button type="submit" name="submit" id="paypalbtn" value="PayPal" class="btn-primary btn-sm btnPAY" formaction="https://www.paypal.com/cgi-bin/webscr" disabled><i class="fab fa-paypal"></i> Paypall (Coming Soon)</button>

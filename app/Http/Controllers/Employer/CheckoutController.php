@@ -23,8 +23,9 @@ class CheckoutController extends Controller
         $this->validate($request, [
             'fullname' => 'required|min:5|max:35',
             'pincode' => 'required|numeric',
-            'city' => 'required|min:5|max:25',
-            'state' => 'required|min:5|max:25']);
+            'city' => 'required|min:5',
+            'state' => 'required',
+            'receipt_bank' => 'required|mimes:jpeg,bmp,png,jpg']);
         
         Cart_Order::createOrder($request); 
         Cart::destroy();

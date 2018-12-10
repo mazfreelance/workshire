@@ -17,9 +17,11 @@
 		                    <div class="row"> 
 		                        <div class="col-12">
 		                            <h5 class="mt-2"><span class="fa fa-file float-right"></span> Resume</h5>
-		                            <button class="btn btn-sm btn-primary my-1" data-toggle="tooltip" data-placement="top" title="Update New Resume">
+		                            <button class="btn btn-sm btn-primary my-1" data-toggle="tooltip" data-placement="top" title="Update New Resume" id="addresume">
 		                            	<i class="fa fa-edit"></i> Update New
 		                            </button>
+		                            @include('seeker.profile.includes.modalresume')
+		                            
 		                            <?php 
 
 										$updated_at = date_create($seek->resume->updated_at);

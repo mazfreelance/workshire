@@ -60,7 +60,6 @@
 						@include('seeker.profile.includes.modalexp')
 					</td> 
 				</tr>
-				{{ $completeResume }}
 				@if($completeProfile == '100' AND $completePhoto = '100'  AND $completeResume == '100' AND $completeEdu == '100' OR $completeExp == '100')
 				<tr>
 					<td colspan="3">

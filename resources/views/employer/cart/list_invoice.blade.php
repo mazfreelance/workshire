@@ -24,6 +24,7 @@
                                         <th class="border-0 text-uppercase small font-weight-bold">Paid by</th>
                                         <th class="border-0 text-uppercase small font-weight-bold">Order by</th>
                                         <th class="border-0 text-uppercase small font-weight-bold">Total</th>
+                                        <th class="border-0 text-uppercase small font-weight-bold">Receipt</th>
                                         <th class="border-0 text-uppercase small font-weight-bold">Action</th> 
                                     </tr>
                                 </thead>
@@ -39,6 +40,11 @@
                                         <td class="w-25">{{$order->name}}</td>
                                         <td class="w-50">{{date('M d, Y - H:i:s', strtotime($order->created_at))}}</td>
                                         <td>RM{{$order->total}}</td> 
+                                        <td>
+                                            <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="top" data-img="{{ asset('public/document/receipt/').'/'.$order->payment_receipt}}">
+                                              Popover on top
+                                            </button>
+                                        </td>
                                         <td class="w-25"> 
                                             <button class="btn btn-sm btn-success"
                                                     onclick="location.href='{{ url('employer/invoice').'/'.str_replace(' ', '_', $order->created_at)}}'">
@@ -60,3 +66,16 @@
 @include('includes.footer') 
 
 @endsection 
+@section('js')
+<script>
+$(function () {
+  $('button[data-toggle="popover"]').popover({
+    html: true,
+    trigger: 'hover',
+    content: function () {
+        return '<img src="'+$(this).data('img') + '" />';
+    }
+  })
+})
+</script>
+@endsection

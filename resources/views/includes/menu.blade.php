@@ -1,9 +1,18 @@
 @if(Auth::guard('employer')->check() AND Auth::guard('employer')->user()->role->id ==  2) 
+      
+      <li class="nav-item">    
+        <a class="nav-link" href="{{route('employer.cart')}}" style="cursor:pointer">
+          <i class="fa fa-shopping-cart text-primary"></i> Cart 
+          <span class="badge badge-pill badge-dark">{{Cart::count()}}</span>
+        </a> 
+      </li> 
+      
       <li class="mx-2 nav-item"> 
         <a class="nav-link" href="{{ route('employer.dashboard') }}"> 
           <span class="fa fa-home mt-sm-1 text-primary" style="font-size:20px;"></span>
         </a>
       </li> 
+
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">   
           @if(file_exists(public_path().'/default_pictures/small/'.Auth::guard('employer')->user()->employer[0]->emp_logo_loc) AND Auth::guard('employer')->user()->employer[0]->emp_logo_loc != '') 

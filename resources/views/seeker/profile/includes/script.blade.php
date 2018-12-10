@@ -1,5 +1,7 @@
 @section('js') 
 <script type="text/javascript" src="{{ asset('public/js/jquery.printPage.js') }}"></script>
+<script src="{{ asset('public/js/ckeditor/ckeditor.js') }}"></script>
+<script src="{{ asset('public/js/ckeditor/adapters/jquery.js') }}"></script>
 <script>
 	$('[data-toggle="tooltip"]').tooltip();
 	var resume_updated = $('input[name="resume_updated"]').val();
@@ -25,6 +27,20 @@
 	<?php } ?>
 
 	//validation
+	$('#job_description').ckeditor();
+
+	$(document).on('change', '#check_date_to', function(){
+		$(this).prop("checked") ? $('#date_to').val('Present') : $('#date_to').val('') ;
+	});
+	$('#date_to').val() == 'Present' ? $('#check_date_to').prop('checked', true) : $('#check_date_to').prop('checked', false);
+
+	$( "#date_from" ).datepicker({ 
+		format: 'yyyy-mm'
+	});  
+	$( "#date_to" ).datepicker({ 
+        format: 'yyyy-mm'
+	});  
+
 
 	if($("#ic_type1").prop("checked")){
 		$("#nric_field").show();
@@ -288,13 +304,27 @@
 		e.preventDefault();
 		$('#expModal').modal('show');
 	});
-	$('#eduModal').modal('show');
-	$('#displayAddEdu').show();
 
+	$('#displayAddEdu').hide();
+	$('#displayAddExp').hide();
 	$(document).on('click', '#eduBtn', function(e){
 		e.preventDefault();
 		$('#displayAddEdu').toggle();
 	});
+	$(document).on('click', '#expBtn', function(e){
+		e.preventDefault();
+		$('#displayAddExp').toggle();
+	});
+
+	@if(isset($editEdu))
+	$('#eduModal').modal('show');
+	$('#displayAddEdu').show();
+	@endif
+
+	@if(isset($editExp))
+	$('#expModal').modal('show');
+	$('#displayAddExp').show();
+	@endif
 
 	/*===========================================================*/ 
 	//submittion edit profile
@@ -569,7 +599,7 @@
 	                icon: 'fa fa-times-circle',
 	                theme: 'modern',
 	                type: 'red',
-	                title: 'Fail to upload default pictures',
+	                title: 'Fail to upload',
 	                content: xhr.responseText,
 	                confirm: function(){}
 	            });

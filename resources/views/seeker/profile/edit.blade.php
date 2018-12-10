@@ -227,23 +227,25 @@
 							    </div>
 							    <div class="form-group row">
 							        <label class="col-lg-3 col-form-label form-control-label">Language</label>
-							        <div class="col-lg-9">   
-						                <a class="btn btn-sm btn-info btn-add-more-lang text-light">Add more language</a> 
-						                   
-						            	<?php $array_language = explode(',', $seek->seeker_language); ?>
-						            	@foreach($array_language as $lang)
-						                <div class="form-group category-lang my-1">
-											<div class="input-group">
-												<input class="form-control" type="text" name="lang[]" id="lang" placeholder="eg: Commnunication" value="{{$lang}}" />
-												<span class="input-group-btn">
-													<a class="btn btn-danger btn-remove-lang"><i class="fa fa-times" aria-hidden="true"></i></a>
-												</span>
-											</div>
-										</div>
-										@endforeach 
-										<div  class="onerowlang"></div>
+							        <div class="col-lg-9">     
+
+										<select class="form-control custom-control" name="lang[]" id="lang" multiple>
+											<option value="" disabled disabled>Select one...</option>
+											<?php 
+											$langDB = explode(',', $seek->seeker_language);
+											$arrayLang = array('Malay', 'English', 'Mandarin', 'Tamil');
+											sort($arrayLang);
+											?> 
+											@foreach($arrayLang as $lang)
+											<option value="{{$lang}}" {{in_array($lang, $langDB) ? 'selected':''}}>{{$lang}}</option>
+											@endforeach
+											<option value="Other" {{in_array('Other', $langDB) ? 'selected':''}}>Other</option>
+										</select>
+
+										<input class="form-control mt-1" type="text" name="other_language" id="other_language" placeholder="Other language eg: France,Arabic,English US" value="{{$seek->seeker_language_other}}" disabled/>
 
 							        	<span id="error-lang" class="invalid-feedback"></span> 
+							        	<span id="error-other_language" class="invalid-feedback"></span> 
 							        </div>
 							    </div>
 							    <div class="form-group row">
@@ -265,6 +267,7 @@
 										<div  class="onerowskill"></div> 
 							        </div>
 							    </div>
+
 							    <div class="form-group row">
 							        <label class="col-lg-3 col-form-label form-control-label"></label>
 							        <div class="col-lg-9">

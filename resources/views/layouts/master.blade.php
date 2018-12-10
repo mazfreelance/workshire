@@ -23,7 +23,7 @@
     <!-- Custom Styles -->
     @yield('css') 
 </head>
-<body style="background-color:#efefef" class="gothic">
+<body style="background-color:#fff" class="gothic">
     <div id="app"> 
       <nav class="navbar navbar-expand-md navbar-light bg-third mb-0" role="navigation">
         <!--GLOBAL NAV-->

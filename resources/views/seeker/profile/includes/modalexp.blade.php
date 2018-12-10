@@ -2,58 +2,125 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Upload default pictures</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Experience</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        {{ Form::open(array('route' => 'seeker.upload_photo', 'id' => 'uploadphoto' , 'enctype' => 'multipart/form-data')) }}
-        <div class="form-group">
-          <label>Upload Image</label>
-          <div class="input-group">
-              <span class="input-group-btn">
-                  <span class="btn btn-default btn-file">
-                      Browse… <input type="file" id="imgInp" name="photo">
-                  </span>
-              </span>
-              <input type="text" class="form-control" readonly>
-          </div>
-              
-          <p id="error1" style="display:none; color:#FF0000;">
-              Invalid Image Format! Image Format Must Be JPG, JPEG, PNG or GIF.
-          </p>
-          <p id="error2" style="display:none; color:#FF0000;">
-              Maximum File Size Limit is 4MB.
-          </p>
-
-          <hr>
-          <h6 class="mt-3 font-weight-bold">Preview image</h6>
-          <div class="row">
-            <div class="col-sm-6 card border-0">
-              <img id='img-upload250' src="{{ asset('public/images/favicon/whv2-310.png') }}" />
-              <div class="card-body"> 
-                <p class="card-text">250 x 250 pixel</p> 
-              </div>
-            </div>
-
-            <div class="col-sm-6 card border-0">
-              <img id='img-upload50' src="{{ asset('public/images/favicon/whv2-310.png') }}" />
-              <div class="card-body"> 
-                <p class="card-text">250 x 250 pixel</p> 
-              </div>
-            </div>
-          </div> 
-        </div>  
- 
-        <div class="form-group row">
-            <label class="col-lg-3 col-form-label form-control-label"></label>
-            <div class="col-lg-9">
-                <input type="reset" class="btn btn-secondary" value="Reset" data-dismiss="modal">
-                <input type="submit" id="savephoto" class="btn btn-primary" value="Save Changes">
-            </div>
+      <div class="modal-body">  
+        <label>List Education</label> 
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Company</th>
+                <th>Position</th>
+                <th>From - To</th>
+                <th>Salary (MYR)</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @php
+                $expArr = \App\Model\JobSeeker_Experience::where('seeker_id', '=', Auth::guard('web')->user()->seeker->id)
+                                                          ->orderby('exp_toDt', 'DESC')->get();
+                $i=1;                 
+              @endphp
+              @foreach($expArr as $exps)
+              <tr>
+                <td>{{ $i++ }}</td>
+                <td>{{ $exps->exp_company }}</td>
+                <td>{{ $exps->exp_position }}</td>
+                <td>
+                  {{ date('M y', strtotime($exps->exp_fromDt)) }}
+                  &nbsp;-&nbsp;
+                  @if($exps->exp_toDt == 'Present')
+                  {{ $exps->exp_toDt }}
+                  @else
+                  {{ date('M y', strtotime($exps->exp_toDt)) }}
+                  @endif
+                </td>
+                <td>{{ $exps->exp_salary }}</td>
+                <td>
+                  <div class="btn-group">
+                    <button class="btn btn-sm btn-primary" 
+                    onClick="location.href='{{ route('seeker.update_exp', ['id'=>$exps->id]) }}'">Edit</button>
+                    
+                    <button class="btn btn-sm btn-danger" 
+                    onClick="location.href='{{ route('seeker.delete_exp', ['id'=>$exps->id]) }}'">Delete</button>
+                    
+                  </div>
+                </td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
         </div>
-        {{ Form::close() }}
+        <button class="btn btn-md btn-outline-primary my-2" id="expBtn">Add Experience</button>
+        <div id="displayAddExp">
+
+          @if(isset($editExp))
+              {!! Form::model($editExp,['method'=>'put','id'=>'editprofile']) !!}
+          @else
+              {{ Form::open(array('route' => 'seeker.create_exp', 'id' => 'editprofile')) }}
+          @endif
+          
+          <div class="form-group row">
+              <label class="col-lg-3 col-form-label form-control-label">Company</label>
+              <div class="col-lg-9">
+                <input class="form-control" type="text" name="company" id="company" value="{{ isset($editExp)? $editExp->exp_company :'' }}"/>
+                <span id="error-company" class="invalid-feedback"></span>
+              </div>
+          </div>
+          <div class="form-group row">
+              <label class="col-lg-3 col-form-label form-control-label">Position</label>
+              <div class="col-lg-9">
+                <input class="form-control" type="text" name="position" id="position" value="{{ isset($editExp)? $editExp->exp_position :'' }}"/>
+                <span id="error-position" class="invalid-feedback"></span>
+              </div>
+          </div>
+          <div class="form-group row">
+              <label class="col-lg-3 col-form-label form-control-label">Last Salary</label>
+              <div class="col-lg-9">
+                <input class="form-control" type="text" name="last_salary" id="last_salary" value="{{ isset($editExp)? $editExp->exp_salary :'' }}"/>
+                <span id="error-last_salary" class="invalid-feedback"></span>
+              </div>
+          </div>
+          <div class="form-group row">
+              <label class="col-lg-3 col-form-label form-control-label">Date From</label>
+              <div class="col-lg-9">
+                <input class="form-control" type="text" name="date_from" id="date_from" value="{{ isset($editExp)? $editExp->exp_fromDt :'' }}"/>
+                <span id="error-date_from" class="invalid-feedback"></span>
+              </div>
+          </div>
+          <div class="form-group row">
+              <label class="col-lg-3 col-form-label form-control-label">Date To</label>
+              <div class="col-lg-9">
+                <input class="form-control" type="text" name="date_to" id="date_to" value="{{ isset($editExp)? $editExp->exp_toDt :'' }}"/>
+                <span class="input-group-addon" style="text-align:left;">
+                  <input class="btn-default" type="checkbox" id="check_date_to" name="check_date_to"/>&nbsp;Present
+                </span>
+                <span id="error-date_to" class="invalid-feedback"></span>
+              </div>
+          </div>
+          <div class="form-group row">
+              <label class="col-lg-12 col-form-label form-control-label">Job Description</label>
+              <div class="col-lg-12">
+                <textarea class="form-control" name="job_description" id="job_description">{!! isset($editExp)? $editExp->exp_jobd :'' !!}</textarea>
+                <span id="error-job_description" class="invalid-feedback"></span>
+              </div>
+          </div>
+          
+          <div class="form-group row">
+              <label class="col-lg-3 col-form-label form-control-label"></label>
+              <div class="col-lg-9">
+                  <input type="reset" class="btn btn-secondary" value="Reset" data-dismiss="modal">
+                  <input type="submit" class="btn btn-primary" value="Save Changes">
+              </div>
+          </div>
+          {{ Form::close() }}
+        </div>  
       </div>
     </div>
   </div>

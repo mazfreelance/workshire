@@ -33,7 +33,7 @@ class ProfileController extends Controller
  	{
  		$seek = Auth::guard('web')->user()->seeker;   
     $edu_detail = JobSeeker_Education::where('seeker_id', '=', $seek->id)->orderby('level', 'ASC')->get();
-    $exp_detail = JobSeeker_Experience::where('seeker_id', '=', $seek->id)->orderby('level', 'ASC')->get();
+    $exp_detail = JobSeeker_Experience::where('seeker_id', '=', $seek->id)->orderby('exp_toDt', 'DESC')->get();
 
     return view('seeker.profile.eduexp', compact('seek', 'edu_detail', 'exp_detail')); 
  	}  
@@ -193,7 +193,7 @@ class ProfileController extends Controller
                                 ISNULL(NULLIF(exp_company,'')) + ISNULL(NULLIF(exp_salary,''))
                                 AS incomplete ")
                                ->where('seeker_id', '=', $seek->id)
-                               ->where('level', '=', 1)
+                               ->orderby('exp_toDt', 'DESC') 
                                ->first();
 
     return Auth::guard('web')->user()->complete ? redirect()->intended(route('main'))  : view('seeker.profile.complete', compact('seek', 'photo', 'resume', 'edu', 'exp')); 
@@ -393,6 +393,276 @@ class ProfileController extends Controller
         'redirect_url' => route('seeker.account.complete'),
         'success' => 'Successfully uploaded resume'
       ]);
+  }
+
+  public function create_edu(Request $request)
+  {   
+    $rules = [
+      'level' => 'required',
+      'highEdu' => 'required',
+      'fos' => 'required',
+      'major' => 'required_if:highEdu,STPM|required_if:highEdu,Certificate|required_if:highEdu,Diploma|required_if:highEdu,Degree|required_if:highEdu,Master|required_if:highEdu,PHD',
+      'institute' => 'required',
+      'achieve' => 'required',
+      'achievement_grade' => 'required_if:achieve,Grade',
+      'achievement_cgpa' => 'required_if:achieve,CGPA|numeric',
+      'achievement_class' => 'required_if:achieve,Class',
+
+      'status' => 'required',
+    ];  
+
+    $validator = Validator::make($request->all(), $rules);
+    if ($validator->fails()) //return back()->withInput()->withErrors($validator); 
+    return response()->json([
+      'fail' =>true, 
+      'errors' => $validator->errors()
+    ]);          
+
+
+    $user = Auth::guard('web')->user();
+
+    if($request->input('achieve') == 'Grade') $grade = $request->input('achievement_grade');
+    elseif($request->input('achieve') == 'CGPA') $grade = $request->input('achievement_cgpa');
+    elseif($request->input('achieve') == 'Class') $grade = $request->input('achievement_class');
+
+    JobSeeker_Education::create([
+        'seeker_id' => $user->seeker->id,
+        'highest_education' => $request->input('highEdu'),
+        'qualification' => $request->input('achieve'),
+        'grade_achievement' => $grade,
+        'field_of_study' => $request->input('fos'), 
+        'major_study' => $request->input('major'), 
+        'institute' => $request->input('institute'), 
+        'level' =>  $request->input('level'), 
+        'status_study' => $request->input('status')
+    ]); 
+
+    return response()->json([
+      'fail' => false,
+      'redirect_url' => route('seeker.account.complete')
+    ]);
+  }
+
+  public function update_edu(Request $request, $id)
+  {
+    $user_id = Auth::guard('web')->user()->id; 
+    if($request->isMethod('get'))
+    {
+      $seek = job_seeker::selectraw("*, ISNULL(NULLIF(seeker_address,'')) + ISNULL(NULLIF(seeker_city,'')) +
+                                     ISNULL(NULLIF(seeker_state,'')) + ISNULL(NULLIF(seeker_zip,'')) +
+                                     ISNULL(NULLIF(seeker_ctc_tel1,'')) + ISNULL(NULLIF(seeker_DOB,'')) + 
+                                     ISNULL(NULLIF(seeker_nric,'')) + ISNULL(NULLIF(seeker_gender,'')) +
+                                     ISNULL(NULLIF(seeker_skillSets,'')) + ISNULL(NULLIF(seeker_will_travel,'')) + 
+                                     ISNULL(NULLIF(seeker_expect_salary,'')) + ISNULL(NULLIF(seeker_language,'')) + 
+                                     ISNULL(NULLIF(seeker_type,''))
+                                     AS incomplete")
+                         ->where('user_id', '=', $user_id)
+                         ->first(); 
+
+      $photo = job_seeker::selectraw("ISNULL(NULLIF(seeker_profile_photo_loc,'')) AS incomplete")
+                         ->where('user_id', '=', $user_id)
+                         ->first(); 
+
+      $resume = Resume::selectraw("*, ISNULL(NULLIF(resume_loc,'')) AS incomplete")
+                      ->where('seeker_id', '=', $seek->id)
+                      ->first(); 
+
+      $edu = JobSeeker_Education::selectraw("*, ISNULL(NULLIF(highest_education,'')) +
+                                  ISNULL(NULLIF(qualification,'')) + ISNULL(NULLIF(grade_achievement,'')) + ISNULL(NULLIF(field_of_study,'')) +
+                                  ISNULL(NULLIF(major_study,'')) + ISNULL(NULLIF(institute,''))
+                                  AS incomplete ")
+                                ->where('seeker_id', '=', $seek->id)
+                                ->where('level', '=', 1)
+                                ->first(); 
+      $exp = JobSeeker_Experience::selectraw("*, ISNULL(NULLIF(exp_fromDt,'')) +
+                                  ISNULL(NULLIF(exp_toDt,'')) + ISNULL(NULLIF(exp_position,'')) + ISNULL(NULLIF(exp_jobd,'')) +
+                                  ISNULL(NULLIF(exp_company,'')) + ISNULL(NULLIF(exp_salary,''))
+                                  AS incomplete ")
+                                 ->where('seeker_id', '=', $seek->id)
+                                 ->orderby('exp_toDt', 'DESC') 
+                                 ->first();
+
+      $editEdu = JobSeeker_Education::find($id);                              
+      return view('seeker.profile.complete', compact('seek', 'photo', 'resume', 'edu', 'exp', 'editEdu')); 
+    }
+    else
+    {
+      $editEdu = JobSeeker_Education::find($id);
+
+      $rules = [
+        'highEdu' => 'required',
+        'fos' => 'required',
+        'major' => 'required_if:highEdu,STPM|required_if:highEdu,Certificate|required_if:highEdu,Diploma|required_if:highEdu,Degree|required_if:highEdu,Master|required_if:highEdu,PHD',
+        'institute' => 'required',
+        'achieve' => 'required',
+        'achievement_grade' => 'required_if:achieve,Grade',
+        'achievement_cgpa' => 'required_if:achieve,CGPA|numeric',
+        'achievement_class' => 'required_if:achieve,Class',
+
+        'status' => 'required',
+      ];  
+
+      $validator = Validator::make($request->all(), $rules);
+      if ($validator->fails()) //return back()->withInput()->withErrors($validator); 
+      return response()->json([
+        'fail' =>true, 
+        'errors' => $validator->errors()
+      ]);          
+
+ 
+
+      if($request->input('achieve') == 'Grade') $grade = $request->input('achievement_grade');
+      elseif($request->input('achieve') == 'CGPA') $grade = $request->input('achievement_cgpa');
+      elseif($request->input('achieve') == 'Class') $grade = $request->input('achievement_class');
+ 
+      $editEdu->highest_education = $request->input('highEdu');
+      $editEdu->qualification = $request->input('achieve');
+      $editEdu->grade_achievement = $grade;
+      $editEdu->field_of_study = $request->input('fos');
+      $editEdu->major_study = $request->input('major');
+      $editEdu->institute = $request->input('institute');
+      $editEdu->status_study = $request->input('status');
+
+      $editEdu->save();
+
+      return response()->json([
+        'fail' => false,
+        'redirect_url' => route('seeker.account.complete')
+      ]);
+    }
+
+  }
+
+  public function delete_edu($id)
+  {
+    JobSeeker_Education::destroy($id);
+    return back();
+  }
+
+  public function create_exp(Request $request)
+  {   
+    $rules = [
+      'company' => 'required',
+      'position' => 'required',
+      'last_salary' => 'required|numeric',
+      'date_from' => 'required',
+      'date_to' => 'required',
+      'job_description' => 'required'
+    ];  
+
+    $validator = Validator::make($request->all(), $rules);
+    if ($validator->fails()) //return back()->withInput()->withErrors($validator); 
+    return response()->json([
+      'fail' =>true, 
+      'errors' => $validator->errors()
+    ]);          
+
+
+    $user = Auth::guard('web')->user();
+
+    if($request->input('achieve') == 'Grade') $grade = $request->input('achievement_grade');
+    elseif($request->input('achieve') == 'CGPA') $grade = $request->input('achievement_cgpa');
+    elseif($request->input('achieve') == 'Class') $grade = $request->input('achievement_class');
+
+    JobSeeker_Experience::create([
+        'seeker_id' => $user->seeker->id,
+        'exp_fromDt' => $request->input('date_from'),
+        'exp_toDt' => $request->input('date_to'),
+        'exp_position' => $request->input('position'),
+        'exp_jobd' => $request->input('job_description'), 
+        'exp_company' => $request->input('company'), 
+        'exp_salary' => $request->input('last_salary')
+    ]); 
+
+    return response()->json([
+      'fail' => false,
+      'redirect_url' => route('seeker.account.complete')
+    ]);
+  }
+
+  public function update_exp(Request $request, $id)
+  {
+    $user_id = Auth::guard('web')->user()->id; 
+    if($request->isMethod('get'))
+    {
+      $seek = job_seeker::selectraw("*, ISNULL(NULLIF(seeker_address,'')) + ISNULL(NULLIF(seeker_city,'')) +
+                                     ISNULL(NULLIF(seeker_state,'')) + ISNULL(NULLIF(seeker_zip,'')) +
+                                     ISNULL(NULLIF(seeker_ctc_tel1,'')) + ISNULL(NULLIF(seeker_DOB,'')) + 
+                                     ISNULL(NULLIF(seeker_nric,'')) + ISNULL(NULLIF(seeker_gender,'')) +
+                                     ISNULL(NULLIF(seeker_skillSets,'')) + ISNULL(NULLIF(seeker_will_travel,'')) + 
+                                     ISNULL(NULLIF(seeker_expect_salary,'')) + ISNULL(NULLIF(seeker_language,'')) + 
+                                     ISNULL(NULLIF(seeker_type,''))
+                                     AS incomplete")
+                         ->where('user_id', '=', $user_id)
+                         ->first(); 
+
+      $photo = job_seeker::selectraw("ISNULL(NULLIF(seeker_profile_photo_loc,'')) AS incomplete")
+                         ->where('user_id', '=', $user_id)
+                         ->first(); 
+
+      $resume = Resume::selectraw("*, ISNULL(NULLIF(resume_loc,'')) AS incomplete")
+                      ->where('seeker_id', '=', $seek->id)
+                      ->first(); 
+
+      $edu = JobSeeker_Education::selectraw("*, ISNULL(NULLIF(highest_education,'')) +
+                                  ISNULL(NULLIF(qualification,'')) + ISNULL(NULLIF(grade_achievement,'')) + ISNULL(NULLIF(field_of_study,'')) +
+                                  ISNULL(NULLIF(major_study,'')) + ISNULL(NULLIF(institute,''))
+                                  AS incomplete ")
+                                ->where('seeker_id', '=', $seek->id)
+                                ->where('level', '=', 1)
+                                ->first(); 
+      $exp = JobSeeker_Experience::selectraw("*, ISNULL(NULLIF(exp_fromDt,'')) +
+                                  ISNULL(NULLIF(exp_toDt,'')) + ISNULL(NULLIF(exp_position,'')) + ISNULL(NULLIF(exp_jobd,'')) +
+                                  ISNULL(NULLIF(exp_company,'')) + ISNULL(NULLIF(exp_salary,''))
+                                  AS incomplete ")
+                                 ->where('seeker_id', '=', $seek->id)
+                                 ->orderby('exp_toDt', 'DESC') 
+                                 ->first();
+
+      $editExp = JobSeeker_Experience::find($id);                              
+      return view('seeker.profile.complete', compact('seek', 'photo', 'resume', 'edu', 'exp', 'editExp')); 
+    }
+    else
+    {
+      $editExp = JobSeeker_Experience::find($id);
+
+      $rules = [
+        'company' => 'required',
+        'position' => 'required',
+        'last_salary' => 'required|numeric',
+        'date_from' => 'required',
+        'date_to' => 'required',
+        'job_description' => 'required'
+      ];  
+
+      $validator = Validator::make($request->all(), $rules);
+      if ($validator->fails()) //return back()->withInput()->withErrors($validator); 
+      return response()->json([
+        'fail' =>true, 
+        'errors' => $validator->errors()
+      ]);          
+ 
+      $editExp->exp_fromDt = $request->input('date_from');
+      $editExp->exp_toDt = $request->input('date_to');
+      $editExp->exp_position = $request->input('position');
+      $editExp->exp_jobd = $request->input('job_description');
+      $editExp->exp_company = $request->input('company');
+      $editExp->exp_salary = $request->input('last_salary');
+
+      $editExp->save();
+
+      return response()->json([
+        'fail' => false,
+        'redirect_url' => route('seeker.account.complete')
+      ]);
+    }
+
+  }
+
+  public function delete_exp($id)
+  {
+    JobSeeker_Experience::destroy($id);
+    return back();
   }
 
   public function verify_complete($id)

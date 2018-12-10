@@ -17,6 +17,37 @@
     border: 0;
     position: relative;
 }
+
+.files input {
+    outline: 2px dashed #92b0b3;
+    outline-offset: -10px;
+    -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+    transition: outline-offset .15s ease-in-out, background-color .15s linear;
+    padding: 120px 0px 85px 35%;
+    text-align: center !important;
+    margin: 0;
+    width: 100% !important;
+}
+.files input:focus{     outline: 2px dashed #92b0b3;  outline-offset: -10px;
+    -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+    transition: outline-offset .15s ease-in-out, background-color .15s linear; border:1px solid #92b0b3;
+ }
+.files{ position:relative}
+.files:after {  pointer-events: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 50px;
+    right: 0;
+    height: 56px;
+    content: "";
+    background-image: url(https://image.flaticon.com/icons/png/128/109/109612.png);
+    display: block;
+    margin: 0 auto;
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+.color input{ background-color:#f1f1f1;}
 </style>
 <script>   
 function loadpage()
@@ -71,7 +102,7 @@ $(document).ready(function(){
                         <strong>{{ $message }}</strong>
                 </div>
                 @endif  
-                <form action="{{route('employer.checkout.post')}}" method="post">
+                <form action="{{route('employer.checkout.post')}}" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class="shopper-informations">
                         <div class="row">
@@ -107,18 +138,15 @@ $(document).ready(function(){
                                             <hr style="margin:0.5em 0 -0.5em 0" class="d-lg-none">
                                         </div> 
                                         <div class="col-md-4 mb-3">
-                                            <label for="state">Country Name</label> 
+                                            <label for="state">State Name</label> 
  
                                             <select name="state" class="form-control" >
-                                                <option value="{{ old('state')!=''? old('state') : $employer->emp_state}}" selected="selected">Select state</option>
-                                                <option value="United States">United States</option>
-                                                <option value="Bangladesh">Bangladesh</option>
-                                                <option value="UK">UK</option>
-                                                <option value="India">India</option>
-                                                <option value="Pakistan">Pakistan</option>
-                                                <option value="Ucrane">Ucrane</option>
-                                                <option value="Canada">Canada</option>
-                                                <option value="Dubai">Dubai</option>
+                                                <option value="" selected disable>Select state</option>
+                                                @foreach($state_array as $state)
+                                                <option value="{{ $state->state_name }}">{{ $state->state_name }}</option>
+                                                @endforeach
+
+                                                {{ old('state')!=''? old('state') : $employer->emp_state}}
                                             </select>
                                             <span style="color:red">{{ $errors->first('state') }}</span>
                                             <hr style="margin:0.5em 0 -0.5em 0" class="d-lg-none"> 
@@ -222,7 +250,7 @@ $(document).ready(function(){
                     <div class="payment-options">  
                         @if(Cart::count() > 0)
                         <div class="custom-control custom-radio custom-control">
-                          <input type="radio" id="cash" name="pay" class="custom-control-input" value="COD" checked/>
+                          <input type="radio" id="cash" name="pay" class="custom-control-input" value="CASH" checked/>
                           <label class="custom-control-label" for="cash">CASH</label>
                         </div>
                         <div class="custom-control custom-radio custom-control">
@@ -233,6 +261,17 @@ $(document).ready(function(){
                           <input type="radio" id="fpx" name="pay" class="custom-control-input" value="fpx"/>
                           <label class="custom-control-label" for="fpx">FPX</label>
                         </div> 
+
+
+                        <div class="mt-3">
+                          <div class="form-group files color">
+                            <label>Upload Bank Receipt</label>
+                            <input type="file" class="form-control" name="receipt_bank" multiple="">
+                            <span style="color:red">{{ $errors->first('receipt_bank') }}</span>
+                            <hr style="margin:0.5em 0 -0.5em 0" class="d-lg-none"> 
+                          </div>
+                        </div> 
+
 
                         <div class="d-block my-2"> 
                             <button type="submit" id="cashbtn" class="btn-primary btn-sm btnPAY">

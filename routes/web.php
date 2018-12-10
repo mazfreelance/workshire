@@ -88,6 +88,15 @@ Route::group(['as' => 'seeker.', 'prefix' => 'seeker', 'namespace' => 'Seeker', 
     Route::post('complete/profile/post', 'ProfileController@complete_post')->name('account.complete.post'); 
     Route::post('complete/profile/upload', 'ProfileController@upload_photo')->name('upload_photo'); 
     Route::post('complete/profile/upload_resume', 'ProfileController@upload_resume')->name('upload_resume'); 
+
+    Route::match(['get', 'post'], 'create-education', 'ProfileController@create_edu')->name('create_edu');
+    Route::match(['get', 'put'], 'update-education/{id}', 'ProfileController@update_edu')->name('update_edu');
+    Route::get('delete-education/{id}', 'ProfileController@delete_edu')->name('delete_edu'); 
+
+    Route::match(['get', 'post'], 'create-experience', 'ProfileController@create_exp')->name('create_exp');
+    Route::match(['get', 'put'], 'update-experience/{id}', 'ProfileController@update_exp')->name('update_exp');
+    Route::get('delete-experience/{id}', 'ProfileController@delete_exp')->name('delete_exp'); 
+
     Route::get('complete/verify/{id}', 'ProfileController@verify_complete')->name('account.verify.complete');
 
     //setting 
