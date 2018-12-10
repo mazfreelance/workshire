@@ -2,38 +2,50 @@
 
 
 
-  <div class="row">
-    <div class="col-sm-12 col-md-12 col-lg-12  py-0 pl-3 pr-1 featcard">
-      <div id="featured" class="carousel slide carousel-fade" data-ride="carousel">
-        <div class="carousel-inner">
-          <div class="carousel-item active">        
-            <div class="card bg-dark text-white">
-              <img class="card-img img-fluid" src="{{asset('public/images/slider/third.jpg')}}" alt="" style="height:200px">
-                <div class="card-img-overlay d-flex linkfeat">
-                  <a href="http://makro.id/review-gsp-amerika-ingin-perdagangan-saling-menguntungkan" class="align-self-end">
-                    <span class="badge">Ekspor</span> 
-                    <h4 class="card-title">Review GSP: Amerika Ingin Perdagangan Saling Menguntungkan</h4>
-                      <p class="textfeat" style="display: none;">makro.id – Duta Besar Amerika Serikat untuk Indonesia Joseph R. Donovan menegaskan, langkah pemerintah Amerika Serikat meninjau ulang pemberian Generalized System od Preferenes (GSP) akan menguntungkan kedua belah pihak. Menurut Donovan,</p>
-                  </a>
-                </div>
-            </div>
-          </div>
-          <div class="carousel-item">       
-            <div class="card bg-dark text-white">
-              <img class="card-img img-fluid" src="http://admin.makro.id/media/post_img_sm/dpr-setujui-penambahan-anggaran-bp-batam-rp565-miliar-1531258457.jpeg" alt="" style="height:200px">
+<div class="row">
+  <div class="col-sm-12 col-md-12 col-lg-12  py-0 pl-3 pr-1 featcard">
+    <div id="featured" class="carousel slide carousel-fade" data-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">        
+          <div class="card bg-dark text-white">
+            <img class="card-img img-fluid" src="{{asset('public/images/slider/first.jpg')}}" alt="" style="height:200px">
               <div class="card-img-overlay d-flex linkfeat">
-                <a href="http://makro.id/dpr-setujui-penambahan-anggaran-bp-batam-rp565-miliar" class="align-self-end">
-                  <span class="badge">Pertumbuhan Ekonomi</span> 
-                  <h4 class="card-title">DPR Setujui Penambahan Anggaran BP Batam Rp565 Miliar</h4>
-                  <p class="textfeat" style="display: none;">makro.id - Dewan Perwakilan Rakyat (DPR) menyetujui penambahan anggaran Badan Pengusahaan (BP) Batam Rp565 miliar. Dengan penambahan anggaran di tahun 2019 tersebut diharapkan dapat mendorong percepatan pembangunan Kota Batam.Anggota Komisi</p>
+                <a href="" class="align-self-end">
+                  <span class="badge">First Page</span> 
+                  <h4 class="card-title">First Title</h4>
+                    <p class="textfeat" style="display: none;">makro.id – Duta Besar Amerika Serikat untuk Indonesia Joseph R. Donovan menegaskan, langkah pemerintah Amerika Serikat meninjau ulang pemberian Generalized System od Preferenes (GSP) akan menguntungkan kedua belah pihak. Menurut Donovan,</p>
                 </a>
               </div>
+          </div>
+        </div>
+        <div class="carousel-item">       
+          <div class="card bg-dark text-white">
+            <img class="card-img img-fluid" src="{{asset('public/images/slider/second.jpg')}}" alt="" style="height:200px">
+            <div class="card-img-overlay d-flex linkfeat">
+              <a href="" class="align-self-end">
+                <span class="badge">Pertumbuhan Ekonomi</span> 
+                <h4 class="card-title">DPR Setujui Penambahan Anggaran BP Batam Rp565 Miliar</h4>
+                <p class="textfeat" style="display: none;">makro.id - Dewan Perwakilan Rakyat (DPR) menyetujui penambahan anggaran Badan Pengusahaan (BP) Batam Rp565 miliar. Dengan penambahan anggaran di tahun 2019 tersebut diharapkan dapat mendorong percepatan pembangunan Kota Batam.Anggota Komisi</p>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">       
+          <div class="card bg-dark text-white">
+            <img class="card-img img-fluid" src="{{asset('public/images/slider/third.jpg')}}" alt="" style="height:200px">
+            <div class="card-img-overlay d-flex linkfeat">
+              <a href="" class="align-self-end">
+                <span class="badge">Pertumbuhan Ekonomi</span> 
+                <h4 class="card-title">DPR Setujui Penambahan Anggaran BP Batam Rp565 Miliar</h4>
+                <p class="textfeat" style="display: none;">makro.id - Dewan Perwakilan Rakyat (DPR) menyetujui penambahan anggaran Badan Pengusahaan (BP) Batam Rp565 miliar. Dengan penambahan anggaran di tahun 2019 tersebut diharapkan dapat mendorong percepatan pembangunan Kota Batam.Anggota Komisi</p>
+              </a>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
 <style>
 /*HYPER LINK*/
@@ -76,7 +88,18 @@ a, a:focus , a:hover{
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', endColorstr='#131313', GradientType=0 );
 }
 </style>
-
+<script>
+$(document).ready(function(){
+      $(".linkfeat").hover(
+        function () {
+            $(".textfeat").show(200);
+        },
+        function () {
+            $(".textfeat").hide(200);
+        }
+    );
+});
+</script>
 
 
   <div class="row bg-third border border-bottom-primary py-2 pl-sm-4 mr-0"> 
