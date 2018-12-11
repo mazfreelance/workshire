@@ -40,6 +40,10 @@ class JobWeeklyAlert extends Command
      */
     public function handle()
     {
+
+        $monday = \Carbon::now()->startOfWeek(); 
+        $sunday = \Carbon::now()->endOfWeek(); 
+
         $users = \DB::table('users') 
                       ->select('*', 'users.id', 'job_seekers.id as seeker_id', 'notification_seeker.id as noti_id')
                       ->join('job_seekers', 'users.id', '=', 'job_seekers.user_id')
@@ -49,14 +53,17 @@ class JobWeeklyAlert extends Command
 
         $jobs = \DB::table('job_postings')  
                ->whereRaw('jobpost_status = "A"')
+               ->whereRaw('Date(jobpost_startDate) BETWEEN Date("'.$monday.'") AND Date("'.$sunday.'")')
                ->get();
-       
-        foreach($users as $user)
-        {   
-            $user_id = $user->id;
-            $email = $user->email;
-            $name = $user->seeker_name;
-            if($jobs->count() > 0) Mail::send(new SendMailJobAlert($email, $jobs, $user_id, $name));
+
+        if($jobs->count() > 0){
+            foreach($users as $user)
+            {   
+                $user_id = $user->id;
+                $email = $user->email;
+                $name = $user->seeker_name;
+                if($jobs->count() > 0) Mail::send(new SendMailJobAlert($email, $jobs, $user_id, $name));
+            }
         }
     }
 }

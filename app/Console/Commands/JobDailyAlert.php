@@ -40,6 +40,8 @@ class JobDailyAlert extends Command
      */
     public function handle()
     {   
+        $now = \Carbon::now();
+
         $users = \DB::table('users') 
                       ->select('*', 'users.id', 'job_seekers.id as seeker_id', 'notification_seeker.id as noti_id')
                       ->join('job_seekers', 'users.id', '=', 'job_seekers.user_id')
@@ -47,18 +49,20 @@ class JobDailyAlert extends Command
                       ->whereRaw('notification_seeker.job_alert = "Y|Daily"')
                       ->get(); 
 
-        $jobs = \DB::table('job_postings')  
+        $jobs = \DB::table('job_postings')
                ->whereRaw('jobpost_status = "A"')
+               ->whereRaw('Date(jobpost_startDate) >= Date("'.$now.'")')
                ->get();
        
-        
-        foreach($users as $user)
-        {   
-            $user_id = $user->id;
-            $email = $user->email;
-            $name = $user->seeker_name;
-            if($jobs->count() > 0) Mail::send(new SendMailJobAlert($email, $jobs, $user_id, $name));
-        } 
+        if($jobs->count() > 0){
+            foreach($users as $user)
+            {   
+                $user_id = $user->id;
+                $email = $user->email;
+                $name = $user->seeker_name;
+                if($jobs->count() > 0) Mail::send(new SendMailJobAlert($email, $jobs, $user_id, $name));
+            } 
+        }
 
     }
 }

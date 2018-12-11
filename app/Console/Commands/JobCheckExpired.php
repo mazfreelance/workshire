@@ -39,15 +39,19 @@ class JobCheckExpired extends Command
      */
     public function handle()
     {
+        $now = \Carbon::now();
+
         $jobs = \DB::table('job_postings')  
                ->whereRaw('jobpost_status = "A"')
-               ->whereRaw('jobpost_endDate < CURDATE()')
+               ->whereRaw('jobpost_endDate <= Date("'.$now.'")')
                ->get();
- 
-        foreach ($jobs as $job) { 
-            $jp = jobPost::find($job->id);
-            $jp->jobpost_status = 'E';
-            $jp->save();
+        
+        if($jobs->count() > 0){
+            foreach ($jobs as $job) { 
+                $jp = jobPost::find($job->id);
+                $jp->jobpost_status = 'E';
+                $jp->save();
+            }
         }
     }
 }

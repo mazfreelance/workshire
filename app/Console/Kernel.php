@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
        'App\Console\Commands\JobDailyAlert',
        'App\Console\Commands\JobWeeklyAlert',
        'App\Console\Commands\JobCheckExpired',
+       'App\Console\Commands\RegisteredUsers',
     ];
 
     /**
@@ -31,22 +32,23 @@ class Kernel extends ConsoleKernel
         
         //job alert daily
         $schedule->command('jobalertdaily:users')
-                 ->everyMinute();
-                 //->daily();
-        /*     
+                 //->everyMinute();
+                 ->daily();
+        
+        //Run the task every week on Monday at 8:00
         //job alert weekly
         $schedule->command('jobalertweekly:users')
-                 ->weeklyOn(1, '00:00');
+                 ->weeklyOn(1, '8:00'); 
  
         //check expired date job post
         $schedule->command('job_checkexpired:users')
-                 ->weeklyOn(1, '00:00'); */
- 
+                 ->weeklyOn(1, '8:00');
+        
+        //Run the task every week on Friday at 17:00
         //registered users
         $schedule->command('registered:users')
-                 //->weeklyOn(1, '00:00');
-                 ->everyMinute();
-        
+                 ->weeklyOn(5, '17:00');
+                 //->everyMinute();
     }
 
     /**

@@ -341,4 +341,15 @@ Route::get('emailview', function () {
     return view('emails.applyjobnoti');
 });
 
+Route::get('test', function () {  
+
+        $monday = \Carbon::now()->startOfWeek(); 
+        $sunday = \Carbon::now()->endOfWeek(); 
+    $jobs = \DB::table('job_postings')  
+                   ->whereRaw('jobpost_status = "A"')
+                   ->whereRaw('Date(jobpost_startDate) BETWEEN Date("2018-12-03") AND Date("2018-12-07")')
+                   ->get();
+
+    return dd($jobs);
+});
 */
