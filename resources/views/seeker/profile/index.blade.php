@@ -15,6 +15,12 @@
 		            <div class="tab-content py-4">
 		            	<!--tab 1-->
 		                <div class="tab-pane active" id="profile">
+
+		                	<button class="btn float-sm-right btn-outline-primary btn-sm"
+		                	onClick="location.href='{{route('seeker.showEditForm')}}'">
+		                	Edit Profile
+		                	</button>
+
 		                    <h5 class="mb-2">{{$seek->seeker_name}}&#39;s Profile</h5>
 		                    <h6 class="mb-1">
 		                    	<i class="fa fa-user fa-1x" aria-hidden="true"></i>&nbsp;

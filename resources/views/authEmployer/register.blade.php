@@ -24,7 +24,7 @@
     <link href="{{ asset('public/css/custom/login-signup.css') }}" rel="stylesheet"> 
 </head>
 <body style="background-color:#efefef" class="gothic">  
-    <div class="container register">
+    <div class="register">
         <div class="row">
             <div class="col-md-3 register-left">
                 <img src="{{asset('public/images/icon/wh-circle.png')}}" alt=""/>

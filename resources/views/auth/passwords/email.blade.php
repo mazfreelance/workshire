@@ -25,7 +25,7 @@
 </head>
 <body style="background-color:#efefef" class="gothic">
 
-    <div class="container register">
+    <div class="register">
         <div class="row">
             <div class="col-md-3 register-left">
                 

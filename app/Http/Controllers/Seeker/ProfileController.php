@@ -671,6 +671,6 @@ class ProfileController extends Controller
       $user->complete = 1;
       $user->save();
 
-      return redirect()->route('seeker.dashboard')->with('success', 'Successfully to verified profile');
+      return redirect()->route('main')->with('success', 'Successfully to verified profile');
   }
 }

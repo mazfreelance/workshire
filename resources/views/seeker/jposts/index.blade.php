@@ -113,6 +113,16 @@ $(document).ready(function(){
   </div>  
   <div class="row mt-1 py-2 pl-sm-4 mr-0 mx-0"> 
       <div class="col-sm col-md-9">  
+
+        @if (session('success'))
+            <div class="alert alert-success ml-4">
+                {{ session('success') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+        
         <!-- Filter Job Session Start -->
         @include('seeker.includes.filterjob_session')   
         <!-- Filter Job Session End -->
