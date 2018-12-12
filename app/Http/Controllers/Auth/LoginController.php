@@ -41,9 +41,7 @@ class LoginController extends Controller
      */
     public function __construct()
     { 
-        //if(Auth::guard('web')->check()){
-            //$this->redirectTo = route('seeker.profile'); 
-        //} 
+        $this->redirectTo = route('seeker.dashboard'); 
         $this->middleware('guest')->except(['logout', 'userLogout']);
     }
 
@@ -99,6 +97,7 @@ class LoginController extends Controller
         if(!$user->complete) { 
             return redirect()->intended(route('seeker.account.complete'));
         } 
-        return redirect()->intended( $this->redirectPath() ); //$this->redirectTo
+        return redirect()->intended( $this->redirectTo ); //$this->redirectTo $this->redirectPath()
+        //return dd( $this->redirectTo );
     }
 }

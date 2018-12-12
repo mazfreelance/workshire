@@ -61,11 +61,23 @@
           <div class="form-group row">
               <label class="col-lg-3 col-form-label form-control-label">Level</label>
               <div class="col-lg-9">
+                @if(isset($editEdu))
                 {{ in_array('1', $arr_lvl) ? '1st Education Level' : '' }}
                 {{ in_array('2', $arr_lvl) ? '2nd Education Level' : '' }}
                 {{ in_array('3', $arr_lvl) ? '3rd Education Level' : '' }}
                 {{ in_array('4', $arr_lvl) ? '4th Education Level' : '' }}
                 {{ in_array('5', $arr_lvl) ? '5th Education Level' : '' }}
+                @else
+                <select class="form-control" name="level" id="level">
+                  <option value="" selected disabled>Please select...</option>
+                  <option value="1" {{ in_array('1', $arr_lvl) ? 'disabled' : '' }}>1st Education Level</option>
+                  <option value="2" {{ in_array('2', $arr_lvl) ? 'disabled' : '' }}>2nd Education Level</option>
+                  <option value="3" {{ in_array('3', $arr_lvl) ? 'disabled' : '' }}>3rd Education Level</option>
+                  <option value="4" {{ in_array('4', $arr_lvl) ? 'disabled' : '' }}>4th Education Level</option>
+                  <option value="5" {{ in_array('5', $arr_lvl) ? 'disabled' : '' }}>5th Education Level</option>
+                </select>
+                <span id="error-level" class="invalid-feedback"></span>
+                @endif
               </div>
           </div>
           <div class="form-group row">

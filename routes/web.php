@@ -44,18 +44,7 @@ Route::group(['as' => 'employer.', 'prefix' => 'employer', 'namespace' => 'AuthE
 
     //verify user
     Route::get('verify/{token}', 'RegisterController@verifyUser')->name('verify');
-});
-//LOGIN,RESET [ADMIN]
-Route::group(['as' => 'admin.', 'prefix' => 'admin', 'namespace' => 'AuthAdmin'], function(){  
-    Route::get('login', 'LoginController@showLoginForm')->name('login'); 
-    Route::post('login', 'LoginController@login')->name('login.submit');
-    Route::post('logout', 'LoginController@logout')->name('logout');
-    Route::get('/password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.request');
-    Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-    Route::get('/password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
-    Route::post('/password/reset', 'ResetPasswordController@reset'); 
 }); 
- 
 /* JOB SEEKER */      
 Route::group(['namespace' => 'Seeker'], function() {
     Route::get('/', 'jobPostController@index')->name('main');  
@@ -106,8 +95,6 @@ Route::group(['as' => 'seeker.', 'prefix' => 'seeker', 'namespace' => 'Seeker', 
     Route::get('setting/notification', 'SettingController@notification')->name('setting.notification'); 
     Route::post('setting/notification/edit', 'SettingController@notification_post')->name('setting.notification.edit');  
 });  
-
-
 /* EMPLOYER */  
 //middleware employer
 Route::group(['as' => 'employer.', 'prefix' => 'employer', 'namespace' => 'Employer', 'middleware' => 'auth:employer'], function(){ 
@@ -177,6 +164,18 @@ Route::group(['as' => 'employer.', 'prefix' => 'employer'], function() {
     Route::get('cart', 'Employer\CartController@index')->name('cart');
 }); 
 
+
+
+//LOGIN,RESET [ADMIN]
+Route::group(['as' => 'admin.', 'prefix' => 'admin', 'namespace' => 'AuthAdmin'], function(){  
+    Route::get('login', 'LoginController@showLoginForm')->name('login'); 
+    Route::post('login', 'LoginController@login')->name('login.submit');
+    Route::post('logout', 'LoginController@logout')->name('logout');
+    Route::get('/password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.request');
+    Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+    Route::get('/password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
+    Route::post('/password/reset', 'ResetPasswordController@reset'); 
+}); 
 /* ADMINISTRATOR */  
 Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 'Admin'], function(){  
     Route::get('/', 'DashboardController@index')->name('dashboard'); 
