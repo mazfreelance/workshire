@@ -42,6 +42,7 @@
                     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                         <h3 class="register-heading">Reset Password</h3>
                         {{ Form::open(array('route' => 'password.request', 'aria-label' => 'Reset Password')) }}
+                        <input type="hidden" name="token" value="{{ $token }}">
                         <div class="row register-form">
                             <div class="col-md-12">
                                 <div class="form-group"> 

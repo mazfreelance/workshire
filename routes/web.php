@@ -37,14 +37,13 @@ Route::group(['as' => 'employer.', 'prefix' => 'employer', 'namespace' => 'AuthE
     Route::get('register', 'RegisterController@showRegistrationForm')->name('register');
     Route::post('register', 'RegisterController@register')->name('register.submit');
 
-    //verify user
-    Route::get('verify/{token}', 'RegisterController@verifyUser')->name('verify');
-
     Route::get('password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.request');
     Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-
     Route::get('password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
     Route::post('password/reset', 'ResetPasswordController@reset');
+
+    //verify user
+    Route::get('verify/{token}', 'RegisterController@verifyUser')->name('verify');
 });
 //LOGIN,RESET [ADMIN]
 Route::group(['as' => 'admin.', 'prefix' => 'admin', 'namespace' => 'AuthAdmin'], function(){  
