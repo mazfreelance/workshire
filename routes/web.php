@@ -179,6 +179,11 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'namespace' => 'AuthAdmin']
 /* ADMINISTRATOR */  
 Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 'Admin'], function(){  
     Route::get('/', 'DashboardController@index')->name('dashboard'); 
+    Route::get('seeker', 'DashboardController@seeker')->name('seeker');  
+    Route::get('seeker-getData', 'DashboardController@seeker_getData')->name('seeker_getData');  
+    Route::get('employer', 'DashboardController@employer')->name('employer');  
+    Route::get('other', 'DashboardController@other')->name('other');  
+    
     Route::get('setting/search-candidate', 'SettingController@search_candidate')->name('search_candidate'); 
     Route::get('setting/candidate-expired', 'SettingController@candidate_expired')->name('candidate_expired'); 
     Route::get('setting/mail', 'SettingController@mail')->name('mail'); 
@@ -196,12 +201,6 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'auth:admin
     Route::match(['get', 'post'], 'user/create', 'SettingController@create_user')->name('create_user');
     Route::match(['get', 'put'], 'user/update/{id}', 'SettingController@update_user')->name('update_user');
     Route::get('user/delete_user/{id}', 'SettingController@destroy_user')->name('delete_user');  
-  
-
-    Route::get('seeker', 'DashboardController@seeker')->name('seeker');  
-    Route::get('seeker-getData', 'DashboardController@seeker_getData')->name('seeker_getData');  
-    Route::get('employer', 'DashboardController@employer')->name('employer');  
-    Route::get('other', 'DashboardController@other')->name('other');  
 }); 
 
 /* CONTACT */  

@@ -15,7 +15,7 @@ class DashboardController extends Controller
     
     public function __construct()
     {
-        //$this->middleware('auth:admin'); // (auth:'guards')
+        $this->middleware('auth:admin'); // (auth:'guards')
 
         $totalSeeker = \DB::table('job_seekers')
                                ->count();
