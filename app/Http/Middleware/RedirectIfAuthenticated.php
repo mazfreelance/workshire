@@ -35,7 +35,7 @@ class RedirectIfAuthenticated
                     break;
                 default:
                     if (Auth::guard($guard)->check()) {
-                        return redirect()->route('seeker.profile');
+                        return redirect()->route('main');
                     }
                     break;
             }

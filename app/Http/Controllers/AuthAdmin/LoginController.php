@@ -25,8 +25,10 @@ class LoginController extends Controller
      * @return void
      */
     public function __construct()
-    {    
-        $this->redirectTo = route('admin.dashboard');   
+    {      
+        if(Auth::guard('admin')->check()){
+            $this->redirectTo = route('admin.dashboard'); 
+        }
         $this->middleware('guest:admin')->except(['logout']);
     } 
     
