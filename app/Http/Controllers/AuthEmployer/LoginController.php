@@ -84,7 +84,7 @@ class LoginController extends Controller
             if(!$user->complete){ 
                 return redirect()->intended(route('employer.account.complete'));
             } 
-            return redirect()->intended(route('employer.dashboard'));
+            return redirect()->intended($this->redirectTo);
         }    
         // If Unsuccessful, then redirect back to the login with the form data
         return redirect()->back()->withInput($request->only('email', 'remember')); 

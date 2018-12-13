@@ -26,88 +26,119 @@
         <!-- Row content -->
         <div class="row">
             <div class="col-md-12">  
-        		<!-- Col content-2 --> 
+                @if(session('success'))
+                <div class="alert alert-success" role="alert">
+                  {{ session('success') }}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                @endif
+                {!! Form::open(['route' => 'admin.post_search_candidate']) !!}
+                <input type="hidden" name="candidate_id" value="{{$status[0]->id}}">
+        		<!-- Col content-2 -->   
 				<div class="card">
                     <div class="card-header">
-                    	@if($status[0]->status == 'ENABLE')
-                        <div class="d-block">
-                         	<button class="btn btn-success waves-effect waves-light js-programmatic-enable" disabled> Enabled</button>
-    						<button class="btn btn-danger waves-effect waves-light js-programmatic-disable" value="DISABLE"> Disable</button>
-                        </div>
-                        <label class="col-xs-7 col-sm-1 col-form-label col-form-label">Message</label>
-                        <div class="d-block">
-                            <input type="text" class="form-control col-sm-5" id="" placeholder="Enter message">
-                        </div>
-                     	@elseif($status[0]->status == 'DISABLE')
-                     	<button class="btn btn-success waves-effect waves-light js-programmatic-enable" value="ENABLE"> Enable</button>
-						<button class="btn btn-danger waves-effect waves-light js-programmatic-disable" disabled> Disabled</button>
-						@endif
-
-						<input type="hidden" class="status" value="{{$status[0]->status}}">
+                        <div class="form-radio">
+                            <div class="radio radio-inline">
+                                <label>
+                                    <input type="radio" name="status" value="ENABLE" {{ $status[0]->status == 'ENABLE' ? 'checked' : '' }}>
+                                        <i class="helper"></i>ENABLE
+                                </label>
+                            </div>
+                            
+                            <div class="radio radio-inline">
+                                <label>
+                                    <input type="radio" name="status" value="DISABLE" {{ $status[0]->status == 'DISABLE' ? 'checked' : '' }}>
+                                        <i class="helper"></i>DISABLE
+                                </label>
+                            </div>
+                        </div> 
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="exampleTextarea" class="form-control-label">Message</label>
+                                    <textarea class="form-control" name="status-msg" id="status-msg" rows="4">{{ $status[0]->message }}</textarea>
+                                </div>
+                            </div>
+                        </div> 
                     </div>  
-                    <div class="card-block" style="margin-left:2em">
-                        <form>  
-							<div class="form-group row">
-							    <label for="inputEmail3" class="col-xs-6 col-sm-2 col-form-label col-form-label bg-info">Fresh</label>
-							    <div class="col-xs-6 col-sm-2">
-							      	<label class="custom-control availability-checkbox checkbox-1">
-		                        		<input type="checkbox" class="custom-control-input">
-		                        		<span class="custom-control-indicator"></span>
-		                    	  	</label>
-							    </div>
-                                <label class="col-xs-7 col-sm-1 col-form-label col-form-label">Message</label>
-                                <div class="col-xs-6 col-sm-7">
-                                    <input type="text" class="form-control-sm" id="" placeholder="Enter message">
-                                </div>
-						  	</div>
+                    <div class="card-block"> 
+                        <div class="row enable_candidate">
+                            <div class="col-sm-12 table-responsive">
 
-							<div class="form-group row">
-							    <label for="inputEmail3" class="col-xs-6 col-sm-2 col-form-label col-form-label bg-primary">Experience</label>
-							    <div class="col-xs-6 col-sm-2">
-							      	<label class="custom-control availability-checkbox checkbox-2">
-		                        		<input type="checkbox" class="custom-control-input">
-		                        		<span class="custom-control-indicator"></span>
-		                    	  	</label>
-							    </div>
-                                <label class="col-xs-7 col-sm-1 col-form-label col-form-label">Message</label>
-                                <div class="col-xs-6 col-sm-7">
-                                    <input type="text" class="form-control-sm" id="" placeholder="Enter message">
-                                </div>
-						  	</div>
-
-							<div class="form-group row">
-							    <label for="inputEmail3" class="col-xs-6 col-sm-2 col-form-label col-form-label bg-warning">Intership</label>
-							    <div class="col-xs-6 col-sm-2">
-							      	<label class="custom-control availability-checkbox checkbox-3">
-		                        		<input type="checkbox" class="custom-control-input">
-		                        		<span class="custom-control-indicator"></span>
-		                    	  	</label>
-							    </div>
-                                <label class="col-xs-7 col-sm-1 col-form-label col-form-label">Message</label>
-                                <div class="col-xs-6 col-sm-7">
-                                    <input type="text" class="form-control-sm" id="" placeholder="Enter message">
-                                </div>
-						  	</div>
-
-							<div class="form-group row">
-							    <label for="inputEmail3" class="col-xs-6 col-sm-2 col-form-label col-form-label bg-danger">Operator</label>
-							    <div class="col-xs-6 col-sm-2">
-							      	<label class="custom-control availability-checkbox checkbox-4">
-		                        		<input type="checkbox" class="custom-control-input">
-		                        		<span class="custom-control-indicator"></span>
-		                    	  	</label>
-							    </div>
-                                <label class="col-xs-7 col-sm-1 col-form-label col-form-label">Message</label>
-                                <div class="col-xs-6 col-sm-7">
-                                    <input type="text" class="form-control-sm" id="" placeholder="Enter message">
-                                </div>
-						  	</div>
-
-                            <button type="submit" class="btn btn-primary waves-effect waves-light m-r-30">Save</button>
-                        </form>
+                                <input type="hidden" name="fresh_id" value="{{$candidates[0]->id}}">
+                                <input type="hidden" name="exp_id" value="{{$candidates[1]->id}}">
+                                <input type="hidden" name="intern_id" value="{{$candidates[2]->id}}">
+                                <input type="hidden" name="operator_id" value="{{$candidates[3]->id}}">
+                                
+                                <table class="table table-inverse">
+                                    <tbody> 
+                                        <tr class="bg-info">
+                                            <td>Fresh</td>
+                                            <td>
+                                                <label class="custom-control availability-checkbox checkbox-1">
+                                                    <input type="checkbox" class="custom-control-input" name="fresh-radio" id="fresh-radio" value="YES" {{ $candidates[0]->status == 'YES' ? 'checked' : '' }}>
+                                                    <span class="custom-control-indicator"></span>
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" name="fresh-msg" id="fresh-msg" 
+                                                value="{{ $candidates[0]->message }}" placeholder="Enter message">
+                                            </td>
+                                        </tr>
+                                        <tr class="bg-primary">
+                                            <td>Experience</td>
+                                            <td>
+                                                <label class="custom-control availability-checkbox checkbox-2">
+                                                    <input type="checkbox" class="custom-control-input" name="exp-radio" id="exp-radio" value="YES" {{ $candidates[1]->status == 'YES' ? 'checked' : '' }}>
+                                                    <span class="custom-control-indicator"></span>
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" name="exp-msg" id="exp-msg" 
+                                                value="{{ $candidates[1]->message }}" placeholder="Enter message">
+                                            </td>
+                                        </tr>
+                                        <tr class="bg-warning">
+                                            <td>Internship</td>
+                                            <td>
+                                                <label class="custom-control availability-checkbox checkbox-3">
+                                                    <input type="checkbox" class="custom-control-input" name="intern-radio" id="intern-radio" value="YES" {{ $candidates[2]->status == 'YES' ? 'checked' : '' }}>
+                                                    <span class="custom-control-indicator"></span>
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" name="intern-msg" id="intern-msg" 
+                                                value="{{ $candidates[2]->message }}" placeholder="Enter message">
+                                            </td>
+                                        </tr>
+                                        <tr class="bg-success">
+                                            <td>Operator</td>
+                                            <td>
+                                                <label class="custom-control availability-checkbox checkbox-4">
+                                                    <input type="checkbox" class="custom-control-input" name="operator-radio" id="operator-radio" value="YES" {{ $candidates[3]->status == 'YES' ? 'checked' : '' }}>
+                                                    <span class="custom-control-indicator"></span>
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" name="operator-msg" id="operator-msg" 
+                                                value="{{ $candidates[3]->message }}" placeholder="Enter message">
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>  
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-sm btn-outline-primary">Save</button>
+                            </div>
+                        </div> 
                     </div>
-                </div> 
+                </div>  
     			<!-- Col content-2 end-->
+                {!! Form::close() !!}
             </div>
         </div>
         <!-- Row content end -->
@@ -121,10 +152,49 @@
 @endsection
 @section('js')
 <script>
-$(function () {    
-    var status = $('.status').val(); 
+$(document).ready(function(){
+    $('.enable_candidate').hide();  
 
-    alert('status');
+    var status = $("input[name='status']:checked").val();    
+    if(status == 'ENABLE'){
+        $('#status-msg').prop('readonly', true);
+        $('.enable_candidate').show();
+    }else if(status == 'DISABLE'){
+        $('#status-msg').prop('readonly', false);
+        $('.enable_candidate').hide();
+    }
+
+    $("input[name='status']").change(function(){  
+        if( $(this).is(":checked") ){   
+            var status = $(this).val();
+            if(status == 'ENABLE'){
+                $('#status-msg').prop('readonly', true);
+                $('.enable_candidate').show();
+            }else if(status == 'DISABLE'){
+                $('#status-msg').prop('readonly', false);
+                $('.enable_candidate').hide();
+            }
+        }
+    });
+
+    $('#fresh-radio').is(":checked") ? $('#fresh-msg').prop('readonly', false) : $('#fresh-msg').prop('readonly', true);  
+    $("#fresh-radio").change(function(){    
+        $(this).is(":checked") ? $('#fresh-msg').prop('readonly', false) : $('#fresh-msg').prop('readonly', true); 
+    }); 
+    $('#exp-radio').is(":checked") ? $('#exp-msg').prop('readonly', false) : $('#exp-msg').prop('readonly', true);  
+    $("#exp-radio").change(function(){    
+        $(this).is(":checked") ? $('#exp-msg').prop('readonly', false) : $('#exp-msg').prop('readonly', true); 
+    }); 
+    $('#intern-radio').is(":checked") ? $('#intern-msg').prop('readonly', false) : $('#intern-msg').prop('readonly', true);  
+    $("#intern-radio").change(function(){    
+        $(this).is(":checked") ? $('#intern-msg').prop('readonly', false) : $('#intern-msg').prop('readonly', true); 
+    }); 
+    $('#operator-radio').is(":checked") ? $('#operator-msg').prop('readonly', false) : $('#operator-msg').prop('readonly', true);  
+    $("#operator-radio").change(function(){    
+        $(this).is(":checked") ? $('#operator-msg').prop('readonly', false) : $('#operator-msg').prop('readonly', true); 
+    }); 
+
+
 });
 </script>
 @endsection

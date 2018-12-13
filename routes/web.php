@@ -185,6 +185,12 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'auth:admin
     Route::get('other', 'DashboardController@other')->name('other');  
 
     Route::get('setting/search-candidate', 'SettingController@search_candidate')->name('search_candidate'); 
+    Route::post('setting/post-search-candidate', 'SettingController@post_search_candidate')->name('post_search_candidate'); 
+    Route::match(['get', 'put'], 'update-search-candidate/{id}', 'SettingController@update_search_candidate')->name('update_search_candidate');
+
+
+
+
     Route::get('setting/candidate-expired', 'SettingController@candidate_expired')->name('candidate_expired'); 
     Route::get('setting/mail', 'SettingController@mail')->name('mail'); 
     Route::get('setting/web', 'SettingController@web')->name('web');  

@@ -67,15 +67,57 @@
                                                 @endif
                                             </td>
                                             <td>{{$dur->token_value}}</td>
-                                            <td><button class="btn btn-flat flat-info">Edit</button></td>
-                                        </tr>
-                                    @endforeach
-                                    
-                                        
-                                        
-                                        
+                                            <td><button class="btn btn-flat flat-info" onClick="location.href='{{ route('admin.update_search_candidate', ['id' => $dur->id]) }}'">Edit</button></td>
+                                        </tr> 
+                                    @endforeach 
                                     </tbody>
                                 </table>
+
+
+                                <div class="modal" tabindex="-1" role="dialog" id="editCandidate">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Modal title</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p></p>
+
+
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1" class="form-control-label">{{ isset($editDuration) ?$editDuration->candidate_type :'' }}</label>
+                                                    <input type="text" class="form-control" name="dur_id" value="{{ isset($editDuration) ?$editDuration->id:'' }}" readonly>
+                                                </div> 
+                                                 
+                                                <div class="form-group">
+                                                    <label for="exampleSelect1" class="form-control-label">Duration</label>
+                                                    <select class="form-control" id="exampleSelect1">
+                                                        <option>1</option>
+                                                        <option>2</option>
+                                                        <option>3</option>
+                                                        <option>4</option>
+                                                        <option>5</option>
+                                                    </select>
+                                                </div>
+                                                 
+                                                <div class="form-group">
+                                                    <label for="exampleInputPassword1" class="form-control-label">Token value</label>
+                                                        <input type="number" class="form-control" name="token_value">
+                                                </div> 
+                                                 
+ 
+  
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary">Save changes</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -96,7 +138,7 @@
 @section('js')
 <script>
 $(function () {    
-     
+    @if(isset($editDuration)) $('#editCandidate').modal('show'); @endif
 });
 </script>
 @endsection

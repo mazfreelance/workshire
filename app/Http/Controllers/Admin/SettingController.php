@@ -38,16 +38,65 @@ class SettingController extends Controller
     public function search_candidate()
     {
     	$status = Status::all();
-    	$candidates = Candidate::all();
+    	$candidates = Candidate::all(); 
 
+    	return view('admin.setting.candidate', compact('status', 'candidates'));
+    }
 
-    	return view('admin.setting.candidate', compact('status'));
+    public function post_search_candidate(Request $request)
+    {   
+        $candidate_id = $request->input('candidate_id');
+        $status = $request->input('status');
+        $candidates = Status::find($candidate_id);
+
+        if($status == 'ENABLE'){ 
+            $fresh = Candidate::find($request->input('fresh_id'));
+            $exp = Candidate::find($request->input('exp_id'));
+            $intern = Candidate::find($request->input('intern_id'));
+            $operator = Candidate::find($request->input('operator_id'));
+
+            $fresh_radio = $request->input('fresh-radio') == 'YES' ? 'YES' : 'NO'; 
+            $exp_radio = $request->input('exp-radio') == 'YES' ? 'YES' : 'NO'; 
+            $intern_radio = $request->input('intern-radio') == 'YES' ? 'YES' : 'NO'; 
+            $operator_radio = $request->input('operator-radio') == 'YES' ? 'YES' : 'NO';
+
+            $fresh->status = $fresh_radio;
+            $fresh->message = $request->input('fresh-msg');
+            $fresh->save();
+
+            $exp->status = $exp_radio;
+            $exp->message = $request->input('exp-msg');
+            $exp->save();
+
+            $intern->status = $intern_radio;
+            $intern->message = $request->input('intern-msg');
+            $intern->save();
+
+            $operator->status = $operator_radio;
+            $operator->message = $request->input('operator-msg');
+            $operator->save();
+
+            $candidates->status = $status; 
+        }elseif($status == 'DISABLE'){
+            $candidates->status = $status; 
+        }
+
+        $candidates->message = $request->input('status-msg');
+        $candidates->save();
+
+        return back()->with('success', 'Successfully saved candidates search.');
+
     }
 
     public function candidate_expired()
     {
         $duration = CandidateDuration::all();  
         return view('admin.setting.candidate_exp', compact('duration'));
+    }
+
+    public function update_search_candidate(Request $request, $id)
+    {
+        if ($request->isMethod('get')) return view('admin.setting.candidate_exp', ['duration' => CandidateDuration::all(), 'editDuration' => CandidateDuration::find($id)]);
     }
 
     public function mail()
