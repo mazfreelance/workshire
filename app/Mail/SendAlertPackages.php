@@ -37,7 +37,7 @@ class SendAlertPackages extends Mailable
         $email_cc = \DB::table('admin_email')->whereRaw('class = "cc"')->whereRaw('type = "signup"')->get();  
 
         return $this->view('emails.alertpackages')
-                    ->from('noreply@workshire', 'WORKSHIRE NOTIFICATION')
+                    ->from('noreply@workshire.com.my', 'WORKSHIRE NOTIFICATION')
                     ->to($email_primary->toArray())
                     ->cc($email_cc->toArray())
                     ->subject('Packages notification');

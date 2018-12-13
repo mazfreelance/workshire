@@ -62,64 +62,91 @@
                     <i class="icon-speedometer"></i><span> Dashboard</span>
                 </a>                
             </li>
-            @if(Request::path() == 'admin/setting/search-candidate' OR Request::path() == 'admin/setting/candidate-expired' OR Request::path() == 'admin/setting/mail' OR  Request::path() == 'admin/setting/web' OR  Request::path() == 'admin/setting/package' OR  Request::path() == 'admin/setting/package/employer' OR  Request::path() == 'admin/setting/package/topup/add' OR  Request::path() == 'admin/setting/package/topup/reload')
-            <li class="treeview active">
-            @else
+
+            @if(Auth::user()->role->id == 3) 
+                @if(Request::path() == 'admin/setting/search-candidate' OR Request::path() == 'admin/setting/candidate-expired' OR Request::path() == 'admin/setting/mail' OR  Request::path() == 'admin/setting/web' OR  Request::path() == 'admin/setting/package' OR  Request::path() == 'admin/setting/package/employer' OR  Request::path() == 'admin/setting/package/topup/add' OR  Request::path() == 'admin/setting/package/topup/reload')
+                <li class="treeview active">
+                @else
+                <li class="treeview">
+                @endif    
+                    <a class="waves-effect waves-dark" href="#!">
+                        <i class="icofont icofont-ui-settings"></i><span> User Setting</span><i class="icon-arrow-down"></i>
+                    </a>
+                    <ul class="treeview-menu"> 
+                        <li class="{{ Request::path() == 'admin/setting/mail' ? 'active' : '' }}">
+                            <a class="waves-effect waves-dark" href="{{route('admin.mail')}}">
+                                <i class="icon-arrow-right"></i> Mail
+                            </a>
+                        </li> 
+                        <li class="{{ Request::path() == 'admin/setting/web' ? 'active' : '' }}">
+                            <a class="waves-effect waves-dark" href="{{route('admin.web')}}">
+                                <i class="icon-arrow-right"></i> Web
+                            </a>
+                        </li> 
+                        <li class="{{ Request::path() == 'admin/setting/search-candidate' ? 'active' : '' }}">
+                            <a class="waves-effect waves-dark" href="{{route('admin.search_candidate')}}">
+                                <i class="icon-arrow-right"></i> Search candidate
+                            </a>
+                        </li> 
+                        <li class="{{ Request::path() == 'admin/setting/candidate-expired' ? 'active' : '' }}">
+                            <a class="waves-effect waves-dark" href="{{route('admin.candidate_expired')}}">
+                                <i class="icon-arrow-right"></i> Search candidate duration
+                            </a>
+                        </li> 
+                        @if(Request::path() == 'admin/setting/package' OR Request::path() == 'admin/setting/package/employer' OR Request::path() == 'admin/setting/package/topup/add' OR Request::path() == 'admin/setting/package/topup/reload')
+                        <li class="treeview active">
+                        @else
+                        <li class="treeview">
+                        @endif    
+                            <a class="waves-effect waves-dark" href="">
+                                <i class="icon-arrow-right"></i>
+                                <span>Package candidate</span>
+                                <i class="icon-arrow-down"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li class="{{ Request::path() == 'admin/setting/package' ? 'active' : '' }}">
+                                    <a class="waves-effect waves-dark" href="{{route('admin.package')}}">
+                                        <i class="icon-arrow-right"></i>
+                                        Package Plan
+                                    </a>
+                                </li>  
+                                <li class="{{ Request::path() == 'admin/setting/cart-package' ? 'active' : '' }}">
+                                    <a class="waves-effect waves-dark" href="{{route('admin.cart_package')}}">
+                                        <i class="icon-arrow-right"></i>
+                                        Cart Package
+                                    </a>
+                                </li>  
+                                <li class="{{ Request::path() == 'admin/setting/package/employer' ? 'active' : '' }}">
+                                    <a class="waves-effect waves-dark" href="{{route('admin.package_employer')}}">
+                                        <i class="icon-arrow-right"></i>
+                                        Employer list
+                                    </a>
+                                </li>  
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            @endif
+
             <li class="treeview">
-            @endif    
                 <a class="waves-effect waves-dark" href="#!">
-                    <i class="icofont icofont-ui-settings"></i><span> User Setting</span><i class="icon-arrow-down"></i>
+                    <i class="icofont icofont-ui-settings"></i><span> Customers</span><i class="icon-arrow-down"></i>
                 </a>
                 <ul class="treeview-menu">
-                    @if(Auth::user()->role->id == 3) 
-                    <li class="{{ Request::path() == 'admin/setting/mail' ? 'active' : '' }}">
-                        <a class="waves-effect waves-dark" href="{{route('admin.mail')}}">
-                            <i class="icon-arrow-right"></i> Mail
-                        </a>
-                    </li> 
-                    <li class="{{ Request::path() == 'admin/setting/web' ? 'active' : '' }}">
-                        <a class="waves-effect waves-dark" href="{{route('admin.web')}}">
-                            <i class="icon-arrow-right"></i> Web
+                    <li class="{{ Request::path() == 'admin/setting/orders' ? 'active' : '' }}">
+                        <a class="waves-effect waves-dark" href="{{route('admin.orders')}}">
+                            <i class="icon-arrow-right"></i> Orders
                         </a>
                     </li>
-                    @endif
-                    <li class="{{ Request::path() == 'admin/setting/search-candidate' ? 'active' : '' }}">
-                        <a class="waves-effect waves-dark" href="{{route('admin.search_candidate')}}">
-                            <i class="icon-arrow-right"></i> Search candidate
+                    <li class="{{ Request::path() == 'admin/setting/token-manual' ? 'active' : '' }}">
+                        <a class="waves-effect waves-dark" href="{{route('admin.addtokenmanual')}}">
+                            <i class="icon-arrow-right"></i> Add manual
                         </a>
-                    </li> 
-                    <li class="{{ Request::path() == 'admin/setting/candidate-expired' ? 'active' : '' }}">
-                        <a class="waves-effect waves-dark" href="{{route('admin.candidate_expired')}}">
-                            <i class="icon-arrow-right"></i> Search candidate duration
-                        </a>
-                    </li> 
-                    @if(Request::path() == 'admin/setting/package' OR Request::path() == 'admin/setting/package/employer' OR Request::path() == 'admin/setting/package/topup/add' OR Request::path() == 'admin/setting/package/topup/reload')
-                    <li class="treeview active">
-                    @else
-                    <li class="treeview">
-                    @endif    
-                        <a class="waves-effect waves-dark" href="">
-                            <i class="icon-arrow-right"></i>
-                            <span>Package candidate</span>
-                            <i class="icon-arrow-down"></i>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li class="{{ Request::path() == 'admin/setting/package' ? 'active' : '' }}">
-                                <a class="waves-effect waves-dark" href="{{route('admin.package')}}">
-                                    <i class="icon-arrow-right"></i>
-                                    Package list
-                                </a>
-                            </li>  
-                            <li class="{{ Request::path() == 'admin/setting/package/employer' ? 'active' : '' }}">
-                                <a class="waves-effect waves-dark" href="{{route('admin.package_employer')}}">
-                                    <i class="icon-arrow-right"></i>
-                                    Employer list
-                                </a>
-                            </li>  
-                        </ul>
                     </li>
                 </ul>
             </li>
+
+
             <li class="treeview">
                 <a class="waves-effect waves-dark" href="#!">
                     <i class="icofont icofont-ui-settings"></i><span> Sourcing</span><i class="icon-arrow-down"></i>
@@ -128,7 +155,7 @@
                     <li>
                         <a class="waves-effect waves-dark" href="">
                             <i class="icon-arrow-right"></i>
-                            <span>Sourcing Numbers</span>
+                            <span>Numbers</span>
                             <i class="icon-arrow-down"></i>
                         </a>
                         <ul class="treeview-menu">
@@ -152,11 +179,6 @@
                             </li>  
                         </ul>
                     </li> 
-                    <li class="{{ Request::path() == 'admin/setting/web' ? 'active' : '' }}">
-                        <a class="waves-effect waves-dark" href="{{route('admin.web')}}">
-                            <i class="icon-arrow-right"></i> Web
-                        </a>
-                    </li>
                 </ul>
             </li>
         </ul>

@@ -169,7 +169,7 @@
                                             </td>
                                             <td class="w-25 text-center">
                                                 <button class="btn btn-flat flat-info txt-info waves-effect waves-light" 
-                                                onClick="location.href='{{route('admin.delete_user', ['id' => $ej->id])}}'">
+                                                onClick="location.href='{{route('admin.update_user', ['id' => $ej->id])}}'">
                                                     Edit
                                                 </button>
                                                 @if($ej->role_id !== 3) 

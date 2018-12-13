@@ -37,7 +37,7 @@ class SendMailJobAlert extends Mailable
     public function build()
     {     
         return $this->view('emails.jobalert')   
-                    ->from('noreply@workshire.com.my', 'Workshire NOREPLY')
+                    ->from('noreply@workshire.com.my.com.my', 'Workshire NOREPLY')
                     ->to($this->email, $this->name)
                     ->subject('We have jobs that might interest you'); 
     }

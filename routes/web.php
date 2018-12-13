@@ -185,20 +185,39 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'auth:admin
     Route::get('other', 'DashboardController@other')->name('other');  
 
     Route::get('setting/search-candidate', 'SettingController@search_candidate')->name('search_candidate'); 
-    Route::post('setting/post-search-candidate', 'SettingController@post_search_candidate')->name('post_search_candidate'); 
-    Route::match(['get', 'put'], 'update-search-candidate/{id}', 'SettingController@update_search_candidate')->name('update_search_candidate');
-
-
-
+    Route::post('setting/post-search-candidate', 'SettingController@post_search_candidate')->name('post_search_candidate');  
 
     Route::get('setting/candidate-expired', 'SettingController@candidate_expired')->name('candidate_expired'); 
-    Route::get('setting/mail', 'SettingController@mail')->name('mail'); 
-    Route::get('setting/web', 'SettingController@web')->name('web');  
+    Route::match(['get', 'put'], 'update-candidate-expired/{id}', 'SettingController@update_candidate_expired')->name('update_candidate_expired');
+
+    //package and cart
     Route::get('setting/package', 'SettingController@package')->name('package'); 
+    Route::match(['get', 'post'], 'create-package', 'SettingController@create_package')->name('create_package');
+    Route::match(['get', 'put'], 'update-package/{id}', 'SettingController@update_package')->name('update_package');
+    Route::get('destroy-package/{id}', 'SettingController@destroy_package')->name('destroy_package');  
+ 
+    Route::match(['get', 'post'], 'create-jobpostingduration', 'SettingController@create_jobpostingduration')->name('create_jobpostingduration');
+    Route::match(['get', 'put'], 'update-jobpostingduration/{id}', 'SettingController@update_jobpostingduration')->name('update_jobpostingduration');
+    Route::get('destroy-jobpostingduration/{id}', 'SettingController@destroy_jobpostingduration')->name('destroy_jobpostingduration'); 
+
+    Route::get('setting/cart-package', 'SettingController@cart_package')->name('cart_package'); 
+    Route::match(['get', 'post'], 'create-cart_package', 'SettingController@create_cart_package')->name('create_cart_package');
+    Route::match(['get', 'put'], 'update-cart_package/{id}', 'SettingController@update_cart_package')->name('update_cart_package');
+    Route::get('destroy-cart_package/{id}', 'SettingController@destroy_cart_package')->name('destroy_cart_package'); 
+
+
+    Route::get('setting/orders', 'SettingController@orders')->name('orders'); 
+    Route::match(['get', 'put'], 'update-orders/{id}', 'SettingController@update_orders')->name('update_orders');
+    Route::match(['get', 'put'], 'add-token-cart/{emp_id}/{post_id}/{resume_id}', 'SettingController@add_token_cart')->name('add_token_cart');
+    Route::get('setting/token-manual', 'SettingController@addtokenmanual')->name('addtokenmanual'); 
+
     Route::get('setting/package/employer', 'SettingController@package_employer')->name('package_employer'); 
     Route::get('setting/package/topup/add', 'SettingController@package_add')->name('package_add'); 
     Route::get('setting/package/topup/reload', 'SettingController@package_reload')->name('package_reload');  
 
+
+    Route::get('setting/mail', 'SettingController@mail')->name('mail'); 
+    Route::get('setting/web', 'SettingController@web')->name('web');  
     Route::match(['get', 'post'], 'post', 'SettingController@add_email')->name('post');
     Route::match(['get', 'put'], 'update/{id}', 'SettingController@update_email')->name('update_email');
     Route::get('delete_email/{id}', 'SettingController@destroy_email')->name('delete_email');  
@@ -341,7 +360,7 @@ Route::get('jobalert', function() {
  
 
 Route::get('emailview', function () {
-    return view('emails.applyjobnoti');
+    return view('emails.alerttoemployerforpackage');
 });
 
 Route::get('test', function () {  

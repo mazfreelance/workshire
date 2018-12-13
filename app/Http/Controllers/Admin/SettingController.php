@@ -7,16 +7,23 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AlertEmailToEmployerForPackage; 
  
 use App\Model\Candidate;
 use App\Model\Status;
 use App\Model\CandidateDuration;
+use App\Model\PostingDuration;
+use App\Model\Cart_Order;
+use App\Model\Cart_Product;
+use App\Model\Cart_Order_Product;
 use App\Model\PackagePlan;
 use App\Model\employer;
 use App\Model\EmployerTokenResume;
 use App\Model\EmployerTokenPost;
 use App\Model\Admin_Email;
 use App\User_Admin;
+use App\User_Employer;
 
 class SettingController extends Controller
 { 
@@ -94,9 +101,26 @@ class SettingController extends Controller
         return view('admin.setting.candidate_exp', compact('duration'));
     }
 
-    public function update_search_candidate(Request $request, $id)
+    public function update_candidate_expired(Request $request, $id)
     {
-        if ($request->isMethod('get')) return view('admin.setting.candidate_exp', ['duration' => CandidateDuration::all(), 'editDuration' => CandidateDuration::find($id)]);
+        if ($request->isMethod('get')) 
+            return view('admin.setting.candidate_exp', ['duration' => CandidateDuration::all(), 
+                                                        'editDuration' => CandidateDuration::find($id)]);
+
+        $candidate = CandidateDuration::find($id);
+        $limit = $request->input('limit');
+        if($limit == 0) $candidate->duration = $limit;
+        else{
+            $number = $request->input('number');
+            $number_dur = $request->input('number_dur');
+            $duration = $number.' '.$number_dur;
+            $candidate->duration = $duration;
+        } 
+
+        $candidate->token_value = $request->input('token_value');
+        $candidate->save();
+
+        return redirect()->route('admin.candidate_expired')->with('success', 'Successfully saved search '.$candidate->candidate_type.' candidate duration');
     }
 
     public function mail()
@@ -154,7 +178,7 @@ class SettingController extends Controller
         $email->type = $request->input('type');
         $email->save();
 
-        return redirect('admin/setting/mail')->with('Success', 'Succesffully update email '. $request->input('email'));
+        return redirect('admin/setting/mail')->with('Success', 'Succesfully update email '. $request->input('email'));
     }
 
     public function destroy_email($id)
@@ -162,7 +186,7 @@ class SettingController extends Controller
         $e = Admin_Email::find($id);
         $email = $e->email;
         Admin_Email::destroy($id);
-        return redirect('admin/setting/mail')->with('Success', 'Succesffully deleted email '. $email);
+        return redirect('admin/setting/mail')->with('Success', 'Succesfully deleted email '. $email);
     } 
 
     public function user(Request $request){
@@ -208,41 +232,304 @@ class SettingController extends Controller
         $email->password = Hash::make($request->input('password'));
         $email->save();
 
-        return redirect('admin/setting/user')->with('Success', 'Succesffully update email '. $request->input('email'));
+        return redirect('admin/setting/user')->with('Success', 'Succesfully update email '. $request->input('email'));
     }
     public function destroy_user($id){
         $e = User_Admin::find($id);
         $email = $e->email;
         User_Admin::destroy($id);
-        return redirect('admin/setting/user')->with('Success', 'Succesffully deleted email '. $email);
+        return redirect('admin/setting/user')->with('Success', 'Succesfully deleted email '. $email);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public function web()
     {  
         return view('admin.setting.web', compact('duration'));
     } 
 
+
+    /*Package and Cart*/
+
     public function package()
     {  
-        $pkgs = new PackagePlan();
-        $pkgs = $pkgs->orderby('type', 'ASC')->paginate(5);
-
-        return view('admin.setting.package', compact('pkgs'));
+        $pkgs = PackagePlan::orderby('type', 'ASC')->paginate(5);
+        $postDur = PostingDuration::all();
+        return view('admin.setting.package', compact('pkgs', 'postDur'));
     }
+
+    public function create_package(Request $request)
+    { 
+        $pkgs = PackagePlan::create([
+            'type' => $request->input('type'),
+            'description' => $request->input('description'),
+            'token_amount' => $request->input('token_amt'),
+            'token_count' => 0,
+            'status' => 'A',
+        ]);
+
+        return back()->with('success', 'Succesfully added new package');
+    }
+
+    public function update_package(Request $request, $id)
+    {   
+        $editPkg = PackagePlan::find($id);
+        if ($request->isMethod('get')){ 
+            $pkgs = PackagePlan::orderby('type', 'ASC')->paginate(5);
+            $postDur = PostingDuration::all();
+            return view('admin.setting.package', compact('pkgs', 'editPkg', 'postDur'));
+        }
+
+        $editPkg->type = $request->input('type');
+        $editPkg->description = $request->input('description');
+        $editPkg->token_amount = $request->input('token_amt');
+        $editPkg->save();
+
+        return redirect()->route('admin.package')->with('success', 'Succesfully updated '.$editPkg->type.'|'.$editPkg->id.' package');
+    }
+
+    public function destroy_package($id)
+    {   
+        $pkg = PackagePlan::find($id); 
+        $old = $pkg->type.'|'.$pkg->id;
+        PackagePlan::destroy($id); 
+
+        return redirect()->route('admin.package')->with('success', 'Succesfully deleted '.$old.' package');
+    }
+
+    public function create_jobpostingduration(Request $request)
+    {    
+        $pkgs = PostingDuration::create([
+            'post_type' => $request->input('jobpost'),
+            'duration' => $request->input('number').' '.$request->input('number_dur'),
+            'token_value' => $request->input('token_amt')
+        ]);
+
+        return back()->with('success', 'Succesfully added new job posting duration package');
+    }
+
+    public function update_jobpostingduration(Request $request, $id)
+    {   
+        $editPkgDur = PostingDuration::find($id);
+        if ($request->isMethod('get')){ 
+            $pkgs = PackagePlan::orderby('type', 'ASC')->paginate(5);
+            $postDur = PostingDuration::all();
+            return view('admin.setting.package', compact('pkgs', 'editPkgDur', 'postDur'));
+        }
+
+        $editPkgDur->post_type = $request->input('jobpost');
+        $editPkgDur->duration = $request->input('number').' '.$request->input('number_dur');
+        $editPkgDur->token_value = $request->input('token_amt');
+        $editPkgDur->save();
+
+        return redirect()->route('admin.package')->with('success', 'Succesfully updated '.$editPkgDur->post_type.' job posting duration package');
+    }
+
+    public function destroy_jobpostingduration($id)
+    {   
+        $pkg = PostingDuration::find($id); 
+        $old = $pkg->post_type;
+        PostingDuration::destroy($id); 
+
+        return redirect()->route('admin.package')->with('success', 'Succesfully deleted '.$old.' job posting duration package');
+    }
+
+
+    public function cart_package()
+    {   
+        $cartPro = Cart_Product::paginate(10); 
+        return view('admin.setting.cartpackage', compact('pkgs', 'cartPro'));
+    }
+
+    public function create_cart_package(Request $request)
+    {
+        //return dd($request->all());
+        if($request->input('type') == 'lifetime') $limit = $request->input('type');
+        else{
+            $limit = $request->input('number').' '.$request->input('number_dur');
+        }
+
+        Cart_Product::create([
+            'name' => $request->input('name'), 
+            'post_id' => $request->input('jobpost'), 
+            'resume_id' => $request->input('viewresume'), 
+            'price' => $request->input('total'), 
+            'disc_price' => $request->input('discount'), 
+            'duration' => $limit, 
+            'description' => $request->input('description')
+        ]);
+
+        return back()->with('success', 'Succesfully added new cart package');
+    }
+
+    public function update_cart_package(Request $request, $id)
+    {   
+        $editPkg = Cart_Product::find($id);
+        if ($request->isMethod('get')){ 
+            $cartPro = Cart_Product::paginate(10);
+            return view('admin.setting.cartpackage', compact('cartPro', 'editPkg'));
+        }
+       
+
+        if($editPkg->id == 1 OR $editPkg->id == 2){
+            $editPkg->name = $request->input('name');
+            $editPkg->description = $request->input('description'); 
+        }else{
+            if($request->input('type') == 'lifetime') $limit = $request->input('type');
+            else{
+                $limit = $request->input('number').' '.$request->input('number_dur');
+            }    
+            $editPkg->name = $request->input('name');
+            $editPkg->post_id = $request->input('jobpost');
+            $editPkg->resume_id = $request->input('viewresume');
+            $editPkg->price = $request->input('total');
+            $editPkg->disc_price = $request->input('discount');
+            $editPkg->duration = $limit; 
+            $editPkg->description = $request->input('description'); 
+        } 
+        $editPkg->save();
+        
+        return redirect()->route('admin.cart_package')->with('success', 'Succesfully updated '.$editPkg->name.' package');
+    }
+
+    public function destroy_cart_package($id)
+    {   
+        $pkg = Cart_Product::find($id); 
+        $old = $pkg->name;
+        Cart_Product::destroy($id); 
+
+        return redirect()->route('admin.cart_package')->with('success', 'Succesfully deleted '.$old.' package');
+    }
+
+    public function package_cart()
+    {    
+        $pkgs = PackagePlan::all();
+        $post = PostingDuration::all();
+        $cartPro = Cart_Product::all();
+
+        return view('admin.setting.package', compact('pkgs', 'post', 'cartPro'));
+    }
+
+    public function orders()
+    {   
+        $COP = Cart_Order_Product::paginate(10);
+        return view('admin.setting.package_order', compact('COP'));
+    }
+
+    public function update_orders(Request $request, $id)
+    {
+        $editPkg = Cart_Order::find($id);
+        if ($request->isMethod('get')){ 
+            $COP = Cart_Order_Product::paginate(10);
+            return view('admin.setting.package_order', compact('COP', 'editPkg'));
+        } 
+        $editPkg->status = $request->input('status'); 
+        $editPkg->save();
+        
+        return redirect()->route('admin.orders')->with('success', 'Succesfully updated #'.$editPkg->id.' package');
+    }
+
+    public function add_token_cart(Request $request, $emp_id, $post_id, $resume_id)
+    {
+        $employer = employer::find($emp_id);
+        $user = User_Employer::find($employer->users_id); 
+
+        $postPlan = 'P|'.$post_id;
+        $resumePlan = 'V|'.$resume_id;
+
+        $TokenPost = EmployerTokenPost::where('employer_id', '=', $emp_id)->first();
+        $TokenResume = EmployerTokenResume::where('employer_id', '=', $emp_id)->first();
+
+        $postPP = PackagePlan::where('id', '=', $post_id)->first();
+        $resumePP = PackagePlan::where('id', '=', $resume_id)->first();
+        $token_post = $postPP->token_amount; 
+        $token_resume = $resumePP->token_amount;
+
+        $duration = Cart_Product::where('post_id', '=', $post_id)->where('resume_id', '=', $resume_id)->pluck('duration')->first(); 
+        $now = \Carbon::now();
+        $mod_date = strtotime($now."+ ".$duration);
+        $expired_date = date("Y-m-d H:i:s",$mod_date) . "\n";
+
+        if(isset($TokenPost) AND isset($TokenResume)){
+            //Reset new if exist another package ealier  
+            $TokenPost->package_plan = $postPlan;
+            $TokenPost->balance = $token_post;
+            $TokenPost->subscribe_date = $now;
+            $TokenPost->expired_date = $expired_date;
+            $TokenPost->created_at = $now;
+            $TokenPost->save();
+
+            $TokenResume->package_plan = $resumePlan;
+            $TokenResume->balance = $token_resume;
+            $TokenResume->subscribe_date = $now;
+            $TokenResume->expired_date = $expired_date;
+            $TokenResume->created_at = $now;
+            $TokenResume->save();
+        }else{
+            //create new
+            return 'xmasuk '.$emp_id; 
+            EmployerTokenPost::create([
+                'employer_id' => $employer->id, 
+                'package_plan' => $postPlan, 
+                'balance' => $token_post,
+                'subscribe_date' => $now, 
+                'expired_date' => $expired_date
+            ]);
+            EmployerTokenResume::create([
+                'employer_id' => $employer->id, 
+                'package_plan' => $resumePlan, 
+                'balance' => $token_resume,
+                'subscribe_date' => $now, 
+                'expired_date' => $expired_date
+            ]);
+        }
+
+
+        $new_count_post = $postPP->token_count+1;
+        $postPP->token_count = $new_count_post;
+        //$postPP->save(); 
+
+        $new_count_resume = $resumePP->token_count+1;
+        $resumePP->token_count = $new_count_resume;
+        //$resumePP->save();
+
+        Mail::send(new AlertEmailToEmployerForPackage($user->email, $employer->emp_name));
+
+        return redirect()->route('admin.orders')->with('success', 'Succesfully added token to customer and successfully sent email on '.$employer->emp_name);
+    }
+
+    /********************************************/
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function package_employer(Request $req)
     {   

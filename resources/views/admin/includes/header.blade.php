@@ -44,9 +44,10 @@
                 <!-- User Menu-->
                 <li class="dropdown">
                     <a href="#!" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle drop icon-circle drop-image">
-                        <span><img class="img-circle " src="{{asset('public/admin/assets/images/avatar-1.png') }}" style="width:40px;" alt="User Image"></span>
-                        <span>John <b>Doe</b> <i class=" icofont icofont-simple-down"></i></span>
-
+                        
+                    @auth('admin')   
+                        <span><b>{{Auth::user()->name}}</b> <i class=" icofont icofont-simple-down"></i></span>
+                    @endauth
                     </a>
                     <ul class="dropdown-menu settings-menu">
                         @if(Auth::user()->role->id == 3) 

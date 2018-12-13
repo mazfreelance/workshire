@@ -37,7 +37,7 @@ class SendMailableRegisteredUsers extends Mailable
         $email_cc = \DB::table('admin_email')->whereRaw('class = "cc"')->whereRaw('type = "signup"')->get();  
 
         return $this->view('emails.registeredcount')
-                    ->from('noreply@workshire', 'WORKSHIRE NOTIFICATION')
+                    ->from('noreply@workshire.com.my', 'WORKSHIRE NOTIFICATION')
                     ->to($email_primary->toArray())
                     ->cc($email_cc->toArray())
                     ->subject('Number of Workshire Signup Weekly Between '.date('F jS , Y', strtotime($this->monday)).' & '.date('F jS , Y', strtotime($this->sunday)));

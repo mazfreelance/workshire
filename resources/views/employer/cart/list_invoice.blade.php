@@ -42,7 +42,7 @@
                                         <td>RM{{$order->total}}</td> 
                                         <td>
                                             <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="top" data-img="{{ asset('public/document/receipt/').'/'.$order->payment_receipt}}">
-                                              Popover on top
+                                              Click to see payment receipt
                                             </button>
                                         </td>
                                         <td class="w-25"> 
