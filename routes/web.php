@@ -210,12 +210,13 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'auth:admin
     Route::match(['get', 'put'], 'update-orders/{id}', 'SettingController@update_orders')->name('update_orders');
     Route::match(['get', 'put'], 'add-token-cart/{emp_id}/{post_id}/{resume_id}', 'SettingController@add_token_cart')->name('add_token_cart');
     Route::get('setting/token-manual', 'SettingController@addtokenmanual')->name('addtokenmanual'); 
+    Route::match(['get', 'put'], 'add-token-manual/{emp_id}/{post_id}/{resume_id}', 'SettingController@add_token_manual')->name('add_token_manual');
 
-    Route::get('setting/package/employer', 'SettingController@package_employer')->name('package_employer'); 
-    Route::get('setting/package/topup/add', 'SettingController@package_add')->name('package_add'); 
-    Route::get('setting/package/topup/reload', 'SettingController@package_reload')->name('package_reload');  
-
-
+    Route::get('setting/jobapproval', 'SettingController@jobapproval')->name('jobapproval'); 
+    Route::match(['get', 'put'], 'update-jobposting/{id}', 'SettingController@update_jobposting')->name('update_jobposting');
+    Route::match(['get', 'put'], 'update-jobapproval/{id}', 'SettingController@update_jobapproval')->name('update_jobapproval');
+  
+    //USER AND EMAIL
     Route::get('setting/mail', 'SettingController@mail')->name('mail'); 
     Route::get('setting/web', 'SettingController@web')->name('web');  
     Route::match(['get', 'post'], 'post', 'SettingController@add_email')->name('post');
@@ -226,6 +227,11 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'auth:admin
     Route::match(['get', 'post'], 'user/create', 'SettingController@create_user')->name('create_user');
     Route::match(['get', 'put'], 'user/update/{id}', 'SettingController@update_user')->name('update_user');
     Route::get('user/delete_user/{id}', 'SettingController@destroy_user')->name('delete_user');  
+
+    Route::get('setting/demo-data', 'DashboardController@demodata')->name('demodata'); 
+    Route::get('setting/advance-search', 'DashboardController@advancesearch')->name('advancesearch');
+    Route::post('setting/post-advance-search', 'DashboardController@postadvancesearch')->name('postadvancesearch');  
+    
 }); 
 
 /* CONTACT */  

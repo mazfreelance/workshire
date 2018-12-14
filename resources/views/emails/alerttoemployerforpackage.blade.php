@@ -44,12 +44,17 @@
 			                <td style="padding:10px;font-size:14px; width:100%;">
 			                	<!-- HERE START -->
 			                    <p>Hi {{$name}} ({{$email}}),</p>
-
-
-
+ 
+			                    <p>
+			                    	On behalf of Talent Suites, we are glad to introduce <em><strong>workshire.com.my</strong></em>, our new online job space. We have credited tokens to you.
+			                    </p>
+			                    <p>
+			                    	Currently, there are more than 8000+ candidates through out Malaysia that are currently exploring opportunities in Workshire.
+			                    </p>
 			                    <p>
 			                    	Your package that you bought is approved and been sent token to you. Thank you for purchase to our services and keep it continue to support us.
 			                    </p>
+
 			                    <table class="table table-bordered">
 			                    	<tr>
 			                    		<th class="bg-dark text-light">
@@ -59,7 +64,8 @@
 			                    			<a href="{{route('employer.login')}}">Click to direct login page</a>
 			                    		</td>
 			                    	</tr>
-			                    </table> 
+			                    </table>
+			                    
 			                	<!-- HERE END -->
 			                    <p>Thank you regard <br>
 		        				Workshire,<br></p>

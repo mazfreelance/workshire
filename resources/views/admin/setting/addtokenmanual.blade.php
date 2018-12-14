@@ -1,6 +1,6 @@
 @extends('layouts.master_admin')
 
-@section('title', 'Setting | Orders')
+@section('title', 'Setting | Employer Token')
 
 @section('content') 
 <div class="content-wrapper">
@@ -10,13 +10,13 @@
         <div class="row">
             <div class="col-sm-12 p-0">
                 <div class="main-header">
-                    <h4>Setting | Employer Orders</h4>
+                    <h4>Setting | Employer Token (Add Token Manual)</h4>
                     <ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
                         <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}"><i class="icofont icofont-home"></i></a>
                         </li>
                         <li class="breadcrumb-item"><a href="">Customers</a>
                         </li>
-                        <li class="breadcrumb-item"><a href="">Orders</a>
+                        <li class="breadcrumb-item"><a href="">Add Token Manual</a>
                         </li>
                     </ol>
                 </div>
@@ -39,7 +39,7 @@
         		<!-- Col content-2 --> 
 				<div class="card">
                     <div class="card-header">
-                    	Setting for employer orders list
+                    	Setting for employer token list
                     </div>  
                     <div class="card-block">
                         <div class="row">
@@ -86,102 +86,54 @@
                                     <thead class="table-inverse">
                                         <tr> 
                                             <th>#</th> 
-                                            <th>Order</th> 
+                                            <th>Detail</th> 
                                             <th>Product</th> 
-                                            <th>Total</th> 
-                                            <th>Tax</th>  
-                                            <th>Quantity</th>
-                                            <th>Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>   
-                                        @foreach($COP as $cop)
-                                        @php
-                                        $product = \App\Model\Cart_Product::find($cop->cart__product_id);
-                                        $order = \App\Model\Cart_Order::find($cop->cart__order_id);
-                                        $employer = \App\Model\employer::find($order->employer_id);
+                                    <tbody>   @php $i=1; @endphp
+                                        @foreach($employer as $emp)
+                                        @php 
 
-                                        $jpost = \App\Model\EmployerTokenPost::where('employer_id', '=', $employer->id)->pluck('expired_date')->first();
-                                        $rview = \App\Model\EmployerTokenResume::where('employer_id', '=', $employer->id)->pluck('expired_date')->first(); 
+                                        $jpost = \App\Model\EmployerTokenPost::where('employer_id', '=', $emp->id)->first();
+                                        $rview = \App\Model\EmployerTokenResume::where('employer_id', '=', $emp->id)->first(); 
                                         @endphp
                                         <tr> 
-                                            <td class="w-25">#{{ $order->id }}</td>
-                                            <td class="w-25"> 
-                                                <table>
-                                                    <tr>
-                                                        <th>Company Name</th>
-                                                        <td>{{ $employer->emp_name }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Buyer</th>
-                                                        <td>{{ $order->name }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Bought by</th>
-                                                        <td>{{ date('M d, Y - h:i a', strtotime($order->created_at)) }}</td>
-                                                    </tr>
-                                                </table>
-                                            </td> 
+                                            <td class="w-25">#{{ $rview->id }}</td>
+                                            <td class="w-25">{{ $emp->emp_name }}</td> 
                                             <td class="w-25"> 
                                                  <table>
                                                     <tr>
-                                                        <th>Name</th>
-                                                        <td>{{ $product->name }}</td>
-                                                    </tr>
-                                                    <tr>
                                                         <th>Package</th>
                                                         <td>
-                                                            {{ 'P|'.$product->post_id }}
+                                                            {{ $jpost->package_plan }} : Bal: {{ $jpost->package_plan == 'P|26'? 'Unlimited':$jpost->balance }}
                                                             <br/>
-                                                            {{ 'V|'.$product->resume_id }} 
+                                                            {{ $rview->package_plan }} - Bal: {{ $rview->package_plan == 'V|25'? 'Unlimited':$rview->balance }}
                                                         </td>
                                                     </tr>
-                                                </table>
-                                            </td>  
-                                            <td class="w-25"> 
-                                                 {{$cop->total}}
-                                            </td> 
-                                            <td class="w-25"> 
-                                                 {{$cop->tax}}
-                                            </td> 
-                                            <td class="w-25"> 
-                                                 {{$cop->qty}}
-                                            </td> 
-                                            <td class="w-25">  
-                                                <table>
                                                     <tr>
-                                                        <th>Status</th>
-                                                        <td><label class="badge badge-inverse-success">{{ $order->status }}</label></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Payment method</th>
-                                                        <td>{{ $order->payment_method }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Total</th>
-                                                        <td>{{ $order->total }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Receipt</th>
-                                                        <td> 
-                                                            <div class="col-xs-4 col-md-2">
-                                                                <a href="{{ asset('public/document/receipt/').'/'.$order->payment_receipt}}" target="_blank">
-                                                                  click to see
-                                                                </a>
-                                                            </div>
+                                                        <th>Bought / Expired</th>
+                                                        <td>
+                                                            {{ $jpost->package_plan }} : Bought: {{ date('M, d Y', strtotime($jpost->subscribe_date)) }}
+                                                            <br/>
+                                                            {{ $rview->package_plan }} - Expired: {{ date('M, d Y', strtotime($rview->expired_date)) }}
+                                                            <br/>
+                                                            @if(date('Y-m-d') >= $jpost->expired_date AND date('Y-m-d') >= $rview->expired_date)
+                                                            	<label class="badge badge-inverse-danger">Expired; Add Token Now</label>
+                                                            @endif
                                                         </td>
                                                     </tr>
                                                 </table>
                                             </td>  
                                             <td class="w-25 text-center"> 
-                                                <button class="btn btn-flat flat-info txt-info waves-effect waves-light" 
-                                                onClick="location.href='{{ route('admin.update_orders', ['id' => $order->id]) }}'">Edit</button> 
+                                            	@php
+                                            		$rpp = explode ('|', $rview->package_plan);
+                                            		$jpp = explode ('|', $jpost->package_plan);
+                                            	@endphp
 
-                                                <br/><br/>
-                                                @if(date('Y-m-d') >= $jpost AND date('Y-m-d') >= $rview)
+                                                @if(date('Y-m-d') >= $jpost->expired_date AND date('Y-m-d') >= $rview->expired_date)
                                                     <button class="btn btn-flat flat-success txt-success waves-effect waves-light" 
-                                                    onClick="location.href='{{ route('admin.add_token_cart', ['emp_id' => $employer->id, 'post_id' => $product->post_id, 'resume_id' => $product->resume_id]) }}'">
+                                                    onClick="location.href='{{ route('admin.add_token_manual', ['emp_id' => $emp->id, 'post_id' => $jpp[1], 'resume_id' => $rpp[1]]) }}'">
                                                     Add Token
                                                     </button>
                                                 @else 
@@ -196,7 +148,7 @@
                                     </tbody>
                                 </table> 
                                 <nav class="table-responsive" aria-label="pagination" style="margin-bottom:-1em">
-                                    {{ $COP->links('vendor.pagination.bootstrap-4') }}
+                                    {{ $employer->links('vendor.pagination.bootstrap-4') }}
                                 </nav> 
                             </div> 
                         </div>

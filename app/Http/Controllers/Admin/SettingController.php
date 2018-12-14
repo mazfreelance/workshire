@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AlertEmailToEmployerForPackage; 
  
+use App\Model\jobPost;
 use App\Model\Candidate;
 use App\Model\Status;
 use App\Model\CandidateDuration;
@@ -496,92 +497,113 @@ class SettingController extends Controller
         return redirect()->route('admin.orders')->with('success', 'Succesfully added token to customer and successfully sent email on '.$employer->emp_name);
     }
 
-    /********************************************/
- 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public function package_employer(Request $req)
+    public function addtokenmanual()
     {   
-        $req->session()->put('employer_name', $req
-            ->has('employer_name') ? $req->get('employer_name') : ($req->session()
-            ->has('employer_name') ? $req->session()->get('employer_name') : ''));
-
-        $employers = new employer(); 
-        $tokenRs = new EmployerTokenResume();
-        $tokenPs = new EmployerTokenPost();
-        
-        $tokenRs = $tokenRs->all();
-        $tokenPs = $tokenPs->all();
-        if($req->session()->get('employer_name') != '')
-            $employers = $employers->whereRaw("emp_name LIKE '%".$req->session()->get('employer_name')."%'")
-                                   ->paginate(10);   
-        else 
-            $employers = $employers->paginate(10);   
-
-        return view('admin.setting.package_employer', compact('employers', 'tokenRs', 'tokenPs'));
-    }
-
-    public function package_add()
-    {  
-        $pkgs = new PackagePlan();
-        $pkgs = $pkgs->orderby('type', 'ASC')->paginate(5);
-
-        return view('admin.setting.package_add', compact('pkgs'));
-    }
-
-    public function package_reload(Request $req)
-    {  
-        $req->session()->put('idR', $req
-            ->has('idR') ? $req->get('idR') : ($req->session()
-            ->has('idR') ? $req->session()->get('idR') : ''));
-        
-        $req->session()->put('idP', $req
-            ->has('idP') ? $req->get('idP') : ($req->session()
-            ->has('idP') ? $req->session()->get('idP') : ''));
-
-        $req->session()->put('employer', $req
-            ->has('employer') ? $req->get('employer') : ($req->session()
-            ->has('employer') ? $req->session()->get('employer') : '')); 
-
-        $employers = new employer(); 
-        $tokenRs = new EmployerTokenResume();
-        $tokenPs = new EmployerTokenPost();
-
-        $employers = $employers->find($req->session()->get('employer')); 
-        $tokenRs = $tokenRs->find($req->session()->get('idR'));
-        $tokenPs = $tokenPs->find($req->session()->get('idP'));
-
-        return view('admin.setting.package_reload', compact('employers', 'tokenRs', 'tokenPs'));
+        $employer = employer::paginate(10);
+        return view('admin.setting.addtokenmanual', compact('employer'));
     } 
+
+    public function add_token_manual(Request $request, $emp_id, $post_id, $resume_id)
+    {
+        $employer = employer::find($emp_id);
+        $user = User_Employer::find($employer->users_id); 
+
+        $postPlan = 'P|'.$post_id;
+        $resumePlan = 'V|'.$resume_id;
+
+        $TokenPost = EmployerTokenPost::where('employer_id', '=', $emp_id)->first();
+        $TokenResume = EmployerTokenResume::where('employer_id', '=', $emp_id)->first();
+
+        $postPP = PackagePlan::where('id', '=', $post_id)->first();
+        $resumePP = PackagePlan::where('id', '=', $resume_id)->first();
+        $token_post = $postPP->token_amount; 
+        $token_resume = $resumePP->token_amount;
+
+        $duration = Cart_Product::where('post_id', '=', $post_id)->where('resume_id', '=', $resume_id)->pluck('duration')->first(); 
+        $now = \Carbon::now();
+        $mod_date = strtotime($now."+ ".$duration);
+        $expired_date = date("Y-m-d H:i:s",$mod_date) . "\n";
+
+        if(isset($TokenPost) AND isset($TokenResume)){
+            //Reset new if exist another package ealier  
+            $TokenPost->package_plan = $postPlan;
+            $TokenPost->balance = $token_post;
+            $TokenPost->subscribe_date = $now;
+            $TokenPost->expired_date = $expired_date;
+            $TokenPost->created_at = $now;
+            $TokenPost->save();
+
+            $TokenResume->package_plan = $resumePlan;
+            $TokenResume->balance = $token_resume;
+            $TokenResume->subscribe_date = $now;
+            $TokenResume->expired_date = $expired_date;
+            $TokenResume->created_at = $now;
+            $TokenResume->save();
+        }else{
+            //create new
+            return 'xmasuk '.$emp_id; 
+            EmployerTokenPost::create([
+                'employer_id' => $employer->id, 
+                'package_plan' => $postPlan, 
+                'balance' => $token_post,
+                'subscribe_date' => $now, 
+                'expired_date' => $expired_date
+            ]);
+            EmployerTokenResume::create([
+                'employer_id' => $employer->id, 
+                'package_plan' => $resumePlan, 
+                'balance' => $token_resume,
+                'subscribe_date' => $now, 
+                'expired_date' => $expired_date
+            ]);
+        }
+
+
+        $new_count_post = $postPP->token_count+1;
+        $postPP->token_count = $new_count_post;
+        //$postPP->save(); 
+
+        $new_count_resume = $resumePP->token_count+1;
+        $resumePP->token_count = $new_count_resume;
+        //$resumePP->save();
+
+        Mail::send(new AlertEmailToEmployerForPackage($user->email, $employer->emp_name));
+
+        return redirect()->route('admin.addtokenmanual')->with('success', 'Succesfully added token to customer and successfully sent email on '.$employer->emp_name);
+    }
+    
+     public function jobapproval()
+    {   
+        $jobPost = jobPost::orderby('jobpost_endDate', 'DESC')->paginate(10);
+        return view('admin.setting.jobapproval', compact('jobPost'));
+    }
+
+    public function update_jobposting(Request $request, $id)
+    {
+        $editjob = jobPost::find($id);
+        if ($request->isMethod('get')){ 
+            $jobPost = jobPost::orderby('jobpost_endDate', 'DESC')->paginate(10);
+            return view('admin.setting.jobapproval', compact('jobPost', 'editjob'));
+        } 
+        $editjob->jobpost_desc = $request->input('job_description'); 
+        $editjob->jobpost_exp = $request->input('job_scope'); 
+        $editjob->save();
+        
+        return redirect()->route('admin.jobapproval')->with('success', 'Succesfully updated #'.$editjob->id.' jobposting');
+    }
+
+    public function update_jobapproval(Request $request, $id)
+    {
+        $editapproval = jobPost::find($id);
+        if ($request->isMethod('get')){ 
+            $jobPost = jobPost::orderby('jobpost_endDate', 'DESC')->paginate(10);
+            return view('admin.setting.jobapproval', compact('jobPost', 'editapproval'));
+        } 
+        $editapproval->jobpost_status = $request->input('status'); 
+        $editapproval->save();
+        
+        return redirect()->route('admin.jobapproval')->with('success', 'Succesfully updated #'.$editapproval->id.' jobposting');
+    }
+
 }

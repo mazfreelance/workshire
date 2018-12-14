@@ -93,7 +93,7 @@
                                 <i class="icon-arrow-right"></i> Search candidate duration
                             </a>
                         </li> 
-                        @if(Request::path() == 'admin/setting/package' OR Request::path() == 'admin/setting/package/employer' OR Request::path() == 'admin/setting/package/topup/add' OR Request::path() == 'admin/setting/package/topup/reload')
+                        @if(Request::path() == 'admin/setting/package' OR Request::path() == 'admin/setting/cart-package')
                         <li class="treeview active">
                         @else
                         <li class="treeview">
@@ -116,12 +116,6 @@
                                         Cart Package
                                     </a>
                                 </li>  
-                                <li class="{{ Request::path() == 'admin/setting/package/employer' ? 'active' : '' }}">
-                                    <a class="waves-effect waves-dark" href="{{route('admin.package_employer')}}">
-                                        <i class="icon-arrow-right"></i>
-                                        Employer list
-                                    </a>
-                                </li>  
                             </ul>
                         </li>
                     </ul>
@@ -141,6 +135,11 @@
                     <li class="{{ Request::path() == 'admin/setting/token-manual' ? 'active' : '' }}">
                         <a class="waves-effect waves-dark" href="{{route('admin.addtokenmanual')}}">
                             <i class="icon-arrow-right"></i> Add manual
+                        </a>
+                    </li>
+                    <li class="{{ Request::path() == 'admin/setting/jobapproval' ? 'active' : '' }}">
+                        <a class="waves-effect waves-dark" href="{{route('admin.jobapproval')}}">
+                            <i class="icon-arrow-right"></i> Job Posting Approval
                         </a>
                     </li>
                 </ul>
@@ -178,7 +177,17 @@
                                 </a>
                             </li>  
                         </ul>
-                    </li> 
+                    </li>  
+                    <li class="{{ Request::path() == 'admin/setting/demo-data' ? 'active' : '' }}">
+                        <a class="waves-effect waves-dark" href="{{route('admin.demodata')}}">
+                            <i class="icon-arrow-right"></i> Demo Data
+                        </a>
+                    </li>
+                    <li class="{{ Request::path() == 'admin/setting/advance-search' ? 'active' : '' }}">
+                        <a class="waves-effect waves-dark" href="{{route('admin.advancesearch')}}">
+                            <i class="icon-arrow-right"></i> Advanced Search
+                        </a>
+                    </li>
                 </ul>
             </li>
         </ul>
