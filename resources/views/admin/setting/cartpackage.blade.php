@@ -172,6 +172,12 @@
                                                     <div class="form-group">
                                                         <label for="exampleInputPassword1" class="form-control-label">Package Description</label>
                                                         <textarea class="form-control" name="description" cols="5" placeholder="Insert description package">{{ isset($editPkg) ? $editPkg->description :''}}</textarea>
+                                                        <br/>
+                                                        <p><code>
+                                                            Notes:<br/>
+                                                            Use &#39;|&#39; as separator, example: sentence 1|sentence 2|...|sentence x<br/>
+                                                            Use &lt;strike&gt; test &lt;/strike&gt;, example: <strike> test </strike>
+                                                        </code></p>
                                                     </div>
                                                 @endif
                                             </div>

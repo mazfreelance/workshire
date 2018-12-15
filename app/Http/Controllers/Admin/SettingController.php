@@ -447,7 +447,7 @@ class SettingController extends Controller
         $duration = Cart_Product::where('post_id', '=', $post_id)->where('resume_id', '=', $resume_id)->pluck('duration')->first(); 
         $now = \Carbon::now();
         $mod_date = strtotime($now."+ ".$duration);
-        $expired_date = date("Y-m-d H:i:s",$mod_date) . "\n";
+        $expired_date = date("Y-m-d H:i:s",$mod_date);
 
         if(isset($TokenPost) AND isset($TokenResume)){
             //Reset new if exist another package ealier  
@@ -466,7 +466,6 @@ class SettingController extends Controller
             $TokenResume->save();
         }else{
             //create new
-            return 'xmasuk '.$emp_id; 
             EmployerTokenPost::create([
                 'employer_id' => $employer->id, 
                 'package_plan' => $postPlan, 
@@ -486,11 +485,11 @@ class SettingController extends Controller
 
         $new_count_post = $postPP->token_count+1;
         $postPP->token_count = $new_count_post;
-        //$postPP->save(); 
+        $postPP->save(); 
 
         $new_count_resume = $resumePP->token_count+1;
         $resumePP->token_count = $new_count_resume;
-        //$resumePP->save();
+        $resumePP->save();
 
         Mail::send(new AlertEmailToEmployerForPackage($user->email, $employer->emp_name));
 
@@ -505,25 +504,43 @@ class SettingController extends Controller
     } 
 
     public function add_token_manual(Request $request, $emp_id, $post_id, $resume_id)
-    {
+    {   
+        $editPkg = $post_id.'|'.$resume_id;
+        if ($request->isMethod('get')){ 
+            $employer = employer::paginate(10);
+            return view('admin.setting.addtokenmanual', compact('employer', 'editPkg'));
+        } 
+        /*==============================================*/
         $employer = employer::find($emp_id);
         $user = User_Employer::find($employer->users_id); 
 
-        $postPlan = 'P|'.$post_id;
-        $resumePlan = 'V|'.$resume_id;
+        $pkg = explode('|', $request->input('pckgpro'));
+
+        $postPlan = 'P|'.$pkg[0];
+        $resumePlan = 'V|'.$pkg[1];
 
         $TokenPost = EmployerTokenPost::where('employer_id', '=', $emp_id)->first();
         $TokenResume = EmployerTokenResume::where('employer_id', '=', $emp_id)->first();
 
-        $postPP = PackagePlan::where('id', '=', $post_id)->first();
-        $resumePP = PackagePlan::where('id', '=', $resume_id)->first();
-        $token_post = $postPP->token_amount; 
-        $token_resume = $resumePP->token_amount;
+        $postPP = PackagePlan::where('id', '=', $pkg[0])->first();
+        $resumePP = PackagePlan::where('id', '=', $pkg[1])->first();
+        $token_post = $postPP->token_amount + $request->input('addtokenoptional_job'); 
+        $token_resume = $resumePP->token_amount + $request->input('addtokenoptional_resume');
 
-        $duration = Cart_Product::where('post_id', '=', $post_id)->where('resume_id', '=', $resume_id)->pluck('duration')->first(); 
-        $now = \Carbon::now();
-        $mod_date = strtotime($now."+ ".$duration);
-        $expired_date = date("Y-m-d H:i:s",$mod_date) . "\n";
+        $duration = Cart_Product::where('post_id', '=', $pkg[0])->where('resume_id', '=', $pkg[1])->pluck('duration')->first();
+        if(isset($duration)){
+            $now = \Carbon::now();
+            $mod_date = strtotime($now."+ ".$duration);
+            $expired_date = date("Y-m-d H:i:s",$mod_date);
+        }else{
+            if($pkg[1] == 28) $expired_date = '2018-12-31';
+            elseif($pkg[1] == 25){
+                $now = \Carbon::now();
+                $mod_date = strtotime($now."+ 5 years");
+                $expired_date = date("Y-m-d H:i:s",$mod_date);
+            }
+        }
+
 
         if(isset($TokenPost) AND isset($TokenResume)){
             //Reset new if exist another package ealier  
@@ -542,7 +559,6 @@ class SettingController extends Controller
             $TokenResume->save();
         }else{
             //create new
-            return 'xmasuk '.$emp_id; 
             EmployerTokenPost::create([
                 'employer_id' => $employer->id, 
                 'package_plan' => $postPlan, 
@@ -562,11 +578,11 @@ class SettingController extends Controller
 
         $new_count_post = $postPP->token_count+1;
         $postPP->token_count = $new_count_post;
-        //$postPP->save(); 
+        $postPP->save(); 
 
         $new_count_resume = $resumePP->token_count+1;
         $resumePP->token_count = $new_count_resume;
-        //$resumePP->save();
+        $resumePP->save();
 
         Mail::send(new AlertEmailToEmployerForPackage($user->email, $employer->emp_name));
 

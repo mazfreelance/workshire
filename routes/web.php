@@ -179,10 +179,7 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'namespace' => 'AuthAdmin']
 /* ADMINISTRATOR */  
 Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 'Admin'], function(){  
     Route::get('dashboard', 'DashboardController@index')->name('dashboard'); 
-    Route::get('seeker', 'DashboardController@seeker')->name('seeker');  
-    Route::get('seeker-getData', 'DashboardController@seeker_getData')->name('seeker_getData');  
-    Route::get('employer', 'DashboardController@employer')->name('employer');  
-    Route::get('other', 'DashboardController@other')->name('other');  
+    Route::get('numbers', 'DashboardController@numbers')->name('numbers'); 
 
     Route::get('setting/search-candidate', 'SettingController@search_candidate')->name('search_candidate'); 
     Route::post('setting/post-search-candidate', 'SettingController@post_search_candidate')->name('post_search_candidate');  
@@ -246,6 +243,9 @@ Route::group(['prefix' => 'contact'], function(){
 Route::get('public/document/uploadsCV/{id}', 'DocumentController@getDocument')->name('resume');
 Route::get('profile/print/{id}', 'DocumentController@print');
 Route::get('poskod', 'HomeController@poskod')->name('poskod');
+Route::get('cart_pro', 'HomeController@cart_pro')->name('cart_pro');
+Route::get('pck_plan_jpost', 'HomeController@pck_plan_jpost')->name('pck_plan_jpost');
+Route::get('pck_plan_resume', 'HomeController@pck_plan_resume')->name('pck_plan_resume');
 Route::get('jobfair', 'HomeController@jobfairForm')->name('jobfairForm');
 Route::post('jobfair_post', 'HomeController@jobfair')->name('jobfair');
 Route::get('operator', 'HomeController@operatorForm')->name('operatorForm');

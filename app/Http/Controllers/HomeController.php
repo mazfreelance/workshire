@@ -14,6 +14,7 @@ use App\Model\VerifyUser;
 use App\Model\JobSeeker_Education_JOBFAIR;
 use App\Mail\VerifyMailSeeker;
 
+use App\Model\PackagePlan;
 use App\Model\Cart_Product;
 use App\Model\Poskod;  
 
@@ -30,6 +31,25 @@ class HomeController extends Controller
     	$zip = $request->input('zip');
     	$token = $request->input('_token');
     	return Poskod::whereRaw('posod LIKE "%'.$zip.'%"')->first(); 
+    } 
+
+    public function cart_pro(Request $request)
+    {   
+        $post_id = $request->input('post_id');
+        $resume_id = $request->input('resume_id');
+        return Cart_Product::whereRaw('post_id LIKE "%'.$post_id.'%"')->whereRaw('resume_id LIKE "%'.$resume_id.'%"')->first(); 
+    } 
+
+    public function pck_plan_jpost(Request $request)
+    {   
+        $post_id = $request->input('post_id');
+        return PackagePlan::whereRaw('id LIKE "%'.$post_id.'%"')->first(); 
+    } 
+
+    public function pck_plan_resume(Request $request)
+    {   
+        $resume_id = $request->input('resume_id');
+        return PackagePlan::whereRaw('id LIKE "%'.$resume_id.'%"')->first(); 
     } 
 
     public function jobfairForm(Request $request){

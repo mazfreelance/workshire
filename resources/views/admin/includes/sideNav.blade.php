@@ -151,33 +151,11 @@
                     <i class="icofont icofont-ui-settings"></i><span> Sourcing</span><i class="icon-arrow-down"></i>
                 </a>
                 <ul class="treeview-menu">
-                    <li>
-                        <a class="waves-effect waves-dark" href="">
-                            <i class="icon-arrow-right"></i>
-                            <span>Numbers</span>
-                            <i class="icon-arrow-down"></i>
+                    <li class="{{ Request::path() == 'admin/numbers' ? 'active' : '' }}">
+                        <a class="waves-effect waves-dark" href="{{route('admin.numbers')}}">
+                            <i class="icon-arrow-right"></i> Numbers
                         </a>
-                        <ul class="treeview-menu">
-                            <li class="{{ Request::path() == 'admin/seeker' ? 'active' : '' }}">
-                                <a class="waves-effect waves-dark" href="{{route('admin.seeker')}}">
-                                    <i class="icon-arrow-right"></i>
-                                    Seeker
-                                </a>
-                            </li>  
-                            <li class="{{ Request::path() == 'admin/employer' ? 'active' : '' }}">
-                                <a class="waves-effect waves-dark" href="{{route('admin.employer')}}">
-                                    <i class="icon-arrow-right"></i>
-                                    Employer
-                                </a>
-                            </li>  
-                            <li class="{{ Request::path() == 'admin/other' ? 'active' : '' }}">
-                                <a class="waves-effect waves-dark" href="{{route('admin.other')}}">
-                                    <i class="icon-arrow-right"></i>
-                                    RA, JP, etc
-                                </a>
-                            </li>  
-                        </ul>
-                    </li>  
+                    </li>
                     <li class="{{ Request::path() == 'admin/setting/demo-data' ? 'active' : '' }}">
                         <a class="waves-effect waves-dark" href="{{route('admin.demodata')}}">
                             <i class="icon-arrow-right"></i> Demo Data

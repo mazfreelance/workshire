@@ -60,16 +60,60 @@
 
                                             <div class="modal-body">  
                                                 <div class="form-group">
-                                                    <label for="exampleInputPassword1" class="form-control-label">Status</label>
-                                                    <select class="form-control" name="status">
-                                                        <option value="" selected disabled>Select status..</option>
-                                                        <option value="pending" 
-                                                        {{ isset($editPkg) ? $editPkg->status == 'pending'? 'selected':'' :''}}>
-                                                        Pending</option>
-                                                        <option value="Approved" 
-                                                        {{ isset($editPkg) ? $editPkg->status == 'Approved'? 'selected':'' :''}}>
-                                                        Approve</option>
+                                                    <label for="exampleInputPassword1" class="form-control-label">Select package first</label>
+                                                    <select class="form-control" name="pckgpro" id="pckgpro">
+                                                        <option value="" selected disabled>Select package..</option>
+                                                        @php
+                                                            $Cart_Product = \App\Model\Cart_Product::all(); 
+                                                        @endphp
+                                                        @foreach($Cart_Product as $cpro)
+                                                            @if(!($cpro->name == 'SPECIAL REQUEST' OR $cpro->name == 'OTHER' OR $cpro->name == 'BASIC'))
+                                                            <option value="{{ $cpro->post_id.'|'.$cpro->resume_id }}" 
+                                                            {{ isset($editPkg) ? $editPkg == $cpro->post_id.'|'.$cpro->resume_id? 'selected':'' :''}}>
+                                                            {{ $cpro->name }}
+                                                            </option> 
+                                                            @endif
+                                                        @endforeach
+                                                            <option value="26|28" 
+                                                            {{ isset($editPkg) ? $editPkg == '26|28'? 'selected':'' :''}}>
+                                                                Promo 31/12
+                                                            </option>
+                                                            <option value="26|25" 
+                                                            {{ isset($editPkg) ? $editPkg == '26|25'? 'selected':'' :''}}>
+                                                                Unlimited 
+                                                            </option>
                                                     </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="exampleInputPassword1" class="form-control-label">Package</label>
+                                                </div>
+                                                <div class="form-group">
+                                                    Duration: <input class="form-control" type="text" name="duration" id="duration" readonly/>
+                                                    <br/>
+                                                    <table class="table table-bordered">
+                                                        <tr class="text-center">
+                                                            <th>Job Posting</th>
+                                                            <th>Resume / Profile Viewing</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <div class="form-group">
+                                                                    <label for="exampleInputPassword1" class="form-control-label">Amount Token</label>
+                                                                    <span id="amountokenjp"></span>
+                                                                    <label for="exampleInputPassword1" class="form-control-label">Add tokens (optional)</label>
+                                                                    <input class="form-control" type="number" name="addtokenoptional_job" value="0" />
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="form-group">
+                                                                    <label for="exampleInputPassword1" class="form-control-label">Amount Token</label>
+                                                                    <span id="amountokenrv"></span>
+                                                                    <label for="exampleInputPassword1" class="form-control-label">Add tokens (optional)</label>
+                                                                    <input class="form-control" type="number" name="addtokenoptional_resume" value="0" />
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -171,6 +215,145 @@
 <script> 
 $(document).ready(function() {
     @if(isset($editPkg)) $('#editpackage').modal('show'); @endif
+    
+    //no selection
+    var pck = $('#pckgpro').val();
+    if( pck != null ){
+        var pck_split = pck.split('|');
+        var data = "post_id="+pck_split[0]+"&resume_id="+pck_split[1]+"&_token={{CSRF_TOKEN()}}";   
+        $.ajax({
+            url: "{{route('cart_pro')}}",
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {   
+                $('#duration').val(data.duration);
+            },
+            error: function (xhr, textStatus, errorThrown){
+                //alert("Error: " + errorThrown);
+                $.alert({
+                    icon: 'fa fa-times-circle',
+                    theme: 'modern',
+                    type: 'red',
+                    title: 'Fail to generate states',
+                    content: xhr.responseText,
+                    confirm: function(){}
+                });
+            }
+        }); 
+        $.ajax({
+            url: "{{route('pck_plan_jpost')}}",
+            data: "post_id="+pck_split[0]+"&_token={{CSRF_TOKEN()}}",
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {   
+                $('#amountokenjp').text(data.token_amount);
+            },
+            error: function (xhr, textStatus, errorThrown){
+                //alert("Error: " + errorThrown);
+                $.alert({
+                    icon: 'fa fa-times-circle',
+                    theme: 'modern',
+                    type: 'red',
+                    title: 'Fail to generate states',
+                    content: xhr.responseText,
+                    confirm: function(){}
+                });
+            }
+        }); 
+        $.ajax({ 
+            url: "{{route('pck_plan_resume')}}",
+            data: "&resume_id="+pck_split[1]+"&_token={{CSRF_TOKEN()}}",
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {   
+                $('#amountokenrv').text(data.token_amount);
+            },
+            error: function (xhr, textStatus, errorThrown){
+                //alert("Error: " + errorThrown);
+                $.alert({
+                    icon: 'fa fa-times-circle',
+                    theme: 'modern',
+                    type: 'red',
+                    title: 'Fail to generate states',
+                    content: xhr.responseText,
+                    confirm: function(){}
+                });
+            }
+        });
+    }
+    //selection
+    $(document).on('change', '#pckgpro' , function(e){
+        e.preventDefault();
+        var pck_split = $(this).val().split('|');
+        var data = "post_id="+pck_split[0]+"&resume_id="+pck_split[1]+"&_token={{CSRF_TOKEN()}}";   
+        $.ajax({
+            url: "{{route('cart_pro')}}",
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {   
+                $('#duration').val(data.duration);
+            },
+            error: function (xhr, textStatus, errorThrown){
+                //alert("Error: " + errorThrown);
+                $.alert({
+                    icon: 'fa fa-times-circle',
+                    theme: 'modern',
+                    type: 'red',
+                    title: 'Fail to generate states',
+                    content: xhr.responseText,
+                    confirm: function(){}
+                });
+            }
+        }); 
+        $.ajax({
+            url: "{{route('pck_plan_jpost')}}",
+            data: "post_id="+pck_split[0]+"&_token={{CSRF_TOKEN()}}",
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {   
+                $('#amountokenjp').text(data.token_amount);
+            },
+            error: function (xhr, textStatus, errorThrown){
+                //alert("Error: " + errorThrown);
+                $.alert({
+                    icon: 'fa fa-times-circle',
+                    theme: 'modern',
+                    type: 'red',
+                    title: 'Fail to generate states',
+                    content: xhr.responseText,
+                    confirm: function(){}
+                });
+            }
+        }); 
+        $.ajax({ 
+            url: "{{route('pck_plan_resume')}}",
+            data: "&resume_id="+pck_split[1]+"&_token={{CSRF_TOKEN()}}",
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {   
+                $('#amountokenrv').text(data.token_amount);
+            },
+            error: function (xhr, textStatus, errorThrown){
+                //alert("Error: " + errorThrown);
+                $.alert({
+                    icon: 'fa fa-times-circle',
+                    theme: 'modern',
+                    type: 'red',
+                    title: 'Fail to generate states',
+                    content: xhr.responseText,
+                    confirm: function(){}
+                });
+            }
+        }); 
+    });  
 });
 </script>
 @endsection

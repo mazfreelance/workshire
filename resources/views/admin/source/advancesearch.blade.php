@@ -156,10 +156,9 @@
                       </tr>
                     </table>
                   </div>
-
-
                   {!! Form::close() !!}
-                  <h5 class="container">Total Seeker: {{$seeker->total()}}</h5>
+                  
+                  @if(!isset($req)) <h5 class="container">Total Seeker: {{$seeker->total()}}</h5>@endif
                   <div class="table-responsive">
                     <table class="table table-inverse table-bordered table-hover" id="table_not" style="width:100%;">
                       <thead class="bg-primary"> 
@@ -178,16 +177,22 @@
                       <tbody>
                           @foreach($seeker as $seek)
                           @php
-                            $fosReq='';
+                            $fosReq='';$institute='';
+                            $institute = isset($req)? $req['dd-institution']:'';
                             if(isset($req)){
                               if($req['dd-fos']  != '' or $req['dd-fos2']  != '') 
                                 $fosReq = $req['dd-fos']  != ''? $req['dd-fos']:$req['dd-fos2'];
                             } 
-                            $edu = \App\Model\JobSeeker_Education::where('seeker_id', '=', $seek->id)
-                                                                 ->whereRaw('field_of_study LIKE "%'.$fosReq.'%"')
-                                                                 ->first();
+                            $edus = \App\Model\JobSeeker_Education::whereRaw('level = '. 1)
+                                                                  ->whereRaw('field_of_study LIKE "%'.$fosReq.'%"')
+                                                                  ->whereRaw('institute LIKE "%'.$institute.'%"')
+                                                                  ->get();
                             $resume = \App\Model\Resume::where('seeker_id', '=', $seek->id)->first();    
                           @endphp
+
+                          
+                          @foreach($edus as $edu)
+                            @if($edu->seeker_id == $seek->id)
                           <tr>
                             <td>{{ date('M d, Y - H:i a', strtotime($seek->created_at)) }}</td>
                             <td>{{ $seek->seeker_name }}</td>
@@ -195,22 +200,27 @@
                             <td>{{ date('M d, Y', strtotime($seek->seeker_DOB)) }}</td>
                             <td>{{ $seek->seeker_nric }}</td>
                             <td>{{ $seek->seeker_ctc_tel1 }}</td>
+                            
                             <td>{{ $edu['highest_education'] }}</td>
                             <td>{{ $edu['field_of_study'] }} {{ $edu['major_study'] != '' ? '('.$edu['major_study'].')': '' }}</td>
                             <td>{{ $edu['grade_achievement'] }}</td>
                             <td>{{ $edu['institute'] }}</td>
+                            
                             <td>
                               @if($resume['resume_loc'] != '')
                                 <a href="{{ asset('public/document/uploadsCV').'/'.$resume['resume_loc'] }}" target="_blank">Resume</a>
                               @endif
                             </td>
                           </tr>
+                            @endif
+                          @endforeach
+
                           @endforeach
                       </tbody>
                     </table>
 
                     <nav aria-label="pagination" class="mt-2 d-flex justify-content-center">
-                        {{ $seeker->links('vendor.pagination.bootstrap-4') }}
+                        {{-- $seeker->links('vendor.pagination.bootstrap-4') --}}
                     </nav>  
                   </div>
               </div>  

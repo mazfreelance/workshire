@@ -44,9 +44,9 @@ class DashboardController extends Controller
     	return view('admin.main', compact('totalAll', 'totalSeeker', 'totalEmployer'));
     } 
 
-    public function seeker()
+    public function numbers()
     {        
-        return view('admin.source.seeker');
+        return view('admin.source.numbers');
     } 
 
     public function seeker_getData()
@@ -76,18 +76,7 @@ class DashboardController extends Controller
             })
             ->make(true);
     } 
-
-    public function employer()
-    {        
-        return view('admin.source.employer', compact('totalAll', 'totalSeeker', 'totalEmployer'));
-    } 
-
-    public function other()
-    {        
-        return view('admin.source.other', compact('totalAll', 'totalSeeker', 'totalEmployer'));
-    } 
-
-
+    
     public function demodata()
     {   
         $now = \Carbon::now();
@@ -121,7 +110,7 @@ class DashboardController extends Controller
                             ->whereRaw('seeker_city LIKE "%'.$request->input('dd-city').'%"')
                             //->orWhereIn('YEAR(CURRENT_TIMESTAMP) - YEAR(seeker_DOB) BETWEEN "'.$request->input('dd-agefirst').'" AND "'.$request->input('dd-agelast').'"')
                             //->orWhere('seeker_noYrsExp BETWEEN "'.$request->input('dd-yoefirst').'" AND "'.$request->input('dd-yoelast').'"')
-                            ->orderby('created_at', 'DESC')->paginate(15);
+                            ->orderby('job_seekers.created_at', 'DESC')->get();
         $req = $request->all();
 
         return view('admin.source.advancesearch', compact('seeker', 'gender', 'exps', 'req'));

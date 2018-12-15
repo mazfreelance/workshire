@@ -42,10 +42,11 @@
                     	Setting for demo data list
                     </div>  
                     <div class="card-block">
+                        <h5 class="small">Click any type to see the data.</h5>
                         <div class="row">
                             <div class="col-md-12"> 
                                 <ul id="tabsJustified" class="nav nav-tabs">
-                                    <li class="nav-item"><a href="" data-target="#age" data-toggle="tab" class="nav-link small text-uppercase active">Age</a></li> 
+                                    <li class="nav-item"><a href="" data-target="#age" data-toggle="tab" class="nav-link small text-uppercase ">Age</a></li> 
                                     <li class="nav-item"><a href="" data-target="#eduLvl" data-toggle="tab" class="nav-link small text-uppercase">Education Level</a></li>
                                     <li class="nav-item"><a href="" data-target="#exp" data-toggle="tab" class="nav-link small text-uppercase">Experience</a></li>
                                     <li class="nav-item"><a href="" data-target="#fos" data-toggle="tab" class="nav-link small text-uppercase">Field of Study</a></li>
@@ -58,7 +59,7 @@
                         </div>
                         <div id="tabsJustifiedContent" class="tab-content"> 
                             
-                            <div id="age" class="tab-pane fade active show">
+                            <div id="age" class="tab-pane fade">
                               <table class="table table-bordered">
                                 <thead>
                                   <tr>
