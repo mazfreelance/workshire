@@ -179,7 +179,8 @@ return [
         Collective\Html\HtmlServiceProvider::class, 
         'Cohensive\Embed\EmbedServiceProvider',
         Yajra\Datatables\DatatablesServiceProvider::class,
-        'Intervention\Image\ImageServiceProvider'
+        'Intervention\Image\ImageServiceProvider',
+        Barryvdh\Debugbar\ServiceProvider::class,
     ],
 
     /*
@@ -237,7 +238,8 @@ return [
         'Embed' => 'Cohensive\Embed\Facades\Embed', 
         'Cart' => Gloudemans\Shoppingcart\Facades\Cart::class,
         'Datatables' => Yajra\Datatables\Facades\Datatables::class,
-        'Image' => 'Intervention\Image\Facades\Image'
+        'Image' => 'Intervention\Image\Facades\Image',
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
     ],
 
 ];

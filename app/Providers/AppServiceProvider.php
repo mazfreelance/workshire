@@ -14,6 +14,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
+
+        // \Debugbar::enable(); // disable : close debugbar; enable : close debugbar
+        if (\App::environment('production')) {
+            \Debugbar::disable();
+        }
     }
 
     /**

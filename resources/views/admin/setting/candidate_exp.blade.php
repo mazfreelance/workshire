@@ -11,14 +11,7 @@
             <div class="col-sm-12 p-0">
                 <div class="main-header">
                     <h4>Setting | Search Candidate Duration</h4>
-                    <ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
-                        <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}"><i class="icofont icofont-home"></i></a>
-                        </li>
-                        <li class="breadcrumb-item"><a href="">User Setting</a>
-                        </li>
-                        <li class="breadcrumb-item"><a href="{{route('admin.candidate_expired')}}">Search Candidate Duration</a>
-                        </li>
-                    </ol>
+                    {{ Breadcrumbs::render('search_candidate_expired') }}
                 </div>
             </div>
         </div>
